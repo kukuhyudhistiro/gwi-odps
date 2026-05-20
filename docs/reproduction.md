@@ -75,7 +75,7 @@ python scripts/04c_evaluate_bsds_v2.py \
     --output-root ./output \
     --methods Canny Sobel LoG PC ED GWC GWi GWi_odps \
     --results-dir ./eval_results/k5 \
-    --n-thresholds 33
+    --n-thresholds 99
 ```
 
 Expected canonical values (full 200 BSDS500):

@@ -1,13 +1,6 @@
 """
 generate_figure_1_pipeline.py — Figure 1: GWi+ODPS Pipeline Overview
 
-Six-stage pipeline schematic with embedded illustrative images at each stage.
-Designed for paper inclusion at 300 DPI.
-
-DEFAULT STAGE IMAGES are placeholder synthetic patterns; replace with real
-test images from your dataset via either:
-  (a) Edit the STAGE_IMAGES dict at the top of this file, OR
-  (b) Pass --stage-image-N <path> for each stage as CLI arguments.
 
 Author: Kukuh Yudhistiro
 """

@@ -87,7 +87,7 @@ by reusing the orientation argmax map from Stage 5. For each pixel $(x,y)$,
 let $\theta^*(x,y)$ be the orientation index (0…7) that gave the maximum
 response in Stage 5. The edge‑normal direction is:
 
-$$\mathbf{n}(x, y) = (\cos\theta^*(x, y),\ \sin\theta^*(x, y))$$
+n(x,y) = (cos θ*(x,y),sin θ*(x,y))
 
 We then apply orientation‑aware non‑maximum suppression (a variant of
 classical NMS [4]) with a fixed distance $d = \lambda/2 = 2$ pixels:

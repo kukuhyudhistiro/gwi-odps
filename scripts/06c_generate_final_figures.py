@@ -1,7 +1,7 @@
 """
 generate_final_figures.py — FINAL paper figures (v3)
 
-Updates from 06b:
+
   1. ADD black border around every image cell (1.0 pt line width)
   2. INCLUDE GWi+ODPS in qualitative figure (now 8 methods + Image + GT = 10 rows)
   3. Run on 3 datasets with sample IDs from user spec

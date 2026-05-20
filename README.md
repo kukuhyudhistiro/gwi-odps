@@ -118,7 +118,7 @@ GWi-ODPS/
 ### Setup
 
 ```bash
-git clone [https://github.com/<username>/GWi-ODPS](https://github.com/kukuhyudhistiro/gwi-odps).git
+git clone [https://github.com/kukuhyudhistiro/gwi-odps].git
 cd GWi-ODPS
 
 python -m venv venv

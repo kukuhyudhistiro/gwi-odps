@@ -34,13 +34,13 @@ keywords:
   - computer vision
   - efficient inference
 license: MIT
-repository-code: "https://github.com/<username>/GWi-ODPS"
+repository-code: "https://github.com/kukuhyudhistiro/gwi-odps"
 type: software
 version: "2.0.0"
 date-released: 2026-05-19
 preferred-citation:
   type: article
-  title: "Halving Gabor Convolutions: Imaginary-Only Wavelet with Orientation-Aware Double-Peak Suppression for Edge Detection"
+  title: "Halving Gabor Convolutions: Imaginary-Only Wavelet with Orientation-Aware Double-Peak Suppression for Lightweight Edge Detection"
   authors:
     - family-names: Yudhistiro
       given-names: Kukuh

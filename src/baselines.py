@@ -1,15 +1,7 @@
 """
-baselines.py (v2 — patched)
+baselines.py
 
 Classical edge detectors: Canny, Sobel, LoG, PC, ED.
-
-PATCH NOTES vs v1:
-    - ED: now requires opencv-contrib-python. Silent fallback to gradient
-      magnitude removed — that fallback made ED == Canny in earlier runs.
-      Now raises RuntimeError if ximgproc unavailable, allowing the user
-      to either install opencv-contrib-python or exclude ED with --methods.
-    - Canny: sigma increased to 1.4 (standard Canny recommendation) for
-      slightly more aggressive smoothing.
 
 Author: Kukuh Yudhistiro
 """

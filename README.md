@@ -264,7 +264,7 @@ The pipeline uses no random sampling. All operations are deterministic given the
   author  = {Yudhistiro, Kukuh and Rijati, Nova and Basuki, Ruri Suko},
   journal = {[Submitted]},
   year    = {2026},
-  note    = {Code: \url{https://github.com/<username>/GWi-ODPS}}
+  note    = {Code: \url{https://github.com/kukuhyudhistiro/gwi-odps}
 }
 ```
 
@@ -294,6 +294,5 @@ Datasets used (BSDS500, BIPED, UDED) are subject to their own licenses.
 
 ## Contact
 
-- **Issues**: [GitHub Issues](https://github.com/<username>/gwi-odps/issues)
 - **Email**: kukuh.yudhistiro@unmer.ac.id
 - **Affiliation**: Universitas Dian Nuswantoro, Semarang, Indonesia

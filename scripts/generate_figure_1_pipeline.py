@@ -9,15 +9,6 @@ test images from your dataset via either:
   (a) Edit the STAGE_IMAGES dict at the top of this file, OR
   (b) Pass --stage-image-N <path> for each stage as CLI arguments.
 
-Layout: 2 rows × 3 columns of stage panels, with arrows showing flow:
-    Row 1: Stage 1 → Stage 2 → Stage 3
-                                  ↓
-    Row 2: Stage 4 ← Stage 5 ← Stage 6 (proposed)
-    Wait, no - flow is left-to-right within rows:
-    Row 1: Stage 1 → Stage 2 → Stage 3
-                                  ↓ (wraps)
-    Row 2: Stage 4 → Stage 5 → Stage 6 (proposed)
-
 Author: Kukuh Yudhistiro
 """
 

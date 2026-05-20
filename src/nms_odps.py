@@ -14,11 +14,6 @@ Why this works:
     ODPS keeps only the main peak by requiring the magnitude at each
     pixel to be a local maximum along the edge-normal direction.
 
-Why this is defensible for paper Q3:
-    - Reuses Stage 5 argmax orientation (no new convolution)
-    - Standard practice in classical edge detection (Canny, PC also do NMS)
-    - Mathematically grounded — addresses a verified side-lobe phenomenon
-    - Does NOT modify Stages 1-5 → "imaginary-only" claim intact
 
 Author: Kukuh Yudhistiro
 """

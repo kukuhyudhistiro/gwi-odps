@@ -73,7 +73,7 @@ tolerance, so every edge produces 2-3 false positives.
 For each pixel (x, y), use the orientation argmax θ*(x, y) from Stage 5
 to define the edge-normal direction:
 
-$\mathbf{n}(x,y) = (\cos \theta^*(x,y), \sin \theta^*(x,y))$
+n(x,y)=(cos θ*(x,y),sin θ*(x,y))
 
 Apply orientation-aware non-maximum suppression:
 

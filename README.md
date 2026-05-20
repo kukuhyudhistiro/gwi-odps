@@ -294,6 +294,6 @@ Datasets used (BSDS500, BIPED, UDED) are subject to their own licenses.
 
 ## Contact
 
-- **Issues**: [GitHub Issues](https://github.com/<username>/GWi-ODPS/issues)
-- **Email**: kukuh.yudhistiro@dsn.dinus.ac.id
+- **Issues**: [GitHub Issues](https://github.com/<username>/gwi-odps/issues)
+- **Email**: kukuh.yudhistiro@unmer.ac.id
 - **Affiliation**: Universitas Dian Nuswantoro, Semarang, Indonesia

@@ -1,0 +1,52 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite the associated paper."
+title: "GWi+ODPS: Imaginary-Only Gabor Wavelet with Orientation-Aware Double-Peak Suppression for Edge Detection"
+abstract: >
+  Reference implementation and evaluation pipeline for an imaginary-only
+  Gabor wavelet edge detector (GWi) with orientation-aware double-peak
+  suppression (ODPS) post-processing. Evaluated on BSDS500, BIPED v2,
+  and UDED benchmarks. The imaginary-only formulation halves the
+  convolution count of complex Gabor, running 2.2x faster while
+  improving ODS by 0.05-0.15. ODPS adds 0.014-0.038 ODS at runtime
+  parity with complex Gabor.
+authors:
+  - family-names: Yudhistiro
+    given-names: Kukuh
+    affiliation: Universitas Dian Nuswantoro
+    city: Semarang
+    country: ID
+  - family-names: Rijati
+    given-names: Nova
+    affiliation: Universitas Dian Nuswantoro
+    city: Semarang
+    country: ID
+  - family-names: Basuki
+    given-names: Ruri Suko
+    affiliation: Universitas Dian Nuswantoro
+    city: Semarang
+    country: ID
+keywords:
+  - edge detection
+  - Gabor wavelet
+  - non-maximum suppression
+  - multi-orientation filtering
+  - boundary detection
+  - computer vision
+  - efficient inference
+license: MIT
+repository-code: "https://github.com/<username>/GWi-ODPS"
+type: software
+version: "2.0.0"
+date-released: 2026-05-19
+preferred-citation:
+  type: article
+  title: "Halving Gabor Convolutions: Imaginary-Only Wavelet with Orientation-Aware Double-Peak Suppression for Edge Detection"
+  authors:
+    - family-names: Yudhistiro
+      given-names: Kukuh
+    - family-names: Rijati
+      given-names: Nova
+    - family-names: Basuki
+      given-names: Ruri Suko
+  year: 2026
+  journal: "[Submitted]"

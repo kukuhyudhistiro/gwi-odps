@@ -1,0 +1,24 @@
+# GWi+ODPS — Python Dependencies
+# Tested on Python 3.13 (Windows 11 + Intel i5-14400)
+
+# Core scientific computing
+numpy>=1.26,<3.0
+scipy>=1.10
+scikit-image>=0.21
+Pillow>=10.0
+
+# Computer vision (REQUIRED: opencv-contrib for Edge Drawing)
+# Do NOT use plain opencv-python; cv2.ximgproc.EdgeDrawing will fail silently
+opencv-contrib-python>=4.10
+
+# Data analysis
+pandas>=2.0
+
+# Visualization
+matplotlib>=3.8
+
+# Phase Congruency reference (Kovesi)
+phasepack>=1.5
+
+# Reproducibility logging
+psutil>=5.9

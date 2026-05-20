@@ -6,7 +6,7 @@
 
 Reference implementation and evaluation pipeline for the paper:
 
-> **"Halving Gabor Convolutions: Imaginary-Only Wavelet with Orientation-Aware Double-Peak Suppression for Edge Detection"**
+> **"Halving Gabor Convolutions: Imaginary-Only Wavelet with Orientation-Aware Double-Peak Suppression for Lightweight Edge Detection"**
 > Kukuh Yudhistiro, Nova Rijati, Ruri Suko Basuki
 > Universitas Dian Nuswantoro, Semarang, Indonesia
 

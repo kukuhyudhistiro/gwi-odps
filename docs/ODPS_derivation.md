@@ -84,6 +84,9 @@ E(x, y) & \text{if } E(x, y) \geq \max(E(x + d\mathbf{n}), E(x - d\mathbf{n})) \
 
 with $d = 2$ pixels (matching side-lobe distance λ/2 for λ=4).
 
+<img width="3254" height="922" alt="figure_2_sidelobe" src="https://github.com/user-attachments/assets/b03de478-5e0b-4fc4-aa04-25cacc147ef9" />
+
+
 ### Why It Works
 
 For a main-peak pixel:

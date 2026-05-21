@@ -25,7 +25,7 @@ setup(
     long_description_content_type="text/markdown",
     author="Kukuh Yudhistiro, Nova Rijati, Ruri Suko Basuki",
     author_email="kukuh.yudhistiro@dsn.dinus.ac.id",
-    url="https://github.com/<username>/GWi-ODPS",
+    url="https://github.com/kukuhyudhistiro/gwi-odps",
     license="MIT",
     python_requires=">=3.10",
     packages=find_packages(where="src"),

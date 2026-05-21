@@ -142,20 +142,6 @@ false positives are proportionally fewer.
 
 ---
 
-## 7. Limitations
-
-ODPS assumes the edge-normal direction is well-defined at each pixel,
-which fails in three regimes:
-
-1. **Junctions** (T-junctions, X-junctions): multiple competing orientations
-2. **Noise-dominated regions**: random argmax suppresses valid edges
-3. **Curvature ≫ λ**: locally curved edges shift the argmax estimate
-
-These motivate the future direction of spatially-adaptive Gabor parameters
-or learned per-pixel d prediction.
-
----
-
 ## References
 
 - Daugman, J.G. (1985). "Uncertainty relation for resolution in space,

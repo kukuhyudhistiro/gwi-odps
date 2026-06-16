@@ -259,7 +259,7 @@ The pipeline uses no random sampling. All operations are deterministic given the
 
 ```bibtex
 @article{yudhistiro2026gwi_odps,
-  title   = {Halving Gabor Convolutions: Imaginary-Only Wavelet with
+  title   = {Imaginary-Only Wavelet with
              Orientation-Aware Double-Peak Suppression for Edge Detection},
   author  = {Yudhistiro, Kukuh and Rijati, Nova and Basuki, Ruri Suko},
   journal = {[Submitted]},

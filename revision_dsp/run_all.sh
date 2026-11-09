@@ -26,6 +26,8 @@ case "${1:-help}" in
     run scripts/10_select_kernel.py ;;
   ablation)    # R2.5, R2.6, R3.2, R3.4 (BSDS500 train+val, reported only)
     run scripts/11_ablation.py ;;
+  hypotheses)  # HYPOTHESES.md (H1 ODPS gain vs rho, H2 GWi vs rho and scale); reads E10 output only
+    run scripts/13_hypotheses.py ;;
   freeze)      # then git tag freeze-2026-11-10
     run scripts/12_freeze.py ;;
   test)        # test sets are opened here, once
@@ -41,6 +43,6 @@ case "${1:-help}" in
   tables)
     run scripts/26_tables.py ;;
   *)
-    echo "stages: smoke | check | select | ablation | freeze | test | preproc | stats | runtime | qualitative | tables"
+    echo "stages: smoke | check | select | ablation | hypotheses | freeze | test | preproc | stats | runtime | qualitative | tables"
     echo "external DL maps (R1.2): python3 scripts/23_eval_external.py --maps-root <dir> --methods TEED PiDiNet LDC --nms" ;;
 esac

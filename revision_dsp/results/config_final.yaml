@@ -1,0 +1,153 @@
+# sha256 of the body below: 1b1918134374e9edfedcd52f93ab68b26f50be06bac8f65a46004385f2b2ee2f
+frozen_from: config.yaml
+protocol:
+  preproc: he
+  border: paper
+  nms_outside: zero
+  normalization: minmax_image
+  quantize_8bit: true
+  n_thresholds: 99
+  max_dist_frac: 0.0075
+  matching: greedy
+  thinning: skimage
+selected_tag: k9l9
+selection:
+  k: 9
+  lam: 9
+  d: 4.5
+  N: 8
+  sigma_ratio: 0.56
+  gamma: 0.5
+  criterion: mean_ods_gwi_odps
+  value: 0.5558
+  mean_ods_gwi: 0.5425
+  mean_ods_gwi_odps: 0.5558
+  rule: highest mean ODS of GWi+ODPS (amendment 2) over BSDS500:trainval, BIPED:train;
+    d = lambda/2
+  selected_under_gwi_criterion:
+    k: 9
+    lam: 10
+    mean_ods_gwi: 0.5472
+  selected_under_gwi_odps_criterion:
+    k: 9
+    lam: 9
+    mean_ods_gwi_odps: 0.5558
+  per_k_edge:
+  - k: 5
+    best_lam: 7
+    value: 0.5276
+    lam_max_evaluated: 8.0
+    at_upper_edge: false
+    lam_bound: 8.0
+    at_bound: false
+  - k: 7
+    best_lam: 9
+    value: 0.5497
+    lam_max_evaluated: 12.0
+    at_upper_edge: false
+    lam_bound: 12.0
+    at_bound: false
+  - k: 9
+    best_lam: 9
+    value: 0.5558
+    lam_max_evaluated: 10.0
+    at_upper_edge: false
+    lam_bound: 16.0
+    at_bound: false
+  submitted_config_selected: false
+  limit: 0
+primary:
+  gwi: GWi_k9l9
+  gwi_odps: GWiODPS_k9l9
+  gwc: GWCraw_k9l9
+  gwc_zero: GWCzero_k9l9
+methods:
+- name: GWi_k9l9
+  family: gwi
+  k: 9
+  lam: 9.0
+  N: 8
+  sigma_ratio: 0.56
+  gamma: 0.5
+- name: GWiODPS_k9l9
+  family: gwi
+  nms:
+    d: 4.5
+    mode: nearest
+  k: 9
+  lam: 9.0
+  N: 8
+  sigma_ratio: 0.56
+  gamma: 0.5
+- name: GWCraw_k9l9
+  family: gwc
+  dc: raw
+  k: 9
+  lam: 9.0
+  N: 8
+  sigma_ratio: 0.56
+  gamma: 0.5
+- name: GWCzero_k9l9
+  family: gwc
+  dc: zero
+  k: 9
+  lam: 9.0
+  N: 8
+  sigma_ratio: 0.56
+  gamma: 0.5
+- name: GWi_k5l4
+  family: gwi
+  k: 5
+  lam: 4.0
+  N: 8
+  sigma_ratio: 0.56
+  gamma: 0.5
+- name: GWiODPS_k5l4
+  family: gwi
+  nms:
+    d: 2.0
+    mode: nearest
+  k: 5
+  lam: 4.0
+  N: 8
+  sigma_ratio: 0.56
+  gamma: 0.5
+- name: GWCraw_k5l4
+  family: gwc
+  dc: raw
+  k: 5
+  lam: 4.0
+  N: 8
+  sigma_ratio: 0.56
+  gamma: 0.5
+- name: GWCzero_k5l4
+  family: gwc
+  dc: zero
+  k: 5
+  lam: 4.0
+  N: 8
+  sigma_ratio: 0.56
+  gamma: 0.5
+- name: Canny
+  family: canny
+  low: 50
+  high: 150
+- name: Sobel
+  family: sobel
+- name: LoG
+  family: log
+  ksize: 7
+  sigma: 1.4
+- name: PC
+  family: pc
+  nscale: 4
+  norient: 6
+- name: ED
+  family: ed
+- name: GaussGradMag1.4
+  family: gaussgrad
+  sigma: 1.4
+test_sets:
+- BSDS500:test
+- BIPED:test
+- UDED:test

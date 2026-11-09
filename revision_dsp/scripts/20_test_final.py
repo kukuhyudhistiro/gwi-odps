@@ -59,8 +59,9 @@ def main():
                 lrows.append(summary_row(r, ds, sp))
         write_csv(lrows, out / "legacy_check.csv")
         for r in lrows:
+            # the submitted tables used the legacy OIS/AP definitions
             print(f"    {r['dataset']:8s} {r['method']:22s} ODS {r['ODS']:.4f}  "
-                  f"OIS {r['OIS']:.4f}  AP {r['AP']:.4f}")
+                  f"OIS_legacy {r['OIS_legacy']:.4f}  AP_legacy {r['AP_legacy']:.4f}")
 
 
 if __name__ == "__main__":

@@ -96,6 +96,8 @@ selection:
     - {k: 7, lam: 10}
     - {k: 7, lam: 11}
     - {k: 7, lam: 12}
+    - {k: 9, lam: 9}
+    - {k: 9, lam: 10}
   # Amendment 2 (9 Nov 2026, CHANGELOG.md, FINDINGS.md F4-F5), written AFTER the
   # results above were seen: under mean ODS of GWi there is no interior optimum
   # (monotone in lambda up to lambda 12 at k = 7), so the edge rule of amendment 1
@@ -117,7 +119,7 @@ selection:
 ablation:
   split: "BSDS500:trainval"
   lam_d:                        # R2.5 (effect of d) and R3.2 (vary lambda; is d = lambda/2 enough?)
-    lam: [3, 4, 5, 6, 7, 8, 9]  # at the selected k (amendment 1 + edge rule: lambda range evaluated at k = 7)
+    lam: [3, 4, 5, 6, 7, 8, 9, 10]  # at the selected k (lambda range evaluated at k = 9 in the selection)
     d: [1, 2, 3]                # d = lambda/2 is added for every lambda
   one_at_a_time:                # around the selected configuration, d = lambda/2
     N: [4, 16]                  # R2.6 (4, 8, 16 orientations), R3.4

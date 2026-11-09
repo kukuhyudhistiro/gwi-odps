@@ -146,12 +146,15 @@ def run_counts(cfg, spec: Dict, dataset: str, split: str, proto: Dict,
 
 def summary_row(res: Dict, dataset: str, split: str) -> Dict:
     m = aggregate(res["counts"], res["thresholds"])
-    # OIS and AP: definitions of the submitted tables (04c), described in the
-    # revised Section 4.2 (R2.9); BSDS-aggregated values in OIS_bsds / AP_bsds.
+    # OIS and AP (primary since 9 Nov 2026, CHANGELOG.md): dataset-level
+    # accumulation, as ODS and as in the A-GWi paper (JESA 44740). OIS_legacy and
+    # AP_legacy: the definitions of the submitted tables (04c, mean of per-image
+    # values), kept for continuity. AP_bsds101: BSDS benchmark-code AP.
     return dict(method=res["name"], dataset=dataset, split=split,
-                n=m["n_images"], ODS=round(m["ods"], 4), OIS=round(m["ois_legacy"], 4),
-                AP=round(m["ap_legacy"], 4), OIS_bsds=round(m["ois"], 4),
-                AP_bsds=round(m["ap"], 4), ODS_t=round(m["ods_t"], 3),
+                n=m["n_images"], ODS=round(m["ods"], 4), OIS=round(m["ois"], 4),
+                AP=round(m["ap"], 4), OIS_legacy=round(m["ois_legacy"], 4),
+                AP_legacy=round(m["ap_legacy"], 4), AP_bsds101=round(m["ap_bsds101"], 4),
+                ODS_t=round(m["ods_t"], 3),
                 P_at_ODS=round(m["ods_p"], 4), R_at_ODS=round(m["ods_r"], 4),
                 spec_id=res["sid"])
 

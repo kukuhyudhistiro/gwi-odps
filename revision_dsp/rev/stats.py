@@ -11,7 +11,8 @@ images:
                       ODS threshold; effect size = matched-pairs rank-biserial r.
     holm            : Holm step-down adjustment over a family of p-values.
     variability     : per method, bootstrap 95% CI of ODS, OIS and AP over images
-                      (OIS/AP as in the submitted tables, and BSDS-aggregated),
+                      (OIS/AP by dataset-level accumulation, and the submitted
+                      definitions as *_legacy),
                       and the spread of per-image F at the dataset ODS threshold
                       (Reviewer 2, point 11).
 """

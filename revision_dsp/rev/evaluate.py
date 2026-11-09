@@ -189,19 +189,26 @@ def aggregate(counts: np.ndarray, thr: np.ndarray) -> dict:
     best = np.argmax(f_i, axis=1)
     ois_c = per[np.arange(len(per)), best].sum(axis=0)
     op, orr, of = _prf(ois_c)
-    # AP, BSDS convention
+    # AP, BSDS benchmark code convention (101 recall points, NaN outside the curve)
     o = np.argsort(R)
     Rs, Ps = R[o], P[o]
     Ru, ui = np.unique(Rs, return_index=True)
     grid = np.linspace(0, 1, 101)
     Pi = np.interp(grid, Ru, Ps[ui], left=np.nan, right=np.nan)
-    ap_bsds = float(np.nansum(Pi) * 0.01)
+    ap_bsds101 = float(np.nansum(Pi) * 0.01)
+    # AP, primary since 9 Nov 2026 (CHANGELOG.md): area under the dataset-level PR
+    # curve with precision made monotone, the definition of the A-GWi paper
+    # (JESA 44740, evaluate_v2.interpolated_ap), so that both papers use one AP.
+    p_env = np.maximum.accumulate(Ps[::-1])[::-1]
+    ap_mono = float(np.sum(np.diff(np.concatenate(([0.0], Rs))) * p_env))
     # legacy
     ap_leg = float(np.mean([_trapz(p_i[k][np.argsort(r_i[k])],
                                          r_i[k][np.argsort(r_i[k])])
                             for k in range(len(per))]))
+    # ois / ap: dataset-level accumulation (primary). ois_legacy / ap_legacy: the
+    # definitions of the submitted tables (mean of per-image values), kept for continuity.
     return dict(ods=float(F[i]), ods_p=float(P[i]), ods_r=float(R[i]),
-                ods_t=float(thr[i]), ois=float(of), ap=ap_bsds,
+                ods_t=float(thr[i]), ois=float(of), ap=ap_mono, ap_bsds101=ap_bsds101,
                 ois_legacy=float(np.mean(f_i[np.arange(len(per)), best])),
                 ap_legacy=ap_leg, n_images=int(len(per)),
                 P=P.tolist(), R=R.tolist(), F=F.tolist())

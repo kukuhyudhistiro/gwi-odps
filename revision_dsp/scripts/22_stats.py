@@ -13,8 +13,9 @@ Holm family:
 
 For each pair: Delta ODS with paired-bootstrap 95% CI over images, Wilcoxon
 signed-rank on per-image F (rank-biserial r), fraction of images where A is
-better. For each method: ODS, OIS, AP with bootstrap 95% CI (OIS and AP as
-defined in the submitted tables; the BSDS-aggregated versions in extra columns),
+better. For each method: ODS, OIS, AP with bootstrap 95% CI (OIS and AP by
+dataset-level accumulation; the definitions of the submitted tables in the
+*_legacy columns),
 and mean, SD, median and IQR of per-image F at the dataset ODS threshold.
 
 claims_guard.json gives the verb allowed in the manuscript for each pair
@@ -75,10 +76,12 @@ def main():
             v = S.variability(r["counts"], r["thresholds"], B=B, seed=seed)
             vrows.append(dict(dataset=ds, method=m["name"], n=v["n"],
                               ODS=round(v["ods"], 4), ODS_ci95=fmt(v["ods_ci95"]),
-                              OIS=round(v["ois_legacy"], 4), OIS_ci95=fmt(v["ois_legacy_ci95"]),
-                              AP=round(v["ap_legacy"], 4), AP_ci95=fmt(v["ap_legacy_ci95"]),
-                              OIS_bsds=round(v["ois"], 4), OIS_bsds_ci95=fmt(v["ois_ci95"]),
-                              AP_bsds=round(v["ap"], 4), AP_bsds_ci95=fmt(v["ap_ci95"]),
+                              OIS=round(v["ois"], 4), OIS_ci95=fmt(v["ois_ci95"]),
+                              AP=round(v["ap"], 4), AP_ci95=fmt(v["ap_ci95"]),
+                              OIS_legacy=round(v["ois_legacy"], 4),
+                              OIS_legacy_ci95=fmt(v["ois_legacy_ci95"]),
+                              AP_legacy=round(v["ap_legacy"], 4),
+                              AP_legacy_ci95=fmt(v["ap_legacy_ci95"]),
                               F_img_mean=round(v["f_img_mean"], 4),
                               F_img_sd=round(v["f_img_sd"], 4),
                               F_img_median=round(v["f_img_median"], 4),

@@ -1,11 +1,11 @@
 {
  "k": 7,
- "lam": 5,
- "d": 2.5,
+ "lam": 12,
+ "d": 6.0,
  "N": 8,
  "sigma_ratio": 0.56,
  "gamma": 0.5,
- "mean_ods_gwi": 0.4742,
+ "mean_ods_gwi": 0.5399,
  "rule": "highest mean ODS of GWi over BSDS500:trainval, BIPED:train (as Table 4 of the manuscript); d = lambda/2",
  "submitted_config_selected": false,
  "limit": 0

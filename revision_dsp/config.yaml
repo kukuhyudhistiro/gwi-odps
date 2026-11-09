@@ -89,8 +89,27 @@ selection:
     - {k: 9, lam: 6}
     - {k: 9, lam: 7}
     - {k: 9, lam: 8}
+    # Edge rule (9 Nov 2026, CHANGELOG.md): the 18-candidate run selected k7
+    # lambda 8 (upper edge), so lambda is extended by 1 at k = 7, one round at a
+    # time, until the selected lambda is interior.
+    - {k: 7, lam: 9}
+    - {k: 7, lam: 10}
+    - {k: 7, lam: 11}
+    - {k: 7, lam: 12}
+  # Amendment 2 (9 Nov 2026, CHANGELOG.md, FINDINGS.md F4-F5), written AFTER the
+  # results above were seen: under mean ODS of GWi there is no interior optimum
+  # (monotone in lambda up to lambda 12 at k = 7), so the edge rule of amendment 1
+  # cannot terminate. The criterion becomes mean ODS of GWi+ODPS (d = lambda/2),
+  # the detector the manuscript proposes. The GWi criterion is still computed and
+  # reported (kernel_mean.csv, selected.json: selected_under_gwi_criterion).
+  # Edge rule of amendment 2, fixed before any new candidate is run: for EVERY k
+  # whose best lambda under the criterion is the largest lambda evaluated at that
+  # k, lambda is extended by 1 at that k until its best lambda is interior, up to
+  # the bound lambda <= 4 (k // 2) (first extremum of the carrier inside the
+  # window). A k still at the bound is reported as such and not extended.
   splits: ["BSDS500:trainval", "BIPED:train"]   # UDED has no non-test split
-  criterion: mean_ods_gwi       # GWi = Stages 1-5, as in Tables 1-4
+  criterion: mean_ods_gwi_odps  # amendment 2; was mean_ods_gwi (GWi = Stages 1-5, as in Tables 1-4)
+  lambda_bound_factor: 4        # amendment 2: lambda <= 4 (k // 2) for the edge rule
   d_rule: half_lambda           # d = lambda/2 (Section 3.6: d = 2 for lambda = 4)
   fixed: {N: 8, sigma_ratio: 0.56, gamma: 0.5}  # Section 3.2
 
@@ -98,7 +117,7 @@ selection:
 ablation:
   split: "BSDS500:trainval"
   lam_d:                        # R2.5 (effect of d) and R3.2 (vary lambda; is d = lambda/2 enough?)
-    lam: [3, 4, 5, 6, 7, 8]     # at the selected k (amendment 1: same lambda range as selection)
+    lam: [3, 4, 5, 6, 7, 8, 9]  # at the selected k (amendment 1 + edge rule: lambda range evaluated at k = 7)
     d: [1, 2, 3]                # d = lambda/2 is added for every lambda
   one_at_a_time:                # around the selected configuration, d = lambda/2
     N: [4, 16]                  # R2.6 (4, 8, 16 orientations), R3.4

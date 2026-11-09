@@ -19,6 +19,9 @@ from rev.runner import write_csv
 
 SPLITS = ["BSDS500:trainval", "BIPED:train"]
 SEEN_H2B = {("k7l3", "k9l4"), ("k5l4", "k7l6")}   # orderings seen before writing
+# The hypotheses are defined on the 18 candidates of amendment 1 only. Candidates
+# added later by the edge rule (lambda > 8) are ignored here (see CHANGELOG.md).
+GRID_K, GRID_LAM = {5, 7, 9}, {3.0, 4.0, 5.0, 6.0, 7.0, 8.0}
 
 
 def rho_of(k: int, lam: float) -> Fraction:
@@ -39,6 +42,8 @@ def load(path):
             if s not in out:
                 continue
             k, lam = int(r["k"]), float(r["lam"])
+            if k not in GRID_K or lam not in GRID_LAM:
+                continue
             t = tag(k, lam)
             e = out[s].setdefault(t, dict(tag=t, k=k, lam=lam, rho=rho_of(k, lam)))
             key = "odps" if r["method"].startswith("GWiODPS_") else "gwi"

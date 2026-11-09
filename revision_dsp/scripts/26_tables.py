@@ -11,8 +11,9 @@ from _common import parser, setup
 from rev import cfg as C
 
 SECTIONS = [
-    ("Kernel selection: mean ODS of GWi (R2.1; as Table 4)", "selection/kernel_mean.csv",
-     ["tag", "k", "lam", "d", "mean_ods_gwi"]),
+    ("Kernel selection: mean ODS of GWi+ODPS (amendment 2) and of GWi (as Table 4) (R2.1)",
+     "selection/kernel_mean.csv",
+     ["tag", "k", "lam", "d", "mean_ods_gwi_odps", "mean_ods_gwi"]),
     ("Kernel ablation per split (R2.1, R3.4; replaces Tables 1-3)", "selection/kernel_ablation.csv",
      ["dataset", "split", "method", "k", "lam", "d", "rho", "mac", "ODS", "OIS", "AP"]),
     ("lambda x d (R2.5, R3.2; BSDS500 train+val)", "ablation/lam_d.csv",

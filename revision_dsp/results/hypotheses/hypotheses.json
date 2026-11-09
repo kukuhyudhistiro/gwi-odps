@@ -1,0 +1,190 @@
+{
+ "source": "D:\\Project 2026\\gwi-odps\\revision_dsp\\results\\selection\\kernel_ablation.csv",
+ "H1": {
+  "BSDS500:trainval": {
+   "n": 18,
+   "H1a": {
+    "spearman_rs": 0.9151,
+    "p_one_sided": 0.0,
+    "supported": true
+   },
+   "H1b": {
+    "median_lt": 0.0153,
+    "median_eq": 0.0222,
+    "median_gt": 0.0435,
+    "n_lt": 6,
+    "n_eq": 3,
+    "n_gt": 9,
+    "supported": true
+   },
+   "H1c": {
+    "max_delta_lt": 0.0189,
+    "min_delta_gt": 0.0204,
+    "supported": true
+   },
+   "Q1": {
+    "n_lt_positive": 6,
+    "n_lt_zero": 0,
+    "n_lt_negative": 0,
+    "deltas_lt": [
+     0.0185,
+     0.0189,
+     0.015,
+     0.0118,
+     0.0155,
+     0.0123
+    ]
+   },
+   "H1_split_supported": true
+  },
+  "BIPED:train": {
+   "n": 18,
+   "H1a": {
+    "spearman_rs": 0.8965,
+    "p_one_sided": 0.0,
+    "supported": true
+   },
+   "H1b": {
+    "median_lt": 0.0147,
+    "median_eq": 0.017,
+    "median_gt": 0.0341,
+    "n_lt": 6,
+    "n_eq": 3,
+    "n_gt": 9,
+    "supported": true
+   },
+   "H1c": {
+    "max_delta_lt": 0.0158,
+    "min_delta_gt": 0.0184,
+    "supported": true
+   },
+   "Q1": {
+    "n_lt_positive": 6,
+    "n_lt_zero": 0,
+    "n_lt_negative": 0,
+    "deltas_lt": [
+     0.0087,
+     0.0158,
+     0.0152,
+     0.0149,
+     0.0143,
+     0.0145
+    ]
+   },
+   "H1_split_supported": true
+  }
+ },
+ "H2a": {
+  "BSDS500:trainval": {
+   "max_gwi_rho_ge_0667": 0.4312,
+   "argmax": "k9l6",
+   "min_gwi_rho_05_06": 0.4221,
+   "argmin": "k5l4",
+   "supported": false
+  },
+  "BIPED:train": {
+   "max_gwi_rho_ge_0667": 0.523,
+   "argmax": "k9l6",
+   "min_gwi_rho_05_06": 0.5214,
+   "argmin": "k7l5",
+   "supported": false
+  }
+ },
+ "H2b": {
+  "orderings": [
+   {
+    "smaller_k": "k7l3",
+    "larger_k": "k9l4",
+    "ods_a": 0.3559,
+    "ods_b": 0.3711,
+    "holds": true,
+    "seen_before": true
+   },
+   {
+    "smaller_k": "k5l3",
+    "larger_k": "k9l6",
+    "ods_a": 0.3727,
+    "ods_b": 0.4312,
+    "holds": true,
+    "seen_before": false
+   },
+   {
+    "smaller_k": "k5l4",
+    "larger_k": "k7l6",
+    "ods_a": 0.4221,
+    "ods_b": 0.4514,
+    "holds": true,
+    "seen_before": true
+   },
+   {
+    "smaller_k": "k7l6",
+    "larger_k": "k9l8",
+    "ods_a": 0.4514,
+    "ods_b": 0.4737,
+    "holds": true,
+    "seen_before": false
+   }
+  ],
+  "supported": true
+ },
+ "H2c": {
+  "per_k": [
+   {
+    "k": 5,
+    "best_lam_bsds": 8.0,
+    "best_lam_biped": 8.0,
+    "holds": true
+   },
+   {
+    "k": 7,
+    "best_lam_bsds": 8.0,
+    "best_lam_biped": 8.0,
+    "holds": true
+   },
+   {
+    "k": 9,
+    "best_lam_bsds": 8.0,
+    "best_lam_biped": 8.0,
+    "holds": true
+   }
+  ],
+  "supported": true
+ },
+ "Q2": {
+  "BSDS500:trainval": [
+   {
+    "k": 5,
+    "best_lam": 8.0,
+    "at_upper_edge": true
+   },
+   {
+    "k": 7,
+    "best_lam": 8.0,
+    "at_upper_edge": true
+   },
+   {
+    "k": 9,
+    "best_lam": 8.0,
+    "at_upper_edge": true
+   }
+  ],
+  "BIPED:train": [
+   {
+    "k": 5,
+    "best_lam": 8.0,
+    "at_upper_edge": true
+   },
+   {
+    "k": 7,
+    "best_lam": 8.0,
+    "at_upper_edge": true
+   },
+   {
+    "k": 9,
+    "best_lam": 8.0,
+    "at_upper_edge": true
+   }
+  ]
+ },
+ "H1_verdict": "supported"
+}

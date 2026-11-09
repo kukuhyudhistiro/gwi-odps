@@ -61,15 +61,33 @@ def main():
         r["duration_s"] = int((b - a).total_seconds()) if a and b else None
         r["duration"] = hms(r["duration_s"]) if r["duration_s"] is not None else ""
         r["phase"] = int(r["phase"])
-    js = json.dumps({"timezone": "WIB (UTC+7)", "source": "gwi-odps, revision_dsp/process_log.csv",
-                     "generated": datetime.now().strftime(FMT),
-                     "agenda": {str(k): {"dates": v[0], "name": v[1]} for k, v in AGENDA.items()},
-                     "rows": rows}, ensure_ascii=False, indent=1) + "\n"
-    (ROOT / "process_log.json").write_text(js, encoding="utf-8", newline="\n")
+    def dump(rs, source):
+        return json.dumps({"timezone": "WIB (UTC+7)", "source": source,
+                           "generated": datetime.now().strftime(FMT),
+                           "agenda": {str(k): {"dates": v[0], "name": v[1]} for k, v in AGENDA.items()},
+                           "rows": rs}, ensure_ascii=False, indent=1) + "\n"
+
+    (ROOT / "process_log.json").write_text(dump(rows, "gwi-odps, revision_dsp/process_log.csv"),
+                                           encoding="utf-8", newline="\n")
     if args.kdc:
-        # Data file of the "Riwayat proses eksperimen" section of the KDC agenda page
-        (Path(args.kdc) / "revisi_dsp_log.json").write_text(js, encoding="utf-8", newline="\n")
-        print(f"-> {Path(args.kdc) / 'revisi_dsp_log.json'}")
+        # Data file of the "Riwayat proses eksperimen" section of the KDC agenda page.
+        # Only rows marked web = ya: the stages of the runbook (E00-E26) and the
+        # pre-registration tags. web_status / web_note replace status / result there.
+        web = []
+        for r in rows:
+            if r.get("web") != "ya":
+                continue
+            w = {k: v for k, v in r.items() if not k.startswith("web")}
+            if r.get("web_status"):
+                w["status"] = r["web_status"]
+            elif w["status"] == "rc 0":
+                w["status"] = "selesai"
+            if r.get("web_note"):
+                w["result"] = r["web_note"]
+            web.append(w)
+        (Path(args.kdc) / "revisi_dsp_log.json").write_text(
+            dump(web, "gwi-odps, revision_dsp (tahapan sesuai runbook revisi)"), encoding="utf-8", newline="\n")
+        print(f"-> {Path(args.kdc) / 'revisi_dsp_log.json'} ({len(web)} rows)")
 
     out = ["# Riwayat proses eksperimen: revisi Paper 1 DSP-D-26-02462 (GWi+ODPS)", "",
            "Dibuat dari `process_log.csv` oleh `tools/render_process_log.py`; jangan diedit langsung.",
@@ -77,7 +95,8 @@ def main():
            "Fase mengikuti agenda KDC (https://kdc-2026.vercel.app/agenda).",
            "Sumber waktu: log di `logs_local/`, `logs_local/runs.csv` (tools/run_logged.sh),",
            "commit dan tag git, dan riwayat sesi kerja. Baris tanpa jam ditandai di kolom Ref.",
-           "Temuan lengkap ada di FINDINGS.md; perubahan protokol di CHANGELOG.md.", ""]
+           "Temuan lengkap ada di FINDINGS.md; perubahan protokol di CHANGELOG.md.",
+           "Kolom Web: baris yang ditampilkan di halaman agenda KDC (tahapan runbook dan tag pra-registrasi).", ""]
     out += ["## Ringkasan per fase", "",
             "| Fase | Agenda | Kegiatan tercatat | Waktu komputasi (run) | Belum dijalankan |",
             "|---|---|---|---|---|"]
@@ -95,11 +114,12 @@ def main():
         if not pr:
             continue
         out += [f"## Fase {p}. {name} (agenda {dates})", "",
-                "| ID | Jenis | Kegiatan | Mulai | Selesai | Durasi | Status | Output | Hasil | Ref |",
-                "|---|---|---|---|---|---|---|---|---|---|"]
+                "| ID | Jenis | Kegiatan | Mulai | Selesai | Durasi | Status | Output | Hasil | Ref | Web |",
+                "|---|---|---|---|---|---|---|---|---|---|---|"]
         for r in pr:
             cells = [r["id"], r["kind"], r["activity"], r["start"], r["end"], r["duration"],
-                     r["status"], r["outputs"], r["result"], r["ref"]]
+                     r["status"], r["outputs"], r["result"], r["ref"],
+                     "ya" if r.get("web") == "ya" else ""]
             out.append("| " + " | ".join(c.replace("|", "/") for c in cells) + " |")
         out.append("")
     (ROOT / "PROCESS_LOG.md").write_text("\n".join(out), encoding="utf-8", newline="\n")

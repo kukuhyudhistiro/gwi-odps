@@ -60,15 +60,35 @@ legacy_protocol:
   normalization: minmax_image
 
 # --- Parameter selection without test data (R2.1) -----------------------------
-# Same rule and same candidates as Tables 1-4 of the manuscript (highest mean ODS
-# of GWi over datasets); only the data change: non-test splits instead of test sets.
+# Same rule as Tables 1-4 of the manuscript (highest mean ODS of GWi over
+# datasets); the data change: non-test splits instead of test sets.
+# Amendment 1 (9 Nov 2026, see CHANGELOG.md): the candidate set is extended from
+# the five configurations of Tables 1-4 to the full grid k in {5, 7, 9} x
+# lambda in {3, ..., 8}, because E11 showed ODS of GWi still rising at the upper
+# edge of the tested lambda range. Edge rule, fixed before the run: if the
+# selected lambda is 8 (upper edge), lambda is extended by 1 at that k until the
+# selected lambda is interior. Rule, criterion, d, N, sigma/lambda and gamma are
+# unchanged. Test data have not been opened.
 selection:
-  candidates:                   # the five configurations of Tables 1-4
+  candidates:                   # k in {5, 7, 9} x lambda in {3..8}; includes the five of Tables 1-4
     - {k: 5, lam: 3}
     - {k: 5, lam: 4}
+    - {k: 5, lam: 5}
+    - {k: 5, lam: 6}
+    - {k: 5, lam: 7}
+    - {k: 5, lam: 8}
+    - {k: 7, lam: 3}
     - {k: 7, lam: 4}
     - {k: 7, lam: 5}
+    - {k: 7, lam: 6}
+    - {k: 7, lam: 7}
+    - {k: 7, lam: 8}
+    - {k: 9, lam: 3}
     - {k: 9, lam: 4}
+    - {k: 9, lam: 5}
+    - {k: 9, lam: 6}
+    - {k: 9, lam: 7}
+    - {k: 9, lam: 8}
   splits: ["BSDS500:trainval", "BIPED:train"]   # UDED has no non-test split
   criterion: mean_ods_gwi       # GWi = Stages 1-5, as in Tables 1-4
   d_rule: half_lambda           # d = lambda/2 (Section 3.6: d = 2 for lambda = 4)
@@ -78,7 +98,7 @@ selection:
 ablation:
   split: "BSDS500:trainval"
   lam_d:                        # R2.5 (effect of d) and R3.2 (vary lambda; is d = lambda/2 enough?)
-    lam: [3, 4, 5, 6]           # at the selected k
+    lam: [3, 4, 5, 6, 7, 8]     # at the selected k (amendment 1: same lambda range as selection)
     d: [1, 2, 3]                # d = lambda/2 is added for every lambda
   one_at_a_time:                # around the selected configuration, d = lambda/2
     N: [4, 16]                  # R2.6 (4, 8, 16 orientations), R3.4

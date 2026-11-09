@@ -1,8 +1,10 @@
 """R2.1 (and the kernel ablation of R3.4): select the GWi kernel without test data.
 
-Rule and candidates are those of Tables 1-4 of the manuscript: for each of the
-five (k, lambda) configurations, ODS of GWi (Stages 1-5) is computed on every
-selection split, and the configuration with the highest mean ODS is selected.
+The rule is that of Tables 1-4 of the manuscript: for each (k, lambda) candidate
+in config.yaml (selection.candidates; since amendment 1 the grid k in {5, 7, 9} x
+lambda in {3..8}, which contains the five configurations of Tables 1-4), ODS of
+GWi (Stages 1-5) is computed on every selection split, and the configuration with
+the highest mean ODS is selected.
 Only the data differ from the submission: BSDS500 train+val and BIPED train
 replace the test sets (UDED has no non-test split). d = lambda/2 (Section 3.6).
 N, sigma/lambda and gamma stay at the manuscript values.

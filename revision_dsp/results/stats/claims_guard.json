@@ -1,0 +1,17 @@
+{
+ "BSDS500: GWi_k9l9 vs GWCraw_k9l9": "improves",
+ "BSDS500: GWiODPS_k9l9 vs GWCraw_k9l9": "improves",
+ "BSDS500: GWiODPS_k9l9 vs GWi_k9l9": "improves",
+ "BSDS500: GWi_k9l9 vs GWCzero_k9l9": "improves",
+ "BSDS500: GWCzero_k9l9 vs GWCraw_k9l9": "improves",
+ "BIPED: GWi_k9l9 vs GWCraw_k9l9": "improves",
+ "BIPED: GWiODPS_k9l9 vs GWCraw_k9l9": "improves",
+ "BIPED: GWiODPS_k9l9 vs GWi_k9l9": "does not differ from (CI includes 0)",
+ "BIPED: GWi_k9l9 vs GWCzero_k9l9": "improves",
+ "BIPED: GWCzero_k9l9 vs GWCraw_k9l9": "improves",
+ "UDED: GWi_k9l9 vs GWCraw_k9l9": "improves",
+ "UDED: GWiODPS_k9l9 vs GWCraw_k9l9": "improves",
+ "UDED: GWiODPS_k9l9 vs GWi_k9l9": "does not differ from (CI includes 0)",
+ "UDED: GWi_k9l9 vs GWCzero_k9l9": "improves",
+ "UDED: GWCzero_k9l9 vs GWCraw_k9l9": "improves"
+}

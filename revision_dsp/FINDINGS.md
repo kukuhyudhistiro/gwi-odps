@@ -14,21 +14,25 @@ Status labels:
 - **Process**: something in how the revision was run that a reader should know.
 - **Open**: decided by the test-set run (E20, E22, E24), not yet known.
 
-Unless stated otherwise, numbers are ODS on non-test splits: BSDS500 train+val
-(300 images) and BIPED train (200 images). The test splits have not been opened.
-Last update: 10 Nov 2026, after the final selection (k9 λ9) and E11, before the freeze.
+Unless stated otherwise, numbers in sections A-H are ODS on non-test splits:
+BSDS500 train+val (300 images) and BIPED train (200 images). Section I holds the
+test-set results (E20), run once after the freeze (tag `freeze-2026-11-10`, commit
+7ae7ba5), and the paired statistics of E22 (F25). Only the pairs pre-registered in
+scripts/22_stats.py have confidence intervals. Every other test-set difference is a
+point estimate.
+Last update: 10 Nov 2026, after E22. Timings of every stage: PROCESS_LOG.md.
 
 ## Original claims and their status
 
 | # | Claim in the submission or the roadmap | Status now | Entries |
 |---|---|---|---|
-| C1 | k5 λ4 is the best configuration across three datasets (Table 4) | **Claim withdrawn.** It was selected on test data. On non-test data it ranks 12 of 18 by ODS of GWi | F1, F2 |
+| C1 | k5 λ4 is the best configuration across three datasets (Table 4) | **Claim withdrawn.** It was selected on test data. On non-test data it ranks 12 of 18 by ODS of GWi. On test, k9 λ9 is above it for GWi on all three sets; for GWi+ODPS on BSDS500 and BIPED but not UDED (+0.0002) | F1, F2, F21 |
 | C2 | ODPS suppresses carrier side lobes located at ±λ/2, with d = 2 for λ = 4 | **Claim corrected.** Carrier side lobes exist only when (k//2)/λ > 0.5. At k5 λ4 and at the new selection there are none; ODPS then thins a broad response across orientations | F12 |
-| C3 | ODPS improves ODS over GWi | **Finding (non-test), Open (test).** Positive for all 22 candidates evaluated, but the gain shrinks as the kernel half-width over λ shrinks. At the best kernels it is about +0.01 | F9, F10, F11 |
-| C4 | The real component of the Gabor kernel is redundant (GWi > GWC) | **Open (E20).** Interpretation is limited: at the new kernel the raw real component has a large DC response | F14 |
+| C3 | ODPS improves ODS over GWi | **Claim corrected: supported on BSDS500 only.** E22 at k9 λ9: BSDS500 +0.0122, 95% CI [0.0090, 0.0158]; BIPED +0.0079, CI [−0.0076, 0.0203]; UDED −0.0025, CI [−0.0161, 0.0121]. "Improves" may be written for BSDS500 only. At the submitted k5 λ4 the point gains were larger (+0.0253, +0.0142, +0.0377), with no CI | F9, F10, F11, F22, F25 |
+| C4 | The real component of the Gabor kernel is redundant (GWi > GWC) | **Claim corrected.** GWi is above raw GWC on all test sets (CIs exclude 0), but most of that gap is the DC response of the raw real kernel. Against zero-DC GWC at k9 λ9, GWi stays above, with CIs excluding 0: +0.0161, +0.0391 and +0.0842. At k5 λ4, zero-DC GWC is above GWi on BSDS500 (−0.0093, no CI) | F14, F23, F25 |
 | C5 | GWi is about 2.2× faster than GWC | **Open (E24).** The claim applies to the filtering stage only (R2.10, R3.3). The selected k9 kernel costs 3.24× the submitted one per pixel | F15 |
 | C6 | (implicit) the Gabor carrier is what makes GWi work | **Not supported for GWi alone.** GWi scores best as the kernel loses its carrier lobe and approaches a smoothed oriented derivative. This was already published in Paper 2 (A-GWi) | F7, H1 |
-| C7 | (not claimed, but implied by roadmap §6, which lists only Gabor methods) where GWi+ODPS stands among the evaluated detectors | **Below a classical baseline in the submission's own table.** The Gaussian gradient magnitude (labelled "Canny") is above GWi+ODPS on all three test sets. Revision: open | F16, H3 |
+| C7 | (not claimed, but implied by roadmap §6, which lists only Gabor methods) where GWi+ODPS stands among the evaluated detectors | **Below a classical baseline, in the submission and in the revision.** The Gaussian gradient magnitude σ 1.4 is above every Gabor variant on all three test sets, in ODS, OIS and AP. Measured under the manuscript border protocol, which handicaps the Gabor methods (H5) | F16, F24, H3, H5 |
 | C8 | (design choice, R2.6) N = 8 orientations is an appropriate balance | **Not supported at the selected kernel.** N = 4 reaches the same ODS at half the cost; N = 16 adds nothing. It was supported at k7 λ5 (E11 of the five-candidate run) | F19 |
 
 ## A. Selection procedure
@@ -84,9 +88,11 @@ E11 at k7 showed ODS of GWi still rising at λ6. Amendment 1 extended the grid t
 **F10. Finding, Open. At the configuration selected under amendment 2, the ODPS gain is about +0.01.**
 - At k7 λ9 the gain is +0.0116 (BSDS) and +0.0145 (BIPED). For λ ≥ 10 at k7 it drops to +0.003 to +0.010.
 - Whether the gain at the selected kernel has a 95% CI excluding 0 on test is decided by E22. If it does not, the manuscript may not say "improves".
+- *Added after E22 (F25):* the CI excludes 0 on BSDS500 only. On BIPED and UDED, the verb is "does not differ".
 
 **F11. Finding. ODPS did not reduce ODS for any candidate (Q1).**
 For all six candidates with half-width over λ below 0.5, the gain is positive: +0.012 to +0.019 on BSDS, +0.009 to +0.016 on BIPED.
+- *Added after E20:* F10 and F11 hold on non-test data only. On test (F22), the gain at k9 λ9 is +0.0122 on BSDS500, matching non-test; +0.0079 on BIPED, about half the non-test value; and −0.0025 on UDED. "ODPS never reduces ODS" cannot be stated.
 
 **F12. Claim corrected. The side-lobe mechanism of §3.6 does not apply to the reported kernels.**
 - The carrier side lobe exists only when (k//2)/λ > 0.5 (E02). At k5 λ4 and at k7 λ9 there is none.
@@ -103,6 +109,7 @@ For all six candidates with half-width over λ below 0.5, the gain is positive: 
 - DC-to-gain ratio of the raw real kernel: 0.15 at k5 λ4, 0.76 at k7 λ9, 1.24 at k7 λ12. At k7 λ12 the real kernel is entirely non-negative, a low-pass filter.
 - GWC built with the same kernel therefore carries a brightness-dependent response that grows with λ. A GWi > GWC gap at k7 λ9 may partly reflect this DC leakage, not only the redundancy of the even component.
 - The GWC zero-DC analysis (R1.5, evaluated in E20) is needed to interpret the comparison, and the claim must be stated with this limit.
+- *Added after E20:* the DC concern was correct, and it already applies at the submitted k5 λ4. See F23.
 
 ## E. Cost
 
@@ -117,6 +124,7 @@ For all six candidates with half-width over λ below 0.5, the gain is positive: 
 - The roadmap summary (§6) reports only GWC, GWi and GWi+ODPS, so this ranking does not appear there.
 - The new selection raises GWi+ODPS on non-test data (0.489 BSDS500 train+val, 0.610 BIPED train), so whether it reaches this baseline on test is open. It cannot be assumed.
 - Paper 2 (A-GWi, H3 below) found the same baseline not separable from its method (p = 0.82 on both datasets).
+- *Added after E20:* the ranking holds in the revision. The new selection narrows the gap on BSDS500 and BIPED but not on UDED. See F24.
 
 **F17. Finding. Final selection under amendment 2: k9 λ9, d = 4.5, N = 8, σ/λ = 0.56, γ = 0.5.**
 - Mean ODS of GWi+ODPS 0.5558 (BSDS500 train+val 0.4953, BIPED train 0.6163). Mean ODS of GWi 0.5425 (0.4830, 0.6020).
@@ -184,6 +192,10 @@ Paper 2 was revised after review and accepted. Several of its corrected statemen
 - The Paper 1 revision adds OpenCV Canny 50/150 (binary), as §4.3 describes. It must be reported with the same caveat: one operating point, ODS = OIS, AP not comparable.
 - The Gaussian gradient magnitude that A-GWi calls "Canny" (described there explicitly) is Paper 1's GaussGradMag1.4. Paper 1 must say so.
 - A-GWi states that this detector gave 0.533 under its protocol, against 0.534 in "our previous work" (the Paper 1 submission). If E20 under the revised protocol gives a different value, the reason must be stated.
+- *Added after E20:* GaussGradMag1.4 gives ODS 0.5334 on BSDS500 test (submission 0.5336, A-GWi 0.533). BIPED: 0.6407 vs 0.6406. UDED: 0.6734 vs 0.6737.
+  - Probable cause of the difference of at most 0.0003: the submitted code (`src/baselines.py`) blurs an 8-bit image, so the smoothed image is rounded to integers. The revision blurs in floating point. This was not checked by a separate run.
+  - The 0.533 of A-GWi and the 0.5334 of the revision agree to three decimals.
+- *Added after E20:* binary Canny 50/150 gives ODS 0.3353, 0.3460 and 0.5568. ED gives 0.3508, 0.3275 and 0.5540. Both are single-operating-point maps: ODS = OIS, and their AP is not comparable with that of the soft maps.
 
 **H4. Finding, already published. The adaptation premise was not supported.**
 - A-GWi Table 8: making the frequency modulation active across its full range lowered ODS (0.361). The paper states that the hypothesis "high-activity regions require high-frequency kernels" is not supported on BSDS500.
@@ -217,8 +229,141 @@ Paper 2 was revised after review and accepted. Several of its corrected statemen
 **H6. Consistency item. Runtime.**
 A-GWi measured static GWi k7 at 15.54 ms and GWC at 33.70 ms per BSDS500 image (ratio 2.17, single thread, minimum of 3 runs). Paper 1 E24 uses the median of 5 runs. If the machines or timing rules differ, both must be stated, and E24 values for k7 should be compared with these.
 
+## I. Test-set results (E20)
+
+Source: `results/test/summary.csv` and `results/test/legacy_check.csv`. ODS, with OIS and AP as defined in H2 (dataset accumulation). The submitted definitions are kept in the same files as `OIS_legacy` and `AP_legacy`. Differences below are point estimates; none has a CI yet (E22).
+
+| Method | BSDS500 ODS | BSDS500 AP | BIPED ODS | BIPED AP | UDED ODS | UDED AP |
+|---|---|---|---|---|---|---|
+| GWi k9 λ9 | 0.4998 | 0.3739 | 0.6202 | 0.5808 | 0.6476 | 0.5508 |
+| GWi+ODPS k9 λ9 | 0.5120 | 0.3970 | 0.6281 | 0.5922 | 0.6451 | 0.5524 |
+| GWC raw k9 λ9 | 0.3176 | 0.1492 | 0.4111 | 0.2318 | 0.3753 | 0.1813 |
+| GWC zero-DC k9 λ9 | 0.4836 | 0.3074 | 0.5811 | 0.4758 | 0.5634 | 0.3864 |
+| GWi k5 λ4 | 0.4443 | 0.3365 | 0.5602 | 0.5086 | 0.6072 | 0.5267 |
+| GWi+ODPS k5 λ4 | 0.4696 | 0.3860 | 0.5744 | 0.5371 | 0.6449 | 0.6097 |
+| GWC raw k5 λ4 | 0.3941 | 0.2431 | 0.4106 | 0.2911 | 0.4668 | 0.3126 |
+| GWC zero-DC k5 λ4 | 0.4536 | 0.3064 | 0.5525 | 0.4718 | 0.5818 | 0.4315 |
+| Canny 50/150 (binary) | 0.3353 | n/c | 0.3460 | n/c | 0.5568 | n/c |
+| Sobel 3×3 | 0.4643 | 0.4058 | 0.5844 | 0.6096 | 0.6390 | 0.6405 |
+| LoG 7×7 σ 1.4 | 0.4524 | 0.3710 | 0.5299 | 0.5180 | 0.6219 | 0.6250 |
+| PC | 0.5089 | 0.4499 | 0.5004 | 0.4570 | 0.5853 | 0.5199 |
+| ED (binary) | 0.3508 | n/c | 0.3275 | n/c | 0.5540 | n/c |
+| GaussGradMag σ 1.4 | **0.5334** | **0.4920** | **0.6407** | **0.6845** | **0.6734** | **0.6784** |
+
+n/c: binary map with one operating point; AP is not comparable (H3).
+
+**F20. Process. E20 ran once, and the submitted numbers are reproduced.**
+- Run on 10 Nov 2026, 00:59:36 to 03:27:08 WIB (2 h 27 min), from commit 7ae7ba5 (tag `freeze-2026-11-10`). See PROCESS_LOG.md. There were 14 methods and three test sets: BSDS500 (200 images), BIPED (50) and UDED (30).
+- **Reproduction is exact.** GWi, GWi+ODPS and raw GWC at k5 λ4, under the submitted definitions, match the submission to four decimals in ODS, OIS and AP on all three datasets (`legacy_check.csv` vs `eval_results/k5/ods_summary.csv`). Sobel matches as well.
+- The revision code therefore computes what the submitted code computed for these methods. The differences in this section come from the kernel, the metric definitions or the baseline definitions, not from a change of code.
+- LoG, PC and ED differ from the submission, because the revision runs them as §4.3 describes (R2.8, README). The revision values are not uniformly higher or lower than the submitted ones:
+
+  | Baseline | Revision (BSDS500 / BIPED / UDED) | Submission | Direction |
+  |---|---|---|---|
+  | LoG | 0.4524 / 0.5299 / 0.6219 | 0.4706 / 0.5481 / 0.6364 | lower on all three |
+  | PC | 0.5089 / 0.5004 / 0.5853 | 0.5245 / 0.5688 / 0.5654 | lower on BSDS500 and BIPED, higher on UDED |
+  | ED | 0.3508 / 0.3275 / 0.5540 | 0.3467 / 0.3133 / 0.5376 | higher on all three |
+
+  Lower LoG and PC values make GWi look better against them. The revision does not tune any baseline.
+
+**F21. Finding. Selected kernel (k9 λ9) vs submitted kernel (k5 λ4) on test.**
+
+| ODS difference, k9 λ9 minus k5 λ4 | BSDS500 | BIPED | UDED |
+|---|---|---|---|
+| GWi | +0.0555 | +0.0600 | +0.0404 |
+| GWi+ODPS | +0.0424 | +0.0537 | **+0.0002** |
+
+- On UDED, GWi+ODPS does not gain from the new kernel in ODS. Its OIS is lower by 0.0260 and its AP by 0.0573.
+- UDED has no non-test split, so this is the only check of the selection on data of a kind it never saw. For GWi+ODPS, the selection did not carry over to UDED. For GWi alone, it did in ODS (+0.0404) and AP (+0.0241), but not in OIS (−0.0008).
+- UDED has 30 images, so the CIs (E22) will be wide.
+
+**F22. Finding. The ODPS gain on test is smaller at the selected kernel and negative on UDED.**
+
+| GWi+ODPS minus GWi | BSDS500 | BIPED | UDED |
+|---|---|---|---|
+| k9 λ9, ODS | +0.0122 | +0.0079 | **−0.0025** |
+| k9 λ9, OIS | +0.0058 | +0.0019 | −0.0049 |
+| k9 λ9, AP | +0.0231 | +0.0114 | +0.0016 |
+| k5 λ4, ODS (same as the submission) | +0.0253 | +0.0142 | +0.0377 |
+| k5 λ4, AP | +0.0495 | +0.0285 | +0.0830 |
+
+- On BSDS500 the test gain at k9 λ9 matches the non-test value (+0.0123). On BIPED it is about half (+0.0143 non-test). On UDED it is negative.
+- **Descriptive check of H1, not a test.** On all three sets the gain is smaller at k9 λ9 ((k//2)/λ = 0.44) than at k5 λ4 (0.50). That is the direction of H1, but two kernels cannot test it.
+- **Trade-off.** The kernel that makes GWi strongest leaves ODPS little to add. Of the k9 λ9 improvement in GWi+ODPS over the submitted configuration, most comes from GWi itself, not from ODPS.
+- The manuscript may say "improves" only for datasets where the E22 CI excludes 0. On UDED, the point estimate is negative.
+
+**F23. Finding. Most of the submitted GWi > GWC gap is the DC response of the raw real kernel (R1.5).**
+
+| GWi minus GWC, ODS | BSDS500 | BIPED | UDED |
+|---|---|---|---|
+| raw GWC, k5 λ4 (the submitted comparison) | +0.0502 | +0.1496 | +0.1404 |
+| zero-DC GWC, k5 λ4 | **−0.0093** | +0.0077 | +0.0254 |
+| raw GWC, k9 λ9 | +0.1822 | +0.2091 | +0.2723 |
+| zero-DC GWC, k9 λ9 | +0.0162 | +0.0391 | +0.0842 |
+
+- Removing the DC of the real kernel removes 69% to 119% of the raw gap.
+- At the submitted kernel k5 λ4, zero-DC GWC is above GWi on BSDS500 and only slightly below it on BIPED. The submitted statement "the real component is redundant", supported by a gap of 0.05 to 0.15, rested mostly on comparing against a GWC that carried a brightness (DC) term.
+- At k9 λ9, GWi stays above zero-DC GWC on all three sets. The gap is moderate on BSDS500 and BIPED and larger on UDED.
+- GWi+ODPS minus zero-DC GWC at k9 λ9 is +0.0284, +0.0470 and +0.0817.
+- In AP, GWi stays further above zero-DC GWC: +0.0665, +0.1050 and +0.1644 at k9 λ9; +0.0301, +0.0368 and +0.0952 at k5 λ4.
+- Raw GWC at k9 λ9 is the lowest of all 14 methods on BSDS500 and UDED. This is the DC leakage predicted in F14.
+- The roadmap §6 numbers (+0.050 to +0.150) must be replaced (R2). The manuscript must report the zero-DC comparison as the fair one.
+
+**F24. Finding. The Gaussian gradient magnitude is above every Gabor variant on all three test sets.**
+- GaussGradMag σ 1.4 ranks first in ODS, OIS and AP on BSDS500, BIPED and UDED.
+- Gap of GWi+ODPS k9 λ9 to it:
+  - ODS: −0.0214, −0.0126 and −0.0283.
+  - AP: −0.095, −0.092 and −0.126.
+- Compared with the submitted configuration, the ODS gap narrows on BSDS500 (−0.0638 → −0.0214) and BIPED (−0.0663 → −0.0126). It does not narrow on UDED (−0.0285 → −0.0283).
+- **ODS rank of GWi+ODPS k9 λ9 among the 14 methods:** 2nd on BSDS500, 2nd on BIPED, and 3rd on UDED, behind GaussGradMag and GWi k9 λ9.
+- PC on BSDS500 is 0.5089, against 0.5120 for GWi+ODPS (+0.0031). That is probably not separable (E22).
+- **Sobel:** GWi+ODPS k9 λ9 is above it in ODS on all three sets (+0.0477, +0.0437 and +0.0061). Sobel is above GWi+ODPS in AP on all three sets (−0.0088, −0.0174 and −0.0881), and in OIS on UDED (−0.0241).
+- **AP rank of GWi+ODPS k9 λ9:** 4th on BSDS500 (behind GaussGradMag, PC and Sobel), 3rd on BIPED (behind GaussGradMag and Sobel), and 5th on UDED (behind GaussGradMag, Sobel, LoG and GWi+ODPS k5 λ4).
+- The Gabor maps are therefore weak in AP relative to gradient baselines. A ranking claim cannot rest on ODS alone.
+- **Confound (H5).** The Gabor methods use zero padding, and the baselines use reflect-101. How much this lowers the Gabor ODS on test is not known.
+  - The H5 diagnostic measured per-image F at a fixed threshold on 20 val images, not ODS. It cannot be used to adjust these numbers.
+  - The ranking is reported as measured, with the confound stated.
+- **Relation to Paper 2.** A-GWi reports 0.534 on BSDS500 test with the same border handling for all methods. GWi+ODPS k9 λ9 reaches 0.5120 with zero padding.
+  - The two values are not directly comparable.
+  - In both papers, the Gaussian gradient magnitude is at the level of the best handcrafted Gabor variant or above it.
+
+**F25. Finding. Paired statistics (E22): ODPS improves ODS only on BSDS500; GWi is above both GWC variants.**
+- Run on 10 Nov 2026, 05:26:10 to 05:27:41 WIB (91 s), at commit 7ae7ba5. Files: `results/stats/pairs.csv`, `variability.csv` and `claims_guard.json`.
+- Statistics:
+  - Paired bootstrap over images, 2000 resamples, seed 20261107, giving a 95% CI of ΔODS.
+  - Wilcoxon signed-rank on per-image F, with Holm correction over the 9 tests of the reviewer family.
+- Pre-registered rule: "improves" only when the CI of ΔODS excludes 0.
+
+  | Pair (k9 λ9) | Dataset | ΔODS | 95% CI | Wilcoxon p (Holm) | Images where A is better | Allowed verb |
+  |---|---|---|---|---|---|---|
+  | GWi+ODPS vs GWi | BSDS500 | +0.0122 | [0.0090, 0.0158] | 2.7e-10 | 70.5% | improves |
+  | GWi+ODPS vs GWi | BIPED | +0.0079 | [−0.0076, 0.0203] | 1.1e-4 | 80.0% | does not differ |
+  | GWi+ODPS vs GWi | UDED | −0.0025 | [−0.0161, 0.0121] | 0.75 | 46.7% | does not differ |
+  | GWi vs GWC raw | BSDS500 / BIPED / UDED | +0.1822 / +0.2091 / +0.2723 | all exclude 0 | ≤ 1.5e-8 | 97-99% | improves |
+  | GWi+ODPS vs GWC raw | BSDS500 / BIPED / UDED | +0.1944 / +0.2170 / +0.2698 | all exclude 0 | ≤ 1.5e-8 | 97-100% | improves |
+  | GWi vs GWC zero-DC (R1.5, outside Holm family) | BSDS500 | +0.0161 | [0.0117, 0.0204] | 4.0e-21 (raw) | 82.5% | improves |
+  | same | BIPED | +0.0391 | [0.0171, 0.0671] | 1.0e-5 (raw) | 76.0% | improves |
+  | same | UDED | +0.0842 | [0.0548, 0.1133] | 4.7e-8 (raw) | 93.3% | improves |
+
+- **BIPED, ODPS vs GWi: the two tests disagree, and the pre-registered rule decides.**
+  - Per-image F favours ODPS on 80% of images (Holm p = 1.1e-4).
+  - The CI of ΔODS includes 0. ODS pools counts over images, so a few large or edge-dense images can outweigh many small per-image gains.
+  - The manuscript must use "does not differ" for BIPED. It may report the per-image result alongside it. The Wilcoxon result must not be used to upgrade the verb.
+- **UDED:** no evidence either way (n = 30, p = 0.75).
+- **What E22 does not cover:**
+  - Only the k9 λ9 pairs above were tested.
+  - The k5 λ4 differences (F21-F23) have no CI, including zero-DC GWC above GWi on BSDS500.
+  - The comparisons against the classical baselines (F24) also have no CI. The pre-registered family covers only the reviewers' Gabor pairs, so those rankings stay descriptive.
+  - The per-method CIs in `variability.csv` are marginal. Overlap or non-overlap between them is not a test, and must not be used to claim that the Gaussian gradient magnitude and GWi+ODPS are "not separable" or "separable".
+
 ## G. Open until the test run
 
+Status after E20 and E22 (10 Nov 2026):
+
 - Sign and 95% CI of ΔODS for GWi vs GWC, GWi+ODPS vs GWC, and GWi+ODPS vs GWi on BSDS500, BIPED and UDED (E20, E22).
+  - **Resolved by F25.** ODPS improves ODS on BSDS500 only. GWi and GWi+ODPS are above raw GWC on all three sets. GWi is above zero-DC GWC on all three sets at k9 λ9.
 - UDED: no non-test split, so the selected configuration was never checked on UDED-like data before the test run.
+  - **Resolved by F21.** The selection carries over for GWi but not for GWi+ODPS.
 - Whether the non-test patterns above (H1, F7) also appear on the test sets: a descriptive check, not a new test.
+  - **F22.** The direction is consistent with H1 on all three sets, with only two kernels.
+- Still open: runtime and C5 (E24). E21, E23, E25 and E26 have not been run.

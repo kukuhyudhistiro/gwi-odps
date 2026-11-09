@@ -1,0 +1,25 @@
+{
+ "GWi": {
+  "ods_old": 0.4691553011358798,
+  "ods_new": 0.4691553011358798,
+  "rel_count_diff": 0.0,
+  "sumR_equal": true,
+  "sumP_equal": true
+ },
+ "GWi_odps": {
+  "ods_old": 0.48513016252674646,
+  "ods_new": 0.48513016252674646,
+  "rel_count_diff": 0.0,
+  "sumR_equal": true,
+  "sumP_equal": true
+ },
+ "GWC": {
+  "ods_old": 0.44469786747841566,
+  "ods_new": 0.44469786747841566,
+  "rel_count_diff": 0.0,
+  "sumR_equal": true,
+  "sumP_equal": true
+ },
+ "eval_seconds_per_image_pair": 3.776423766666691,
+ "failed": []
+}

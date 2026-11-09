@@ -1,0 +1,121 @@
+# =============================================================================
+# config.yaml: protocol for the DSP-D-26-02462 revision (version 2, 8 Nov 2026)
+#
+# Principle: keep the protocol of the submitted manuscript (the version the
+# reviewers assessed) and change only what a reviewer asked for. Every block
+# below names the manuscript section it follows or the reviewer point it answers.
+#
+# Commit this file and tag it BEFORE running scripts 10-12 on real data:
+#     git add config.yaml && git commit -m "revision protocol v2"
+#     git tag prereg-dsp-2026-11-08
+# Changes after that tag go to CHANGELOG.md with a reason, and are reported in
+# the response letter.
+# =============================================================================
+
+paths:
+  data_root: ../data            # gwi-odps/data: contains BSDS500/, BIPED/, UDED/
+  results_dir: results          # gwi-odps/revision_dsp/results
+
+n_jobs: 8                       # worker processes (set to the number of cores)
+
+datasets:
+  BSDS500:
+    gt_format: mat
+    splits:
+      train: {images: BSDS500/images/train, gt: BSDS500/groundTruth/train}
+      val:   {images: BSDS500/images/val,   gt: BSDS500/groundTruth/val}
+      test:  {images: BSDS500/images/test,  gt: BSDS500/groundTruth/test}
+  BIPED:
+    gt_format: png
+    splits:
+      train: {images: BIPED/edges/imgs/train/rgbr/real, gt: BIPED/edges/edge_maps/train/rgbr/real}
+      test:  {images: BIPED/edges/imgs/test,            gt: BIPED/edges/edge_maps/test}
+  UDED:
+    gt_format: png
+    splits:
+      test:  {images: UDED/imgs, gt: UDED/gt}
+
+# --- Protocol of the submitted manuscript, used for every method and table ----
+# R2.3 and R2.9 ask for these details to be described and to be the same for all
+# methods; they do not ask for them to be changed.
+protocol:
+  preproc: he                   # BT.601 -> histogram equalization -> /255 (Eq. 1-2)
+  border: paper                 # Gabor: zero padding (Algorithm 1, line 9); other
+                                # baselines: OpenCV default (reflect-101)
+  nms_outside: zero             # ODPS neighbours outside the image = 0 (submitted code)
+  normalization: minmax_image   # per-image min-max (submitted code)
+  quantize_8bit: true           # same 8-bit levels as the submitted PNG maps
+  n_thresholds: 99              # linspace(0.01, 0.99, 99) (Section 4.2)
+  max_dist_frac: 0.0075         # of the image diagonal (Section 4.2)
+  matching: greedy              # one-to-one, ascending distance (submitted 04c)
+  thinning: skimage             # skimage.morphology.thin, prediction and GT
+
+# Used by 20_test_final.py --legacy-check to reproduce the submitted numbers.
+# Identical to `protocol` for the Gabor methods; the ablation tables of the
+# submission (global normalization, 33 thresholds) are NOT reproduced: in the
+# revision every table uses `protocol` (R2.9).
+legacy_protocol:
+  border: constant
+  nms_outside: zero
+  normalization: minmax_image
+
+# --- Parameter selection without test data (R2.1) -----------------------------
+# Same rule and same candidates as Tables 1-4 of the manuscript (highest mean ODS
+# of GWi over datasets); only the data change: non-test splits instead of test sets.
+selection:
+  candidates:                   # the five configurations of Tables 1-4
+    - {k: 5, lam: 3}
+    - {k: 5, lam: 4}
+    - {k: 7, lam: 4}
+    - {k: 7, lam: 5}
+    - {k: 9, lam: 4}
+  splits: ["BSDS500:trainval", "BIPED:train"]   # UDED has no non-test split
+  criterion: mean_ods_gwi       # GWi = Stages 1-5, as in Tables 1-4
+  d_rule: half_lambda           # d = lambda/2 (Section 3.6: d = 2 for lambda = 4)
+  fixed: {N: 8, sigma_ratio: 0.56, gamma: 0.5}  # Section 3.2
+
+# --- Sensitivity analyses, reported only (never change the selection) --------
+ablation:
+  split: "BSDS500:trainval"
+  lam_d:                        # R2.5 (effect of d) and R3.2 (vary lambda; is d = lambda/2 enough?)
+    lam: [3, 4, 5, 6]           # at the selected k
+    d: [1, 2, 3]                # d = lambda/2 is added for every lambda
+  one_at_a_time:                # around the selected configuration, d = lambda/2
+    N: [4, 16]                  # R2.6 (4, 8, 16 orientations), R3.4
+    sigma_ratio: [0.4, 0.7]     # R3.4 (sigma); 0.56 is the manuscript value
+    gamma: [0.75, 1.0]          # R3.4 (gamma); 0.5 is the manuscript value
+
+# --- Baselines as described in Section 4.3, with fixed parameters (R2.8) ------
+# The submitted code differed from this description (runbook section 3, A2-A5);
+# the revision runs what the manuscript describes and reports the parameters.
+baselines:
+  - {name: Canny, family: canny, low: 50, high: 150}
+  - {name: Sobel, family: sobel}
+  - {name: LoG, family: log, ksize: 7, sigma: 1.4}
+  - {name: PC, family: pc, nscale: 4, norient: 6}        # phasepack; skipped if missing
+  - {name: ED, family: ed}                                # needs opencv-contrib; skipped if missing
+  # Computed by the submitted code under the label "Canny" (Gaussian sigma 1.4 +
+  # Sobel magnitude); reported under its correct name for continuity.
+  - {name: GaussGradMag1.4, family: gaussgrad, sigma: 1.4}
+
+# --- Statistics (R1.1, R2.11) -------------------------------------------------
+stats:
+  bootstrap: 2000
+  seed: 20261107
+  alpha: 0.05
+
+# --- Final test (written by 12_freeze.py into config_final.yaml) -------------
+test_sets:
+  - "BSDS500:test"
+  - "BIPED:test"
+  - "UDED:test"
+
+# Images of Figures 7, 9 and 11 of the manuscript
+qualitative:
+  BSDS500: ["3063", "29030", "36046", "48017"]
+  BIPED: ["RGB_042", "RGB_070", "RGB_138"]
+  UDED: ["05-WIREFRAME-2", "04-0896x4", "28-img_043_SRF_2_HR"]
+
+runtime:                        # Section 4.4: one thread, three warm-up images
+  warmup: 3
+  repeats: 5                    # R2.10: per-image median of 5 runs

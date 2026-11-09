@@ -1,0 +1,8 @@
+numpy>=1.24
+scipy>=1.10
+opencv-contrib-python>=4.8     # contrib is needed for Edge Drawing (cv2.ximgproc); uninstall opencv-python first
+scikit-image>=0.21
+pillow>=10
+pyyaml>=6
+matplotlib>=3.7
+phasepack>=1.5                 # optional: Phase Congruency baseline (Python port of Kovesi's code)

@@ -1,0 +1,118 @@
+# smoke-test config (synthetic data from tools/make_synthetic_data.py); mirrors config.yaml
+paths:
+  data_root: /tmp/synth_data
+  results_dir: /tmp/synth_results
+n_jobs: 2
+datasets:
+  BSDS500:
+    gt_format: mat
+    splits:
+      train:
+        images: BSDS500/images/train
+        gt: BSDS500/groundTruth/train
+      val:
+        images: BSDS500/images/val
+        gt: BSDS500/groundTruth/val
+      test:
+        images: BSDS500/images/test
+        gt: BSDS500/groundTruth/test
+  BIPED:
+    gt_format: png
+    splits:
+      train:
+        images: BIPED/edges/imgs/train/rgbr/real
+        gt: BIPED/edges/edge_maps/train/rgbr/real
+      test:
+        images: BIPED/edges/imgs/test
+        gt: BIPED/edges/edge_maps/test
+  UDED:
+    gt_format: png
+    splits:
+      test:
+        images: UDED/imgs
+        gt: UDED/gt
+protocol:
+  preproc: he
+  border: paper
+  nms_outside: zero
+  normalization: minmax_image
+  quantize_8bit: true
+  n_thresholds: 99
+  max_dist_frac: 0.0075
+  matching: greedy
+  thinning: skimage
+legacy_protocol:
+  border: constant
+  nms_outside: zero
+  normalization: minmax_image
+selection:
+  candidates:
+  - k: 5
+    lam: 3
+  - k: 5
+    lam: 4
+  - k: 7
+    lam: 4
+  splits:
+  - BSDS500:trainval
+  - BIPED:train
+  criterion: mean_ods_gwi
+  d_rule: half_lambda
+  fixed:
+    N: 8
+    sigma_ratio: 0.56
+    gamma: 0.5
+ablation:
+  split: BSDS500:trainval
+  lam_d:
+    lam:
+    - 3
+    - 4
+    d:
+    - 1
+    - 2
+  one_at_a_time:
+    N:
+    - 4
+    sigma_ratio:
+    - 0.4
+    gamma:
+    - 1.0
+baselines:
+- name: Canny
+  family: canny
+  low: 50
+  high: 150
+- name: Sobel
+  family: sobel
+- name: LoG
+  family: log
+  ksize: 7
+  sigma: 1.4
+- name: PC
+  family: pc
+  nscale: 4
+  norient: 6
+- name: ED
+  family: ed
+- name: GaussGradMag1.4
+  family: gaussgrad
+  sigma: 1.4
+stats:
+  bootstrap: 200
+  seed: 20261107
+  alpha: 0.05
+test_sets:
+- BSDS500:test
+- BIPED:test
+- UDED:test
+qualitative:
+  BSDS500:
+  - test000
+  BIPED:
+  - RGB_000
+  UDED:
+  - uded000
+runtime:
+  warmup: 1
+  repeats: 2

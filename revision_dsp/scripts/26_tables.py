@@ -20,6 +20,8 @@ SECTIONS = [
      ["method", "lam", "d", "d_is_half_lambda", "mac", "ODS", "OIS", "AP"]),
     ("One factor at a time: N, sigma/lambda, gamma (R2.6, R3.4; BSDS500 train+val)",
      "ablation/one_at_a_time.csv", ["variant", "pipeline", "mac", "ODS", "OIS", "AP"]),
+    ("Pre-registered hypotheses H2, per candidate (R2.2, R3.1b, R3.2, R3.4; tests in hypotheses/hypotheses.md)",
+     "hypotheses/per_candidate.csv", ["split", "tag", "k", "lam", "rho", "ods_gwi", "ods_gwi_odps", "delta"]),
     ("Test sets (OIS, AP by dataset-level accumulation; submitted definitions in *_legacy)",
      "test/summary.csv",
      ["dataset", "method", "n", "ODS", "OIS", "AP", "OIS_legacy", "AP_legacy"]),
@@ -31,11 +33,17 @@ SECTIONS = [
     ("Paired comparisons (R1.1, R2.11; analysis rows for R1.5)", "stats/pairs.csv",
      ["dataset", "kind", "A", "B", "dODS", "ci95_lo", "ci95_hi", "wilcoxon_p", "wilcoxon_p_holm",
       "r_rank_biserial", "frac_images_A_better"]),
-    ("Preprocessing ablation (R2.7)", "preproc/preproc_ablation.csv",
+    ("Preprocessing ablation (R2.7; dODS_HE = with HE minus without; baselines were not run without HE, FINDINGS F26)",
+     "preproc/preproc_ablation.csv",
      ["dataset", "method", "ODS_he", "ODS_none", "ODS_he_noscale", "ODS_none_noscale",
       "dODS_HE", "dODS_scale"]),
-    ("Learning-based detectors (R1.2, R3.5)", "external/summary.csv", ["dataset", "method", "ODS", "OIS", "AP"]),
-    ("Runtime (ms, mean over images; R1.4, R2.10, R3.3)", "runtime/summary.csv",
+    ("Learning-based detectors (R1.2, R3.5; '+NMS' = NMS of scripts/23_eval_external.py, not the "
+     "Structured-Edge NMS, FINDINGS F29)", "external/summary.csv", ["dataset", "method", "ODS", "OIS", "AP"]),
+    ("Learning-based detectors: parameters, MACs, CPU time on one thread (R1.2, R3.5; sources in external/models.yaml)",
+     "external/cost.csv", ["method", "dataset", "input_hw", "params", "gmacs_first_image", "n", "pre_ms",
+                           "forward_ms", "post_ms", "total_ms", "total_ms_sd"]),
+    ("Runtime (ms, mean over images; R1.4, R2.10, R3.3; total excludes pre; for Sobel and the Gaussian gradient "
+     "pool_ms is a direction quantization they do not use, FINDINGS F28)", "runtime/summary.csv",
      ["dataset", "method", "res", "pre_ms_mean", "filter_ms_mean", "pool_ms_mean", "nms_ms_mean",
       "total_ms_mean", "total_ms_std"]),
     ("Kernel construction (R2.10)", "runtime/kernels.csv", ["k", "lam", "N", "dc", "kernel_construction_ms"]),
@@ -74,7 +82,7 @@ def main():
         out += [f"## {title}", f"`{rel}`", ""]
         out += table(p, cols) if p.exists() else ["(not run yet)"]
         out.append("")
-    (rd / "TABLES.md").write_text("\n".join(out))
+    (rd / "TABLES.md").write_text("\n".join(out) + "\n", encoding="utf-8")
     print(f"  -> {rd / 'TABLES.md'}")
 
 

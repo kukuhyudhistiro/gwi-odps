@@ -20,7 +20,7 @@ test-set results (E20), run once after the freeze (tag `freeze-2026-11-10`, comm
 7ae7ba5), and the paired statistics of E22 (F25). Only the pairs pre-registered in
 scripts/22_stats.py have confidence intervals. Every other test-set difference is a
 point estimate.
-Last update: 10 Nov 2026, after E23. Timings of every stage: PROCESS_LOG.md.
+Last update: 10 Nov 2026, after E26. Timings of every stage: PROCESS_LOG.md.
 
 ## Original claims and their status
 
@@ -595,7 +595,7 @@ n/c: binary map with one operating point; AP is not comparable (H3).
   - It lowers ODS in 7 of 9 cases (−0.045 for PiDiNet on BSDS500; +0.001 for TEED on BSDS500 and +0.002 for LDC on UDED).
   - This NMS is not the Structured-Edge NMS (Dollár and Zitnick) that the learned detectors' papers use. That one takes the orientation from second derivatives, which are defined at the crest of a ridge; a first-derivative orientation is not. This is a likely reason for the loss, **not tested**.
   - The "+NMS" rows therefore do not represent the detectors' standard post-processing, and must not be presented as such. The runbook asked for "± standard NMS".
-  - **Decision (10 Nov 2026, 13:06, first author): the "+NMS" rows are reported as they are, with this description.** The Structured-Edge NMS is not added and no deviation is made.
+  - **Decision (10 Nov 2026, 13:06:42, first author): the "+NMS" rows are reported as they are, with this description.** The Structured-Edge NMS is not added and no deviation is made.
   - In the manuscript, the rows are labelled with what was applied (for example "+ first-derivative NMS, script of the pre-registration"), not "standard NMS". The text states that this NMS lowered ODS in 7 of 9 cases, and that the rows without NMS are the comparison under the common protocol.
   - The comparison is not affected: the learned detectors are already above GWi+ODPS without NMS. A better NMS could only widen the gap, except for PiDiNet on UDED, where its effect is unknown.
   - The docstring of `scripts/23_eval_external.py` calls this NMS "a standard edge NMS". The pre-registered script is left unchanged, and this entry corrects the wording.
@@ -631,7 +631,7 @@ n/c: binary map with one operating point; AP is not comparable (H3).
 
 ## G. Open until the test run
 
-Status after E20, E21, E22, E24 and E25 (10 Nov 2026):
+Status after E20 to E26 (10 Nov 2026):
 
 - Sign and 95% CI of ΔODS for GWi vs GWC, GWi+ODPS vs GWC, and GWi+ODPS vs GWi on BSDS500, BIPED and UDED (E20, E22).
   - **Resolved by F25.** ODPS improves ODS on BSDS500 only. GWi and GWi+ODPS are above raw GWC on all three sets. GWi is above zero-DC GWC on all three sets at k9 λ9.
@@ -639,7 +639,11 @@ Status after E20, E21, E22, E24 and E25 (10 Nov 2026):
   - **Resolved by F21.** The selection carries over for GWi but not for GWi+ODPS.
 - Whether the non-test patterns above (H1, F7) also appear on the test sets: a descriptive check, not a new test.
   - **F22.** The direction is consistent with H1 on all three sets, with only two kernels.
-- Runtime and C5: E24 was run on 10 Nov 2026 (F28). E23 was run on 10 Nov 2026 (F29). E26 has not been run.
+- Runtime and C5: E24 was run on 10 Nov 2026 (F28). E23 was run on 10 Nov 2026 (F29).
+- E26 (10 Nov 2026, 13:12): `results/TABLES.md` collects every result CSV, so that each number of the manuscript can be traced to a row.
+  - Two sections were added to `scripts/26_tables.py` before its first real run: the per-candidate H2 values (E13) and the cost of the learned detectors (E23). Three section titles now carry the caveats of F26, F28 and F29. The output file is written as UTF-8.
+  - Spot checks against this file (E22 pairs, E21, E24, E25, E23) match the numbers in C3, C4, C9, F25 to F29.
+  - TABLES.md lists the numbers only. Where a caveat is needed, the FINDINGS entry decides how a number may be written.
 - E25 (R1.3) was run on 10 Nov 2026: see F27 and C10.
 - **Figures (10 Nov 2026):** `scripts/27_figures.py` (stage `figures` of run_all.sh) draws every figure of the revised manuscript from the frozen results.
   - `results/figures/FIGURES.md` lists, for each figure: the figure of the submission it replaces, the reviewer comments it answers, its data source, and what its caption must say.

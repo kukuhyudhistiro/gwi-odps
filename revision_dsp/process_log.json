@@ -1,7 +1,7 @@
 {
  "timezone": "WIB (UTC+7)",
  "source": "gwi-odps, revision_dsp/process_log.csv",
- "generated": "2026-11-10 13:07:04",
+ "generated": "2026-11-10 13:13:20",
  "agenda": {
   "1": {
    "dates": "7-9 Nov",
@@ -1035,7 +1035,7 @@
    "id": "D-11",
    "kind": "keputusan",
    "activity": "Baris +NMS E23 dilaporkan apa adanya, diberi label sesuai NMS yang dipakai; NMS Structured Edges tidak ditambahkan",
-   "start": "2026-11-10 13:06:51",
+   "start": "2026-11-10 13:06:42",
    "end": "",
    "status": "disetujui",
    "outputs": "FINDINGS.md F29",
@@ -1053,19 +1053,38 @@
    "phase_name": "Analisis & pengukuran",
    "id": "E26",
    "kind": "run",
-   "activity": "E26 kumpulan tabel",
-   "start": "",
-   "end": "",
-   "status": "belum dijalankan",
-   "outputs": "",
-   "result": "",
-   "ref": "",
+   "activity": "E26 kumpulan tabel: semua CSV hasil ke results/TABLES.md, termasuk hipotesis H2 (E13) dan biaya detektor learning (E23)",
+   "start": "2026-11-10 13:12:16",
+   "end": "2026-11-10 13:12:41",
+   "status": "rc 0",
+   "outputs": "results/TABLES.md; logs_local/E26_tables.log",
+   "result": "21 bagian tabel; setiap angka naskah dapat ditelusuri ke satu baris. Cek silang dengan FINDINGS (E21, E22, E23, E24, E25) cocok",
+   "ref": "tools/run_logged.sh; dua run (tambahan catatan pada judul bagian)",
    "reviewer": "semua",
    "web": "ya",
    "web_status": "",
    "web_note": "",
-   "duration_s": null,
-   "duration": ""
+   "duration_s": 25,
+   "duration": "0:00:25"
+  },
+  {
+   "phase": 3,
+   "phase_name": "Analisis & pengukuran",
+   "id": "A-09",
+   "kind": "analisis",
+   "activity": "Pemeriksaan E26: kolom tiap tabel terhadap CSV, bagian yang belum ada (E13, biaya E23), cek silang angka dengan FINDINGS",
+   "start": "2026-11-10 13:11:24",
+   "end": "2026-11-10 13:13:19",
+   "status": "selesai",
+   "outputs": "scripts/26_tables.py; FINDINGS.md bagian G",
+   "result": "",
+   "ref": "",
+   "reviewer": "semua",
+   "web": "",
+   "web_status": "",
+   "web_note": "",
+   "duration_s": 115,
+   "duration": "0:01:55"
   }
  ]
 }

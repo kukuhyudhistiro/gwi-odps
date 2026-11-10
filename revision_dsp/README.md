@@ -71,6 +71,9 @@ letter).
 | `bash run_all.sh runtime` (idle machine) | R1.4, R2.5, R2.10, R3.3, R3.6 | `results/runtime/` |
 | `bash run_all.sh qualitative` | R1.3 | `results/qualitative/` |
 | `bash run_all.sh tables` | all | `results/TABLES.md` |
+| `bash run_all.sh figures` | all (figures of the revised manuscript) | `results/figures/`, `results/figures/FIGURES.md` |
+
+All stages above were run on 9-10 Nov 2026. The results are frozen at tag `numbers-frozen-2026-11-10`. Findings and limitations: `FINDINGS.md`. Timing of every stage: `PROCESS_LOG.md`.
 
 Smoke run on real data before each long run: append `--limit 5`, e.g.
 `python3 scripts/10_select_kernel.py --limit 5`. Limited runs are cached

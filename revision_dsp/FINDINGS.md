@@ -20,7 +20,7 @@ test-set results (E20), run once after the freeze (tag `freeze-2026-11-10`, comm
 7ae7ba5), and the paired statistics of E22 (F25). Only the pairs pre-registered in
 scripts/22_stats.py have confidence intervals. Every other test-set difference is a
 point estimate.
-Last update: 10 Nov 2026, after E26. Timings of every stage: PROCESS_LOG.md.
+Last update: 10 Nov 2026, after E26, the numbers freeze (tag `numbers-frozen-2026-11-10`) and the release documentation of v3.0.0. Timings of every stage: PROCESS_LOG.md.
 
 ## Original claims and their status
 
@@ -247,6 +247,8 @@ Correction (9 Nov 2026, after reading the JESA 44740 files): R1, R4 and R5 were 
 - **Decision of the first author (10 Nov 2026):** PTBM (Paper 3) and the later stages of the dissertation will not use HE. The reason is the HE findings of Papers 1 and 2 above.
   - When this is written in Paper 3 or the dissertation, the evidence must be stated as it stands. In Paper 1, HE lowers GWi and GWi+ODPS. In Paper 2, HE lowered the binary Canny baseline; A-GWi itself was not measured without HE.
 - **Pending (decided 10 Nov 2026, to be done later):** update the Paper 1 statements in Research_Topic_KG-Wavelet_6Nopember2026.docx listed in R7. Add the no-HE design rule to the same document.
+- *Done (10 Nov 2026, 15:36):* see R7. The no-HE rule is a new paragraph in §2.3.2 ("Aturan desain kedua"). It carries the evidence and its limits as stated above.
+  - Table 20 (stage 1) and line 1 of Algorithm 1 now say "tanpa HE". Line 1 of Algorithm 1 had said "HE opsional".
 
 **R7. Paper 1 statements in Research_Topic_KG-Wavelet_6Nopember2026.docx that the revision has changed.**
 - "GWi melebihi GWC sebesar +0,050 (BSDS500), +0,150 (BIPED v2), dan +0,140 (UDED) ODS dengan waktu 2,2× lebih cepat":
@@ -256,6 +258,25 @@ Correction (9 Nov 2026, after reading the JESA 44740 files): R1, R4 and R5 were 
 - RQ1 "apakah ODPS menekan side-lobe": the side-lobe mechanism does not apply at the reported kernels (F12). ODPS improves ODS significantly on BSDS500 only (F25).
 - Design rule 1 "Komponen real redundan untuk tepi langkah (Paper 1)" must be narrowed (C4).
 - The topic document's own argument for a zero-DC even kernel in Paper 3 is supported by F23: most of GWC's deficit in Paper 1 came from the DC response of the raw real kernel.
+- *Done (10 Nov 2026, 15:36):* the edits are tracked changes in a new file, `D:\Proposal Disertasi\Research_Topic_KG-Wavelet_10Nopember2026.docx`. The 6 Nov file is unchanged.
+  - **Edited:**
+    - the three statements above;
+    - four more statements that carried the same claims:
+      - contribution 1 in §1.6.1;
+      - note 1 of the roadmap figure;
+      - point 1 of "Kesinambungan antar-paper" in §3.5.1;
+      - the Paper 1 grid search in §2.3.4, now marked as selected on test data in the submission.
+  - **RQ1 is kept as written.** Its answer after the revision is added:
+    - yes to the first part, also against zero-DC GWC at k9 λ9;
+    - the side-lobe part is not supported.
+    The question is not rewritten to fit the result.
+  - **The 2.2× figure** is replaced by the E24 values: filtering 2.1× at k9 λ9; full pipeline 1.56×. The text also states that the Gaussian gradient has higher ODS than every Gabor variant and is about 5.5× faster than GWi+ODPS (F24, F28).
+  - **Not changed:** status words ("under review") and the reference entry of Paper 1.
+  - **Author list.** That entry has four authors, while README.md and CITATION.cff of v2.0.0 had three. The submitted PDF (DSP-D-26-02462.pdf) has four: Yudhistiro, Adi (BRIN), Basuki, Rijati. README.md and CITATION.cff were corrected to match it in v3.0.0.
+  - **Checks done:**
+    - the XML is well-formed;
+    - with all changes rejected, the text equals the original paragraph by paragraph.
+  - **Not done:** the file was not opened in Word. No Word or LibreOffice is installed on this machine.
 
 ## H. Consistency with Paper 2 (A-GWi, JESA 44740, accepted)
 
@@ -654,3 +675,16 @@ Status after E20 to E26 (10 Nov 2026):
     - display ranges are clipped only where the caption says so;
     - no figure is cropped to hide the border response.
 - E21 (R2.7) was run on 10 Nov 2026: see F26 and C9.
+- **Numbers frozen (10 Nov 2026, 15:22):** tag `numbers-frozen-2026-11-10` at commit ed93f8c (E26). No result file has changed since.
+- **Release documentation (10 Nov 2026):** written from this ledger.
+  - `README.md`: revised numbers; the submitted numbers are in a folded section with notes.
+  - `CHANGELOG.md` 3.0.0 and `CITATION.cff`: performance claims removed from the abstract.
+  - `docs/ODPS_derivation.md`: rewritten with the corrected mechanism (F12, F13, F18, F27, F28).
+  - `docs/reproduction.md`: commands of the revision.
+  - `docs/kernel_ablation.md` and `docs/benchmarks.md`: marked as describing v2.0.0.
+  - The documents state the negative results with the same weight as the others: C1 to C11, the Gaussian gradient above every Gabor variant, and the learned detectors far above.
+  - **What the tag does and does not cover.** `v3.0.0-dsp-r1` is a local tag. It precedes the manuscript writing (WP12-WP13). If writing or the number audit changes any file, the tag is moved before it is published.
+- **Before the repository is pushed (decision of the first author, not taken yet):**
+  - Every commit of the revision branch since 8 Nov 2026 carries a `Co-Authored-By` trailer.
+  - FINDINGS sections F and H, and the decision rows (D-) and short analysis rows (A-) of the process log, are internal notes.
+  - Both are part of the commit history. Filtering the latest version would not remove them from the published history. Rewriting the history would change every hash, including those of the pre-registration and freeze tags quoted in this ledger and in CHANGELOG.md.

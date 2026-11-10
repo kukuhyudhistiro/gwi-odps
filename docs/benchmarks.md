@@ -1,6 +1,14 @@
 
 # Hardware and Timing Notes
 
+> **Describes version 2.0.0 (submitted).** Those runtimes were measured once per image.
+>
+> **What the revision does instead (v3.0.0).**
+> - Runtimes are measured on one thread, with 3 warm-up images and the median of 5 runs per image, reported per stage.
+> - The machine is the one listed below: Intel Core i5-14400, Windows 11, Python 3.13.13, OpenCV 4.13.0.
+>
+> See `revision_dsp/results/runtime/` and `revision_dsp/FINDINGS.md` (F28).
+
 ## Reference Hardware
 
 All timing measurements use:

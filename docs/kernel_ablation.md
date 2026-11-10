@@ -1,5 +1,16 @@
 # Kernel Parameter Selection — Cross-Dataset Ablation
 
+> **Describes version 2.0.0 (submitted).**
+>
+> **How these numbers were obtained.** The ablation below was computed on the test sets, with a global normalization and 33 thresholds, and k5 λ4 was selected from it.
+>
+> **What the revision does instead (v3.0.0).**
+> - Selection is on non-test data only: BSDS500 train+val and BIPED train.
+> - It uses the protocol of the main tables.
+> - It selects k9 λ9 with d = λ/2. On that data, k5 λ4 ranks 12th of 18 candidates by mean ODS of GWi.
+>
+> See `revision_dsp/results/selection/` and `revision_dsp/FINDINGS.md` (F1-F5, F17).
+
 This document records the systematic kernel parameter ablation that
 informs the canonical configuration (k=5, λ=4, σ=2.24, γ=0.5, n=8).
 

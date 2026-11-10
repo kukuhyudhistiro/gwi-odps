@@ -4,24 +4,29 @@ title: "GWi+ODPS: Imaginary-Only Gabor Wavelet with Orientation-Aware Double-Pea
 abstract: >
   Reference implementation and evaluation pipeline for an imaginary-only
   Gabor wavelet edge detector (GWi) with orientation-aware double-peak
-  suppression (ODPS) post-processing. Evaluated on BSDS500, BIPED v2,
-  and UDED benchmarks. The imaginary-only formulation halves the
-  convolution count of complex Gabor, running 2.2x faster while
-  improving ODS by 0.05-0.15. ODPS adds 0.014-0.038 ODS at runtime
-  parity with complex Gabor.
+  suppression (ODPS) post-processing, evaluated on BSDS500, BIPED v2 and
+  UDED. Version 3.0.0 adds the code, pre-registered protocol, results and
+  findings of the first revision (revision_dsp/); the submitted code is
+  kept unchanged. Results and limitations are in README.md and
+  revision_dsp/FINDINGS.md.
 authors:
   - family-names: Yudhistiro
     given-names: Kukuh
     affiliation: Universitas Dian Nuswantoro
     city: Semarang
     country: ID
-  - family-names: Rijati
-    given-names: Nova
-    affiliation: Universitas Dian Nuswantoro
-    city: Semarang
+  - family-names: Adi
+    given-names: Puput Dani Prasetyo
+    affiliation: National Research and Innovation Agency (BRIN)
+    city: Bandung
     country: ID
   - family-names: Basuki
     given-names: Ruri Suko
+    affiliation: Universitas Dian Nuswantoro
+    city: Semarang
+    country: ID
+  - family-names: Rijati
+    given-names: Nova
     affiliation: Universitas Dian Nuswantoro
     city: Semarang
     country: ID
@@ -36,17 +41,19 @@ keywords:
 license: MIT
 repository-code: "https://github.com/kukuhyudhistiro/gwi-odps"
 type: software
-version: "2.0.0"
-date-released: 2026-05-19
+version: "3.0.0"
+date-released: 2026-11-10
 preferred-citation:
   type: article
-  title: "Halving Gabor Convolutions: Imaginary-Only Wavelet with Orientation-Aware Double-Peak Suppression for Lightweight Edge Detection"
+  title: "Imaginary-Only Wavelet with Orientation-Aware Double-Peak Suppression for Lightweight Edge Detection"
   authors:
     - family-names: Yudhistiro
       given-names: Kukuh
-    - family-names: Rijati
-      given-names: Nova
+    - family-names: Adi
+      given-names: Puput Dani Prasetyo
     - family-names: Basuki
       given-names: Ruri Suko
+    - family-names: Rijati
+      given-names: Nova
   year: 2026
-  journal: "[Submitted]"
+  journal: "[Under revision]"

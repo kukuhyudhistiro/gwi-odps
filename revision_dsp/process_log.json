@@ -1,7 +1,7 @@
 {
  "timezone": "WIB (UTC+7)",
  "source": "gwi-odps, revision_dsp/process_log.csv",
- "generated": "2026-11-10 13:13:20",
+ "generated": "2026-11-10 15:39:28",
  "agenda": {
   "1": {
    "dates": "7-9 Nov",
@@ -1085,6 +1085,44 @@
    "web_note": "",
    "duration_s": 115,
    "duration": "0:01:55"
+  },
+  {
+   "phase": 3,
+   "phase_name": "Analisis & pengukuran",
+   "id": "PR-6",
+   "kind": "commit",
+   "activity": "Bekukan angka (runbook §8): tag pada commit E26; semua angka naskah dan response letter ditelusuri ke results/TABLES.md pada commit ini",
+   "start": "2026-11-10 15:22:46",
+   "end": "",
+   "status": "selesai",
+   "outputs": "",
+   "result": "",
+   "ref": "commit ed93f8c; tag numbers-frozen-2026-11-10",
+   "reviewer": "semua",
+   "web": "ya",
+   "web_status": "",
+   "web_note": "",
+   "duration_s": null,
+   "duration": ""
+  },
+  {
+   "phase": 5,
+   "phase_name": "Kirim draf",
+   "id": "REL-1",
+   "kind": "tulis",
+   "activity": "Dokumen repositori untuk rilis v3.0.0 (runbook §9): README.md dengan angka revisi (angka versi submit di bagian terlipat), CHANGELOG.md 3.0.0, CITATION.cff, docs/ODPS_derivation.md ditulis ulang dengan mekanisme yang dikoreksi, docs/reproduction.md dengan perintah revisi",
+   "start": "2026-11-10 15:20:42",
+   "end": "2026-11-10 15:38:07",
+   "status": "selesai",
+   "outputs": "README.md; CHANGELOG.md; CITATION.cff; docs/ODPS_derivation.md; docs/reproduction.md; docs/kernel_ablation.md; docs/benchmarks.md; revision_dsp/README.md",
+   "result": "Isi diambil dari FINDINGS.md; klaim yang ditarik atau dikoreksi (C1-C11) ditulis setara dengan hasil lain. Penulis dan judul di README dan CITATION disamakan dengan naskah yang disubmit (empat penulis). Tidak ada file hasil yang berubah",
+   "ref": "jam mulai = pembacaan dokumen root; jam selesai = suntingan terakhir",
+   "reviewer": "semua (Data availability)",
+   "web": "ya",
+   "web_status": "",
+   "web_note": "",
+   "duration_s": 1045,
+   "duration": "0:17:25"
   }
  ]
 }

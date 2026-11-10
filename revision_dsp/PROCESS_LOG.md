@@ -16,7 +16,8 @@ Baris yang bukan jawaban atas komentar reviewer ditandai 'pendukung' atau 'bukan
 |---|---|---|---|---|
 | 1. Persiapan data & eksperimen | 7-9 Nov | 26 | 11:15:09 | - |
 | 2. Penetapan konfigurasi & evaluasi uji | 10 Nov | 6 | 2:30:44 | - |
-| 3. Analisis & pengukuran | 11-14 Nov | 23 | 3:04:04 | - |
+| 3. Analisis & pengukuran | 11-14 Nov | 24 | 3:04:04 | - |
+| 5. Kirim draf | 19 Nov | 1 | 0:00:00 | - |
 
 ## Fase 1. Persiapan data & eksperimen (agenda 7-9 Nov)
 
@@ -87,3 +88,10 @@ Baris yang bukan jawaban atas komentar reviewer ditandai 'pendukung' atau 'bukan
 | D-11 | keputusan | Baris +NMS E23 dilaporkan apa adanya, diberi label sesuai NMS yang dipakai; NMS Structured Edges tidak ditambahkan | pendukung (bukan eksperimen) | 2026-11-10 13:06:42 |  |  | disetujui | FINDINGS.md F29 | "Laporkan apa adanya" |  |  |
 | E26 | run | E26 kumpulan tabel: semua CSV hasil ke results/TABLES.md, termasuk hipotesis H2 (E13) dan biaya detektor learning (E23) | semua | 2026-11-10 13:12:16 | 2026-11-10 13:12:41 | 0:00:25 | rc 0 | results/TABLES.md; logs_local/E26_tables.log | 21 bagian tabel; setiap angka naskah dapat ditelusuri ke satu baris. Cek silang dengan FINDINGS (E21, E22, E23, E24, E25) cocok | tools/run_logged.sh; dua run (tambahan catatan pada judul bagian) | ya |
 | A-09 | analisis | Pemeriksaan E26: kolom tiap tabel terhadap CSV, bagian yang belum ada (E13, biaya E23), cek silang angka dengan FINDINGS | semua | 2026-11-10 13:11:24 | 2026-11-10 13:13:19 | 0:01:55 | selesai | scripts/26_tables.py; FINDINGS.md bagian G |  |  |  |
+| PR-6 | commit | Bekukan angka (runbook §8): tag pada commit E26; semua angka naskah dan response letter ditelusuri ke results/TABLES.md pada commit ini | semua | 2026-11-10 15:22:46 |  |  | selesai |  |  | commit ed93f8c; tag numbers-frozen-2026-11-10 | ya |
+
+## Fase 5. Kirim draf (agenda 19 Nov)
+
+| ID | Jenis | Kegiatan | Komentar reviewer | Mulai | Selesai | Durasi | Status | Output | Hasil | Ref | Web |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| REL-1 | tulis | Dokumen repositori untuk rilis v3.0.0 (runbook §9): README.md dengan angka revisi (angka versi submit di bagian terlipat), CHANGELOG.md 3.0.0, CITATION.cff, docs/ODPS_derivation.md ditulis ulang dengan mekanisme yang dikoreksi, docs/reproduction.md dengan perintah revisi | semua (Data availability) | 2026-11-10 15:20:42 | 2026-11-10 15:38:07 | 0:17:25 | selesai | README.md; CHANGELOG.md; CITATION.cff; docs/ODPS_derivation.md; docs/reproduction.md; docs/kernel_ablation.md; docs/benchmarks.md; revision_dsp/README.md | Isi diambil dari FINDINGS.md; klaim yang ditarik atau dikoreksi (C1-C11) ditulis setara dengan hasil lain. Penulis dan judul di README dan CITATION disamakan dengan naskah yang disubmit (empat penulis). Tidak ada file hasil yang berubah | jam mulai = pembacaan dokumen root; jam selesai = suntingan terakhir | ya |

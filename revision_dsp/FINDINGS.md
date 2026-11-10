@@ -209,6 +209,7 @@ For all six candidates with half-width over λ below 0.5, the gain is positive: 
   | N = 16 | 0.4826 | 0.4945 | 1296 |
 
   σ/λ (0.4, 0.7) and γ (0.75, 1.0) change ODS by at most 0.0006.
+  - *Correction (10 Nov 2026, number check of the Section 5 draft):* 0.0006 holds for GWi+ODPS. For GWi the largest change is 0.0007 (σ/λ = 0.4: 0.4823 against 0.4830; `results/ablation/one_at_a_time.csv`).
 - So 4 orientations are as good as 8 at half the cost here. N = 8 is not changed, because the selection rule fixes it, but the manuscript cannot claim that 8 orientations are needed at this kernel.
 - **Interpretation:** at λ9, σ = 5.0 px and σ/γ = 10 px, both larger than the window half-width of 4 px. The Gaussian envelope is therefore nearly flat and truncated by the window, so σ and γ have little left to change. Broad kernels are also broadly tuned in orientation.
 - This is a property of the large-λ regime. In the five-candidate E11 around k7 λ5, N = 4 was 0.008 below N = 8.

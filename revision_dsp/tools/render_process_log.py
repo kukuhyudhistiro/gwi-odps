@@ -98,7 +98,9 @@ def main():
            "Temuan lengkap ada di FINDINGS.md; perubahan protokol di CHANGELOG.md.",
            "Kolom Web: baris yang ditampilkan di halaman agenda KDC (tahapan runbook dan tag pra-registrasi).",
            "Kolom Komentar reviewer: komentar yang dijawab tahap itu (register komentar, runbook §6-§7).",
-           "Baris yang bukan jawaban atas komentar reviewer ditandai 'pendukung' atau 'bukan permintaan reviewer'.", ""]
+           "Baris yang bukan jawaban atas komentar reviewer ditandai 'pendukung' atau 'bukan permintaan reviewer'.",
+           "Susunan tiap baris (juga di halaman KDC): judul dan kode; waktu dan durasi; status dan komentar reviewer;",
+           "hasil; temuan/catatan; file output (log, CSV, gambar). File di `logs_local/` hanya ada di mesin lokal.", ""]
     out += ["## Ringkasan per fase", "",
             "| Fase | Agenda | Kegiatan tercatat | Waktu komputasi (run) | Belum dijalankan |",
             "|---|---|---|---|---|"]
@@ -116,12 +118,12 @@ def main():
         if not pr:
             continue
         out += [f"## Fase {p}. {name} (agenda {dates})", "",
-                "| ID | Jenis | Kegiatan | Komentar reviewer | Mulai | Selesai | Durasi | Status | Output | Hasil | Ref | Web |",
-                "|---|---|---|---|---|---|---|---|---|---|---|---|"]
+                "| ID | Judul | Jenis | Kegiatan | Mulai | Selesai | Durasi | Status | Komentar reviewer | Hasil | Temuan/Catatan | File output | Ref | Web |",
+                "|---|---|---|---|---|---|---|---|---|---|---|---|---|---|"]
         for r in pr:
-            cells = [r["id"], r["kind"], r["activity"], r.get("reviewer", ""), r["start"], r["end"],
-                     r["duration"], r["status"], r["outputs"], r["result"], r["ref"],
-                     "ya" if r.get("web") == "ya" else ""]
+            cells = [r["id"], r.get("title", ""), r["kind"], r["activity"], r["start"], r["end"],
+                     r["duration"], r["status"], r.get("reviewer", ""), r["result"], r.get("finding", ""),
+                     r["outputs"], r["ref"], "ya" if r.get("web") == "ya" else ""]
             out.append("| " + " | ".join(c.replace("|", "/") for c in cells) + " |")
         out.append("")
     (ROOT / "PROCESS_LOG.md").write_text("\n".join(out), encoding="utf-8", newline="\n")

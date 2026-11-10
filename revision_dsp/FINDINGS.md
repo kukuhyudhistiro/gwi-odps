@@ -210,6 +210,35 @@ Correction (9 Nov 2026, after reading the JESA 44740 files): R1, R4 and R5 were 
 
 **R5.** The roadmap premise for adaptation ("dense regions need high-frequency, small-λ kernels") was tested in Paper 2 and **not supported** (H4). Paper 1 must not restate it as motivation.
 
+**R6. Histogram equalization across the papers (after E21, 10 Nov 2026).**
+- **Paper 1:** HE lowers ODS of GWi and GWi+ODPS on all three test sets (F26). The protocol keeps HE as frozen.
+- **Paper 2 (A-GWi):**
+  - HE is applied to all six methods (Eq. 2, Algorithm 1 line 1, note to Table 3 of the final proof).
+  - An "A-GWi without HE" ablation was planned in the revision plan (A4) but is not in the published Table 8. The effect of HE on A-GWi itself is therefore not measured.
+  - The only measured effect is in the JESA response letter: binary Canny fell from 0.4441 to 0.4078 on BSDS500 when given the equalized image.
+- **Paper 3 (PTBM, Research_Topic_KG-Wavelet_6Nopember2026.docx):**
+  - Stage 1 is BT.601 grayscale and an Otsu mask, without HE.
+  - In `ptbm_v2.py`, HE is optional (`--he`) and off by default. All pilot outputs in `ptbm_v2_out/` have `he=False`.
+  - Brightness is handled by the zero-DC even kernel, not by global HE.
+- **What can be carried forward:** two measurements on natural-scene edge benchmarks point the same way: HE is not neutral and lowered ODS.
+  - This supports keeping PTBM without global HE, and writing that choice as a design rule of the framework.
+- **What cannot be carried forward:**
+  - None of this was measured on maize trays, on counting accuracy, or on UV fluorescence.
+  - It was not measured on A-GWi either.
+  - For Paper 3 it is a motivated default, not a result. If Paper 3 reports an HE on/off check, it should be fixed before its test images are opened, as in Paper 1.
+- **Decision of the first author (10 Nov 2026):** PTBM (Paper 3) and the later stages of the dissertation will not use HE. The reason is the HE findings of Papers 1 and 2 above.
+  - When this is written in Paper 3 or the dissertation, the evidence must be stated as it stands. In Paper 1, HE lowers GWi and GWi+ODPS. In Paper 2, HE lowered the binary Canny baseline; A-GWi itself was not measured without HE.
+- **Pending (decided 10 Nov 2026, to be done later):** update the Paper 1 statements in Research_Topic_KG-Wavelet_6Nopember2026.docx listed in R7. Add the no-HE design rule to the same document.
+
+**R7. Paper 1 statements in Research_Topic_KG-Wavelet_6Nopember2026.docx that the revision has changed.**
+- "GWi melebihi GWC sebesar +0,050 (BSDS500), +0,150 (BIPED v2), dan +0,140 (UDED) ODS dengan waktu 2,2× lebih cepat":
+  - These are the submitted, test-selected numbers against raw GWC.
+  - Against zero-DC GWC at the selected kernel the gaps are +0.016, +0.039 and +0.084 (F23, F25). At k5 λ4, zero-DC GWC is above GWi on BSDS500.
+  - The 2.2× figure awaits E24.
+- RQ1 "apakah ODPS menekan side-lobe": the side-lobe mechanism does not apply at the reported kernels (F12). ODPS improves ODS significantly on BSDS500 only (F25).
+- Design rule 1 "Komponen real redundan untuk tepi langkah (Paper 1)" must be narrowed (C4).
+- The topic document's own argument for a zero-DC even kernel in Paper 3 is supported by F23: most of GWC's deficit in Paper 1 came from the DC response of the raw real kernel.
+
 ## H. Consistency with Paper 2 (A-GWi, JESA 44740, accepted)
 
 Paper 2 was revised after review and accepted. Several of its corrected statements bear directly on Paper 1. Paper 1 must not contradict a published paper by the same authors. Sources: `D:\Paper AGWi\REVIEW JESA\Response_Letter_JESA_44740_15082026.md` and the final proof.

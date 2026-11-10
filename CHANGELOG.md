@@ -59,6 +59,10 @@ First revision of manuscript DSP-D-26-02462. Tag `v3.0.0-dsp-r1`. The work is in
 - `revision_dsp/run_all.sh` now quotes `$PY`, so an interpreter path that contains spaces works, e.g. `PY="D:/Project 2026/.../python.exe"`.
   - Found by the smoke test on a fresh clone on 10 Nov 2026, after the numbers were frozen.
   - No result is affected.
+- **Smoke test on Windows.** The smoke test now keeps its synthetic data and results in `revision_dsp/tests/_smoke/` (git-ignored) instead of `/tmp`.
+  - **The problem.** Under Git Bash on Windows, `/tmp` passed as an argument became the Windows Temp folder. `/tmp` read from the config became `C:\tmp`. The synthetic data were therefore written to one folder and looked for in another, and `01_selftest` failed.
+  - **Also changed.** Earlier smoke results are now removed before each run, so the test does not read old cached results.
+  - No result of the revision is affected.
 
 ### Unchanged
 - `src/`, `scripts/`, `eval_results/k5/` and `runtime_logs/`, as at submission (commit `91b4f83`, tag `dsp-submitted-v1`).

@@ -1,7 +1,7 @@
 # smoke-test config (synthetic data from tools/make_synthetic_data.py); mirrors config.yaml
-paths:
-  data_root: /tmp/synth_data
-  results_dir: /tmp/synth_results
+paths:                     # relative to this file: tests/_smoke/ (git-ignored), the same folder for bash and Python on every OS
+  data_root: _smoke/synth_data
+  results_dir: _smoke/synth_results
 n_jobs: 2
 datasets:
   BSDS500:

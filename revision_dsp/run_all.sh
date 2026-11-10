@@ -11,7 +11,9 @@ run() { echo; echo "=== $*"; "$PY" "$@" --config "$CFG" --n-jobs "$NJ"; }
 
 case "${1:-help}" in
   smoke)       # synthetic data, a few minutes, checks that every script runs
-    "$PY" tools/make_synthetic_data.py --out /tmp/synth_data
+    # in tests/_smoke/ (git-ignored); earlier smoke results are removed so that nothing is read from cache
+    rm -rf tests/_smoke/synth_results
+    "$PY" tools/make_synthetic_data.py --out tests/_smoke/synth_data
     CFG=tests/config_synth.yaml NJ=2
     for s in 00_env 01_selftest 02_mechanism 10_select_kernel 11_ablation 12_freeze \
              20_test_final 21_ablation_preproc 22_stats 24_runtime 25_qualitative_odps 26_tables; do

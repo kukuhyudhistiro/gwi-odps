@@ -5,3 +5,4 @@ __pycache__/
 results/maps/
 results/counts/*/*_limit*/
 results/config_final_LIMIT.yaml
+tests/_smoke/

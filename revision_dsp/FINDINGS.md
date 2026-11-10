@@ -695,6 +695,11 @@ Status after E20 to E26 (10 Nov 2026):
     - `src/`, `scripts/` and `eval_results/` are unchanged since submission.
   - **Content scan.** The tracked files hold no private e-mail address, no credential, no dataset and no detector weights.
   - **Defect found.** `run_all.sh` failed when `PY` held a path with spaces, because `$PY` was not quoted. The first author quoted it; the smoke test then passed with the spaced path. The tag `v3.0.0-dsp-r1` was moved to the commit with this fix.
+  - **Second defect (Windows only).** On an unmodified Windows clone, the smoke test failed in `01_selftest`.
+    - Git Bash turned `/tmp` in arguments into the Windows Temp folder, while Python read `/tmp` from the config as `C:\tmp`.
+    - It passed with `MSYS_NO_PATHCONV=1`.
+    - **Fix.** The smoke data and results moved to `tests/_smoke/` (git-ignored), and old smoke results are removed before each run. The tag was moved again.
+    - The smoke test of 9 Nov (S-00) had passed with another invocation. It is not known exactly which one.
   - **Not in the repository, by choice:**
     - `logs_local/` (run logs, cited above as timing sources);
     - `results/counts/` (per-image counts, 34 MB).

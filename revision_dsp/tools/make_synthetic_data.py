@@ -1,7 +1,7 @@
 """Create a tiny synthetic dataset with the same layout as config.yaml.
 
 For smoke tests only (scripts run end to end without real data):
-    python tools/make_synthetic_data.py --out /tmp/synth_data
+    python tools/make_synthetic_data.py --out tests/_smoke/synth_data
     python scripts/01_selftest.py --config tests/config_synth.yaml
 """
 from __future__ import annotations

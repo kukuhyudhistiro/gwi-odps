@@ -61,7 +61,8 @@ def save(fig, out: Path, name: str, vector=True):
     files = [f"{name}.png"]
     fig.savefig(out / f"{name}.png", dpi=300, bbox_inches="tight", facecolor="white")
     if vector:
-        fig.savefig(out / f"{name}.pdf", bbox_inches="tight", facecolor="white")
+        fig.savefig(out / f"{name}.pdf", bbox_inches="tight", facecolor="white",
+                    metadata={"CreationDate": None})   # reproducible PDF bytes
         files.append(f"{name}.pdf")
     plt.close(fig)
     print(f"  -> {name}")
@@ -632,12 +633,79 @@ def fig_localization(cfg, final, M, proto, out):
                  "BSDS500, ≈ 11 px on BIPED); the increase cannot be separated from the extra recall at the lower threshold (F27).")
 
 
+def fig_runtime(cfg, final, M, proto, out, n_jobs):
+    """Stage times (E24) and ODS against runtime (E20 + E24)."""
+    summ = read_csv(C.results_dir(cfg, "runtime") / "summary.csv")
+    meths = [M.odps, M.gwi, M.gwc, M.gwc0, M.sub_odps] + \
+            [n for n in M.by if M.by[n].get("k") == 5 and n != M.sub_odps and M.by[n]["family"] in ("gwi", "gwc")
+             and not M.by[n].get("nms") and M.by[n].get("dc", "raw") == "raw"] + \
+            ["GaussGradMag1.4", "Sobel", "LoG", "Canny", "ED", "PC"]
+    meths = [n for n in dict.fromkeys(meths) if n]
+    lab = dict(M.label)
+    for n in meths:
+        if n not in lab:
+            m = M.by[n]
+            lab[n] = f"{'GWi' if m['family'] == 'gwi' else 'GWC raw'} (k5 λ4, submitted)"
+    fig = plt.figure(figsize=(14, 4.4))
+    gs = fig.add_gridspec(1, 3, width_ratios=[1.2, 1.2, 1])
+    stages = [("pre_ms_mean", "Stage 1 preprocessing", "#BBBBBB"), ("filter_ms_mean", "filtering", "#4C72B0"),
+              ("pool_ms_mean", "pooling (Gabor: max or argmax; gradients: direction quantization)", "#55A868"), ("nms_ms_mean", "ODPS / NMS", "#D62728")]
+    for j, ds in enumerate(("BSDS500", "BIPED")):
+        a = fig.add_subplot(gs[0, j])
+        rows = {r["method"]: r for r in summ if r["dataset"] == ds}
+        shown = [n for n in meths if n in rows and n != "PC"]
+        y = np.arange(len(shown))
+        left = np.zeros(len(shown))
+        for key, sl, col in stages:
+            v = np.array([float(rows[n][key]) for n in shown])
+            a.barh(y, v, left=left, color=col, label=sl, height=0.7)
+            left += v
+        for yi, n in zip(y, shown):
+            a.text(left[yi] + left.max() * 0.01, yi, f"{left[yi]:.1f}", va="center", fontsize=6)
+        a.set_yticks(y)
+        a.set_yticklabels([lab[n] for n in shown], fontsize=6.5)
+        a.invert_yaxis()
+        pc = rows.get("PC")
+        a.set_title(f"{ds} test, ms per image (1 thread)" + (f"; PC: {float(pc['total_ms_mean']) + float(pc['pre_ms_mean']):.0f} ms" if pc else ""))
+        a.set_xlabel("time (ms), mean over images of the median of 5 runs")
+        if j == 0:
+            a.legend(fontsize=6, loc="lower right")
+    a = fig.add_subplot(gs[0, 2])
+    ds, sp = "BSDS500", "test"
+    rows = {r["method"]: r for r in summ if r["dataset"] == ds}
+    for n in meths:
+        if n not in rows:
+            continue
+        _, ag = pr_and_counts(cfg, final, proto, n, ds, sp, n_jobs)
+        t = float(rows[n]["total_ms_mean"]) + float(rows[n]["pre_ms_mean"])
+        a.scatter([t], [ag["ods"]], color=M.color.get(n, "#333333"), s=30 if n != M.odps else 70,
+                  marker="*" if n == M.odps else "o", zorder=3)
+        a.annotate(lab[n].split(" (")[0] + (" k5" if "submitted" in lab[n] else ""), (t, ag["ods"]),
+                   xytext=(3, 2), textcoords="offset points", fontsize=6)
+    a.set_xscale("log")
+    a.set_xlabel("total time incl. preprocessing (ms, log scale)")
+    a.set_ylabel("ODS")
+    a.set_title("BSDS500 test: accuracy against cost")
+    fig.tight_layout()
+    files = save(fig, out, "fig_runtime")
+    note(id="fig_runtime", old="new (with Table 8)", title="Runtime per stage, and ODS against runtime",
+         reviewer="R1.4, R2.5, R2.10, R3.3, R3.6", source="results/runtime/summary.csv (E24), E20 counts", files=files,
+         status="drawn",
+         caption="Single thread (cv2.setNumThreads(1)), 3 warm-up images, median of 5 runs per image, mean over images; "
+                 "Intel i5-14400, Windows 11, Python 3.13, OpenCV 4.13 (results/runtime/env.json). Kernel construction "
+                 "(about 0.2 ms) is excluded. ODPS needs the argmax instead of the max, so its cost appears in pooling "
+                 "and ODPS. For Sobel and the Gaussian gradient the green part is the direction quantization, which the runtime "
+                 "script always computes although these baselines use no NMS: their times are overstated by that part (F28). "
+                 "Background load during the run was about 0.6 of one core (F28).")
+
+
 def manual_and_pending(cfg, M, out):
     d = M.by[M.odps]["nms"]["d"]
     note(id="(manual) flowchart GWC vs GWi", old="Figure 2", title="Flowchart, complex vs imaginary-only Gabor",
          reviewer="R2.m4, R2.10, R3.3", source="hand-drawn", files=[], status="edit by hand",
          caption=f"Edits: 'Gwi' -> 'GWi'; N vs 2N convolutions; MAC per pixel at k{M.k}: GWi {M.k * M.k * 8}, "
-                 f"GWC {2 * M.k * M.k * 8}; runtime numbers (24.6 / 11.3 ms / 2.2x) replaced from E24 (pending).")
+                 f"GWC {2 * M.k * M.k * 8}; runtime numbers (24.6 / 11.3 ms / 2.2x) replaced from results/runtime/summary.csv "
+                 "(E24, F28), with the filtering stage and the full pipeline stated separately (R2.10, R3.3).")
     note(id="(manual) flowchart of stages", old="Figure 3", title="Flowchart of the stages", reviewer="R2.m4",
          source="hand-drawn", files=[], status="edit by hand", caption="Check names (GWi, GWC, ODPS) and stage numbers against Figure 1.")
     note(id="(manual) ODPS flowchart", old="Figure 4", title="Flowchart of ODPS (Stage 6)", reviewer="R2.2, R2.3",
@@ -645,10 +713,10 @@ def manual_and_pending(cfg, M, out):
          caption=f"Edits: 'double-peak / side-lobe' wording corrected to directional thinning (F12); d = λ/2 = {d:g} with "
                  "nearest sampling; neighbours outside the image = 0; ties kept (match Algorithm 1 lines 9 and 16).")
     rt = C.results_dir(cfg, "runtime")
-    note(id="fig_runtime", old="new (with Table 8)", title="Runtime per stage and MAC per pixel",
-         reviewer="R1.4, R2.5, R2.10, R3.3, R3.6", source="results/runtime/ (E24)", files=[],
-         status="pending E24" if not any(rt.glob("*.csv")) else "data present: add drawing",
-         caption="Filtering stage vs full pipeline, single thread, median of 5 runs.")
+    if not (rt / "summary.csv").exists():
+        note(id="fig_runtime", old="new (with Table 8)", title="Runtime per stage and MAC per pixel",
+             reviewer="R1.4, R2.5, R2.10, R3.3, R3.6", source="results/runtime/ (E24)", files=[],
+             status="pending E24", caption="Filtering stage vs full pipeline, single thread, median of 5 runs.")
     ext = C.results_dir(cfg, "external")
     note(id="(DL in PR and qualitative figures)", old="Figures 8, 10, 12", title="Learning-based detectors (TEED, PiDiNet, LDC)",
          reviewer="R1.2, R3.5", source="results/external/ (E23)", files=[],
@@ -672,7 +740,7 @@ def write_manifest(out: Path, M):
 
 
 FIGS = ["pipeline", "odps_offsets", "step_profiles", "structures_dc", "selection", "lambda_d",
-        "qualitative", "pr", "forest", "perimage_f", "preproc", "odps_effect", "localization"]
+        "qualitative", "pr", "forest", "perimage_f", "preproc", "odps_effect", "localization", "runtime"]
 
 
 def main():
@@ -700,6 +768,7 @@ def main():
         "preproc": lambda: fig_preproc(cfg, final, M, proto, out),
         "odps_effect": lambda: fig_odps_effect(cfg, final, M, proto, out, n_jobs),
         "localization": lambda: fig_localization(cfg, final, M, proto, out),
+        "runtime": lambda: fig_runtime(cfg, final, M, proto, out, n_jobs),
     }
     for name in only:
         print(f"[{name}]")

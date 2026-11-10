@@ -1,0 +1,5 @@
+dataset,config,d,n,odps_ms_mean,odps_ms_std
+BSDS500,GWi_k9l9,1.0,200,3.615,0.123
+BSDS500,GWi_k9l9,2.0,200,3.61,0.113
+BSDS500,GWi_k9l9,3.0,200,3.62,0.122
+BSDS500,GWi_k9l9,4.5,200,3.638,0.12

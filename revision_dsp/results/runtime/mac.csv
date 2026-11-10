@@ -1,0 +1,15 @@
+method,family,mac_per_pixel
+GWi_k9l9,gwi,648
+GWiODPS_k9l9,gwi,648
+GWCraw_k9l9,gwc,1296
+GWCzero_k9l9,gwc,1296
+GWi_k5l4,gwi,200
+GWiODPS_k5l4,gwi,200
+GWCraw_k5l4,gwc,400
+GWCzero_k5l4,gwc,400
+Canny,canny,12
+Sobel,sobel,12
+LoG,log,49
+PC,pc,
+ED,ed,
+GaussGradMag1.4,gaussgrad,34

@@ -20,7 +20,7 @@ test-set results (E20), run once after the freeze (tag `freeze-2026-11-10`, comm
 7ae7ba5), and the paired statistics of E22 (F25). Only the pairs pre-registered in
 scripts/22_stats.py have confidence intervals. Every other test-set difference is a
 point estimate.
-Last update: 10 Nov 2026, after E25. Timings of every stage: PROCESS_LOG.md.
+Last update: 10 Nov 2026, after E24. Timings of every stage: PROCESS_LOG.md.
 
 ## Original claims and their status
 
@@ -30,7 +30,7 @@ Last update: 10 Nov 2026, after E25. Timings of every stage: PROCESS_LOG.md.
 | C2 | ODPS suppresses carrier side lobes located at ±λ/2, with d = 2 for λ = 4 | **Claim withdrawn (mechanism), replaced by directional thinning.** Carrier side lobes exist only when (k//2)/λ > 0.5. At k5 λ4 and at the new selection there are none; ODPS thins a broad response across orientations. Where side lobes exist (k5 λ3), ODPS keeps the two side peaks of an axis-aligned step and removes the edge pixels | F12 (correction), F27 |
 | C3 | ODPS improves ODS over GWi | **Claim corrected: supported on BSDS500 only.** E22 at k9 λ9: BSDS500 +0.0122, 95% CI [0.0090, 0.0158]; BIPED +0.0079, CI [−0.0076, 0.0203]; UDED −0.0025, CI [−0.0161, 0.0121]. "Improves" may be written for BSDS500 only. At the submitted k5 λ4 the point gains were larger (+0.0253, +0.0142, +0.0377), with no CI | F9, F10, F11, F22, F25 |
 | C4 | The real component of the Gabor kernel is redundant (GWi > GWC) | **Claim corrected.** GWi is above raw GWC on all test sets (CIs exclude 0), but most of that gap is the DC response of the raw real kernel. Against zero-DC GWC at k9 λ9, GWi stays above, with CIs excluding 0: +0.0161, +0.0391 and +0.0842. At k5 λ4, zero-DC GWC is above GWi on BSDS500 (−0.0093, no CI) | F14, F23, F25 |
-| C5 | GWi is about 2.2× faster than GWC | **Open (E24).** The claim applies to the filtering stage only (R2.10, R3.3). The selected k9 kernel costs 3.24× the submitted one per pixel | F15 |
+| C5 | GWi is about 2.2× faster than GWC | **Claim corrected (scope).** It holds for the filtering stage: 2.1× at k9 λ9 and 2.3× at k5 λ4. For the full pipeline, GWi+ODPS is 1.56× faster than GWC at k9 λ9, but only 1.15× at the submitted k5 λ4. The Gaussian gradient baseline is about 5.5× faster than GWi+ODPS and has higher ODS. "12.6× faster than PC" becomes 8.5× at k9 λ9 | F15, F28 |
 | C6 | (implicit) the Gabor carrier is what makes GWi work | **Not supported for GWi alone.** GWi scores best as the kernel loses its carrier lobe and approaches a smoothed oriented derivative. This was already published in Paper 2 (A-GWi) | F7, H1 |
 | C7 | (not claimed, but implied by roadmap §6, which lists only Gabor methods) where GWi+ODPS stands among the evaluated detectors | **Below a classical baseline, in the submission and in the revision.** The Gaussian gradient magnitude σ 1.4 is above every Gabor variant on all three test sets, in ODS, OIS and AP. Measured under the manuscript border protocol, which handicaps the Gabor methods (H5) | F16, F24, H3, H5 |
 | C8 | (design choice, R2.6) N = 8 orientations is an appropriate balance | **Not supported at the selected kernel.** N = 4 reaches the same ODS at half the cost; N = 16 adds nothing. It was supported at k7 λ5 (E11 of the five-candidate run) | F19 |
@@ -71,6 +71,7 @@ They add no experiment that a reviewer did not ask for.
 | F25 | R1.1, R2.11, R1.5 | Paired statistics (E22) |
 | F26 | R2.7, R2.12 | Preprocessing ablation (E21) |
 | F27 | R1.3, R1.5, R2.3 | Localization and qualitative analysis of ODPS (E25); failure cases; border responses visible in the figures |
+| F28 | R1.4, R2.5, R2.10, R3.3, R3.6 | Runtime per stage, full pipeline vs filtering, cost of d, measurement conditions (E24) |
 | H1 | R3.1a (citation) | Published in A-GWi; Paper 1 must cite it |
 | H2 | R2.9 | Metric definitions; aligned with A-GWi |
 | H3 | R2.8 | Binary Canny and GaussGradMag naming |
@@ -523,9 +524,46 @@ n/c: binary map with one operating point; AP is not comparable (H3).
   - **Limitation for the manuscript (R1.3, R2.5, R2.12):** ODPS assumes that one edge is isolated within about d pixels. For parallel edges spaced at or below d it removes true edges.
   - This links the choice d = λ/2 to the smallest edge spacing the method can keep (R2.2 asks for the relation between λ and d).
 
+**F28. Finding. GWi halves the filtering time of GWC, but at the selected kernel the full GWi+ODPS pipeline is 1.56× faster than GWC and 5.5× slower than the Gaussian gradient baseline (E24).**
+- **Run:** 10 Nov 2026, 08:08:51 to 08:36:57 WIB (28 min), at commit bb6905d. Files: `results/runtime/summary.csv`, `per_image.csv`, `mac.csv`, `odps_d.csv`, `kernels.csv` and `env.json`.
+- **Protocol** (`scripts/24_runtime.py`, written before the run):
+  - one thread (`cv2.setNumThreads(1)`, OMP/MKL/OpenBLAS = 1);
+  - 3 warm-up images, then the median of 5 runs per image, and the mean ± std over the images;
+  - stage 1 (preprocessing) is reported separately.
+- **Machine:** Intel Core i5-14400 (10 cores, 16 threads), Windows 11, Python 3.13.13, OpenCV 4.13.0.
+  - The machine was not fully idle. Just before the run, the desktop app and an open Notepad window used about 0.6 of one core. This has to be stated with the numbers.
+  - Per-image spread is small: GWi k9 λ9 on BSDS500 is 29.2 ± 1.7 ms.
+- **BSDS500 test, ms per image (filter + pool + ODPS; preprocessing 3.5 ms not included):**
+
+  | Method | k9 λ9 (selected) | k5 λ4 (submitted) |
+  |---|---|---|
+  | GWi | 29.2 (filtering 28.4) | 11.2 (filtering 10.4) |
+  | GWi+ODPS | 38.7 | 21.5 |
+  | GWC raw | 60.3 (filtering 59.5) | 24.8 (filtering 24.0) |
+  | GWC zero-DC | 60.7 | 24.8 |
+
+  Baselines: Gaussian gradient σ 1.4: 7.0, Sobel: 6.8, LoG: 1.7, Canny: 2.0, ED: 4.7, PC: 328.3.
+- **Reproduction of the submitted numbers (k5 λ4):** GWi 11.2 ms (submitted 11.3), GWC 24.8 ms (24.6), ratio 2.22× (2.2×), PC 328.3 ms (326.5).
+  - GWi+ODPS is 21.5 ms against the submitted 25.9 ms. The ODPS implementation of the revision is faster than the submitted one; the result is the same (E01).
+  - The submitted measurement machine is not recorded in the submission, so the agreement is approximate by nature.
+- **Filtering stage (R2.10):** GWC over GWi is 2.09× at k9 λ9 and 2.31× at k5 λ4. The halving holds, as expected from N against 2N convolutions.
+  - The k9 kernel costs 2.73× the k5 kernel in filtering time, against 3.24× in MAC per pixel.
+- **Full pipeline (R3.3):**
+  - ODPS needs the argmax instead of the max. Pooling goes from 0.8 to 6.2 ms, and ODPS itself takes 3.8 ms.
+  - Its overhead is therefore 9.6 ms on BSDS500 (+33% over GWi), 70 ms on BIPED (+46%) and 16 ms on UDED (+33%).
+  - At the submitted k5 λ4, GWi+ODPS (21.5 ms) is only 1.15× faster than GWC (24.8 ms); with preprocessing, 25.0 against 28.3 ms. The reviewer's point that the full pipeline is not clearly faster than GWC is essentially right for the submitted configuration.
+  - At k9 λ9 filtering dominates, and GWi+ODPS is 1.56× faster than GWC (38.7 against 60.3 ms; 1.51× with preprocessing).
+- **Cost of d (R2.5):** ODPS takes 3.61 to 3.64 ms for d = 1, 2, 3 and 4.5. With nearest sampling, its cost does not depend on d.
+- **Kernel construction:** about 0.2 ms per configuration, done once (excluded).
+- **Against the baselines:**
+  - The Gaussian gradient σ 1.4, which has the highest ODS on all three test sets (F24), takes 7.0 ms on BSDS500. GWi+ODPS takes 38.7 ms, 5.5× more; BIPED 42.0 against 224.0 ms (5.3×).
+  - Even this understates the gap. The runtime script always computes the direction quantization for the gradient baselines (4.5 ms of their 7.0 ms), although they use no NMS. Their filtering alone takes 2.5 ms (Gaussian gradient) and 1.7 ms (Sobel).
+  - The submitted comparison "12.6× faster than Phase Congruency" uses the slowest baseline. At k9 λ9 it becomes 8.5×. The Gaussian gradient comparison is the informative one, and it is unfavourable.
+- **Relation to Paper 2 (H6):** A-GWi measured static GWi k7 at 15.54 ms and GWC at 33.70 ms (ratio 2.17; minimum of 3 runs, another machine). The ratios here (2.09× and 2.31× in filtering) are consistent. The absolute times are not comparable across machines and timing rules.
+
 ## G. Open until the test run
 
-Status after E20, E21, E22 and E25 (10 Nov 2026):
+Status after E20, E21, E22, E24 and E25 (10 Nov 2026):
 
 - Sign and 95% CI of ΔODS for GWi vs GWC, GWi+ODPS vs GWC, and GWi+ODPS vs GWi on BSDS500, BIPED and UDED (E20, E22).
   - **Resolved by F25.** ODPS improves ODS on BSDS500 only. GWi and GWi+ODPS are above raw GWC on all three sets. GWi is above zero-DC GWC on all three sets at k9 λ9.
@@ -533,7 +571,7 @@ Status after E20, E21, E22 and E25 (10 Nov 2026):
   - **Resolved by F21.** The selection carries over for GWi but not for GWi+ODPS.
 - Whether the non-test patterns above (H1, F7) also appear on the test sets: a descriptive check, not a new test.
   - **F22.** The direction is consistent with H1 on all three sets, with only two kernels.
-- Still open: runtime and C5 (E24). E23 and E26 have not been run.
+- Runtime and C5: E24 was run on 10 Nov 2026 (F28). E23 and E26 have not been run.
 - E25 (R1.3) was run on 10 Nov 2026: see F27 and C10.
 - **Figures (10 Nov 2026):** `scripts/27_figures.py` (stage `figures` of run_all.sh) draws every figure of the revised manuscript from the frozen results.
   - `results/figures/FIGURES.md` lists, for each figure: the figure of the submission it replaces, the reviewer comments it answers, its data source, and what its caption must say.

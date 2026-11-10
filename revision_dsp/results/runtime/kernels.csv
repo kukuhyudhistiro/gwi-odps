@@ -1,0 +1,5 @@
+k,lam,N,sigma_ratio,gamma,dc,kernel_construction_ms
+9,9.0,8,0.56,0.5,raw,0.2021
+9,9.0,8,0.56,0.5,zero,0.216
+5,4.0,8,0.56,0.5,raw,0.1899
+5,4.0,8,0.56,0.5,zero,0.2073

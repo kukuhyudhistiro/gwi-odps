@@ -154,7 +154,7 @@ test_sets:
 # Images of Figures 7, 9 and 11 of the manuscript
 qualitative:
   BSDS500: ["3063", "29030", "36046", "48017"]
-  BIPED: ["RGB_042", "RGB_070", "RGB_138"]
+  BIPED: ["RGB_042", "RGB_070", "RGB_138", "RGB_139"]   # RGB_139: worst case of E25 (R1.3, R1.5), added after E25
   UDED: ["05-WIREFRAME-2", "04-0896x4", "28-img_043_SRF_2_HR"]
 
 runtime:                        # Section 4.4: one thread, three warm-up images

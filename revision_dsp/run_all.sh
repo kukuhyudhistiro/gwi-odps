@@ -42,7 +42,9 @@ case "${1:-help}" in
     run scripts/25_qualitative_odps.py ;;
   tables)
     run scripts/26_tables.py ;;
+  figures)     # all figures of the revised manuscript + results/figures/FIGURES.md
+    run scripts/27_figures.py ;;
   *)
-    echo "stages: smoke | check | select | ablation | hypotheses | freeze | test | preproc | stats | runtime | qualitative | tables"
+    echo "stages: smoke | check | select | ablation | hypotheses | freeze | test | preproc | stats | runtime | qualitative | tables | figures"
     echo "external DL maps (R1.2): python3 scripts/23_eval_external.py --maps-root <dir> --methods TEED PiDiNet LDC --nms" ;;
 esac

@@ -20,14 +20,14 @@ test-set results (E20), run once after the freeze (tag `freeze-2026-11-10`, comm
 7ae7ba5), and the paired statistics of E22 (F25). Only the pairs pre-registered in
 scripts/22_stats.py have confidence intervals. Every other test-set difference is a
 point estimate.
-Last update: 10 Nov 2026, after E21. Timings of every stage: PROCESS_LOG.md.
+Last update: 10 Nov 2026, after E25. Timings of every stage: PROCESS_LOG.md.
 
 ## Original claims and their status
 
 | # | Claim in the submission or the roadmap | Status now | Entries |
 |---|---|---|---|
 | C1 | k5 λ4 is the best configuration across three datasets (Table 4) | **Claim withdrawn.** It was selected on test data. On non-test data it ranks 12 of 18 by ODS of GWi. On test, k9 λ9 is above it for GWi on all three sets; for GWi+ODPS on BSDS500 and BIPED but not UDED (+0.0002) | F1, F2, F21 |
-| C2 | ODPS suppresses carrier side lobes located at ±λ/2, with d = 2 for λ = 4 | **Claim corrected.** Carrier side lobes exist only when (k//2)/λ > 0.5. At k5 λ4 and at the new selection there are none; ODPS then thins a broad response across orientations | F12 |
+| C2 | ODPS suppresses carrier side lobes located at ±λ/2, with d = 2 for λ = 4 | **Claim withdrawn (mechanism), replaced by directional thinning.** Carrier side lobes exist only when (k//2)/λ > 0.5. At k5 λ4 and at the new selection there are none; ODPS thins a broad response across orientations. Where side lobes exist (k5 λ3), ODPS keeps the two side peaks of an axis-aligned step and removes the edge pixels | F12 (correction), F27 |
 | C3 | ODPS improves ODS over GWi | **Claim corrected: supported on BSDS500 only.** E22 at k9 λ9: BSDS500 +0.0122, 95% CI [0.0090, 0.0158]; BIPED +0.0079, CI [−0.0076, 0.0203]; UDED −0.0025, CI [−0.0161, 0.0121]. "Improves" may be written for BSDS500 only. At the submitted k5 λ4 the point gains were larger (+0.0253, +0.0142, +0.0377), with no CI | F9, F10, F11, F22, F25 |
 | C4 | The real component of the Gabor kernel is redundant (GWi > GWC) | **Claim corrected.** GWi is above raw GWC on all test sets (CIs exclude 0), but most of that gap is the DC response of the raw real kernel. Against zero-DC GWC at k9 λ9, GWi stays above, with CIs excluding 0: +0.0161, +0.0391 and +0.0842. At k5 λ4, zero-DC GWC is above GWi on BSDS500 (−0.0093, no CI) | F14, F23, F25 |
 | C5 | GWi is about 2.2× faster than GWC | **Open (E24).** The claim applies to the filtering stage only (R2.10, R3.3). The selected k9 kernel costs 3.24× the submitted one per pixel | F15 |
@@ -35,6 +35,7 @@ Last update: 10 Nov 2026, after E21. Timings of every stage: PROCESS_LOG.md.
 | C7 | (not claimed, but implied by roadmap §6, which lists only Gabor methods) where GWi+ODPS stands among the evaluated detectors | **Below a classical baseline, in the submission and in the revision.** The Gaussian gradient magnitude σ 1.4 is above every Gabor variant on all three test sets, in ODS, OIS and AP. Measured under the manuscript border protocol, which handicaps the Gabor methods (H5) | F16, F24, H3, H5 |
 | C8 | (design choice, R2.6) N = 8 orientations is an appropriate balance | **Not supported at the selected kernel.** N = 4 reaches the same ODS at half the cost; N = 16 adds nothing. It was supported at k7 λ5 (E11 of the five-candidate run) | F19 |
 | C9 | (§3.1, R2.7) Histogram equalization is important, notably for low-contrast images; normalization to [0, 1] is necessary | **Claim withdrawn.** On all three test sets, removing HE raises ODS of GWi (+0.0055 to +0.0623) and of GWi+ODPS (+0.0111 to +0.0591). /255 changes nothing. The protocol stays as frozen (HE) | F26 |
+| C10 | (R1.3, as the reviewer frames it) ODPS reduces artifacts without introducing boundary distortions | **Claim corrected.** At the selected kernel, ODPS works by thinning, so that a lower threshold gives more recall at about the same precision. The mean matched distance grows by less than 0.1 px on average. Some images lose true boundary pixels (BIPED RGB_139: recall −0.25). "Without distortion" can only be stated with these numbers | F27 |
 
 ## Reviewer map
 
@@ -69,6 +70,7 @@ They add no experiment that a reviewer did not ask for.
 | F24 | R2.8, R2.12 | Ranking against the classical baselines |
 | F25 | R1.1, R2.11, R1.5 | Paired statistics (E22) |
 | F26 | R2.7, R2.12 | Preprocessing ablation (E21) |
+| F27 | R1.3, R1.5, R2.3 | Localization and qualitative analysis of ODPS (E25); failure cases; border responses visible in the figures |
 | H1 | R3.1a (citation) | Published in A-GWi; Paper 1 must cite it |
 | H2 | R2.9 | Metric definitions; aligned with A-GWi |
 | H3 | R2.8 | Binary Canny and GaussGradMag naming |
@@ -139,6 +141,15 @@ For all six candidates with half-width over λ below 0.5, the gain is positive: 
 - The carrier side lobe exists only when (k//2)/λ > 0.5 (E02). At k5 λ4 and at k7 λ9 there is none.
 - At these kernels ODPS removes the shoulder of the response produced by the maximum across orientations, acting as directional thinning.
 - "Double-peak suppression" describes the large-ratio regime only. The text must say so.
+- *Correction (10 Nov 2026, found while drawing the figure that replaces Figure 5):* the bullet above is too generous. Even where the carrier side lobe exists, ODPS does not suppress the double peak on an axis-aligned step.
+  - Source: E02, `results/mechanism/step_profiles.csv` (9 Nov), checked pixel by pixel. At k5 λ3 ((k//2)/λ = 0.67), normal 0°:
+    - the max over orientations is 1.0 at ±1.5 px from the edge and 0.75 at the two edge pixels (±0.5 px);
+    - after ODPS (d = 1.5, offset 2 px) the two peaks at ±1.5 px are kept and the two edge pixels are removed (width 4 → 2 px).
+  - At 22.5° and 45° there is no secondary maximum.
+  - So in the side-lobe regime, ODPS leaves a double line about 1.5 px off the edge instead of a single edge. The large ODPS gains of that regime (F9) come with this behaviour; the tolerance of about 4.3 px still matches both lines.
+  - The submitted mechanism ("suppresses side lobes at ±λ/2") is therefore not supported in any regime tested. ODPS is a directional thinning step.
+- *Added after E02b (10 Nov 2026, E02 re-run so that its tables include the final candidates):* at the selected k9 λ9 there is no carrier side lobe ((k//2)/λ = 0.444). On a step edge, the band above 50% of the maximum is 4.0, 4.52 and 4.24 px wide at normals 0°, 22.5° and 45°. After ODPS, 4.0, 4.0 and 4.24 px remain.
+  - ODPS therefore trims the tails, but leaves a band about 4 px wide. The one-pixel line comes from the thinning step of the evaluation protocol, not from ODPS.
 
 **F13. Limitation. For odd λ, d = λ/2 is rounded.**
 - The offsets use `np.round`, which rounds halves to even. For d = 4.5 (λ9) the axis offsets are 4, the same as for λ8. For λ10 they are 5.
@@ -151,6 +162,10 @@ For all six candidates with half-width over λ below 0.5, the gain is positive: 
 - GWC built with the same kernel therefore carries a brightness-dependent response that grows with λ. A GWi > GWC gap at k7 λ9 may partly reflect this DC leakage, not only the redundancy of the even component.
 - The GWC zero-DC analysis (R1.5, evaluated in E20) is needed to interpret the comparison, and the claim must be stated with this limit.
 - *Added after E20:* the DC concern was correct, and it already applies at the submitted k5 λ4. See F23.
+- *Added after E02b (10 Nov 2026):* at the final selection k9 λ9 the DC-to-gain ratio of the raw real kernel is 0.157, not the 0.76 of k7 λ9. The 9×9 window holds more of the negative cosine lobes.
+  - The ratio is therefore not a sufficient summary of the bias.
+  - On a flat region next to a step of contrast 0.2, GWC raw at k9 λ9 responds at 0.52, 0.74 and 0.82 of its edge response for backgrounds 0.2, 0.5 and 0.8. GWC zero-DC and GWi respond at 0 (`results/mechanism/dc_leakage.csv`).
+  - GWC raw at k9 λ9 is the lowest of all 14 methods on BSDS500 and UDED (F23).
 
 ## E. Cost
 
@@ -460,9 +475,57 @@ n/c: binary map with one operating point; AP is not comparable (H3).
 - **No confidence intervals.** The E21 differences are not part of the pre-registered E22 family, so they are point estimates.
 - **Possible reason, not tested.** HE stretches the contrast of flat and textured regions. That can create gradients that the Gabor filter reports as edges.
 
+**F27. Finding. ODPS thins rather than relocates. Its matched distance grows by a sub-pixel amount, and some images lose true boundaries (E25, R1.3).**
+- Run on 10 Nov 2026, 07:30:18 to 07:32:11 WIB, at commit c25d821, frozen k9 λ9.
+  - Files: `results/qualitative/localization.csv`, `localization_summary.csv`, and 10 figures (the images of Figures 7, 9 and 11).
+- **Operational definition**, written in `scripts/25_qualitative_odps.py` before the run:
+  - Per image, GWi and GWi+ODPS are compared at each method's own dataset ODS threshold.
+  - A distortion would show as a larger matched prediction-GT distance, or as a recall drop at similar precision.
+  - The thresholds differ (BSDS500 0.23 vs 0.20, BIPED 0.18 vs 0.16, UDED 0.10 vs 0.08), so each difference mixes the effect of ODPS with that of its lower threshold.
+- **Results.** Per-image differences, GWi+ODPS minus GWi:
+
+  | | BSDS500 (200) | BIPED (50) | UDED (30) |
+  |---|---|---|---|
+  | Precision, mean | −0.0015 | +0.0053 | +0.0135 |
+  | Recall, mean | +0.0289 | +0.0112 | −0.0109 |
+  | Images with lower recall | 13% | 22% | 53% |
+  | Mean matched distance (base GWi) | +0.070 px (1.386) | +0.085 px (1.877) | +0.015 px (1.207) |
+  | Images with larger mean distance | 94% | 88% | 60% |
+  | P90 distance, median change | 0 px | 0 px | 0 px |
+  | Largest P90 increase, one image | +0.76 px | +1.61 px | +0.76 px |
+
+- **Mechanism.**
+  - On BSDS500, ODPS does not raise precision at its own threshold.
+  - It removes the shoulder pixels around a ridge, so a lower threshold keeps precision while adding recall. This is the directional thinning of F12, not side-lobe removal.
+  - On UDED the trade goes the other way: precision rises, recall falls. This is consistent with no ODS difference on UDED (F25).
+- **Against the pre-defined criterion:**
+  - The matched distance grows on most images. A small localization change is therefore present, and has to be reported.
+  - Its size is less than 0.1 px on average, about 5% of the base distance. The matching tolerance is about 4.3 px on BSDS500 and about 11 px on BIPED.
+  - Whether the increase comes from ODPS moving responses, or from the extra recall at the lower threshold matching farther pixels, cannot be separated with this design.
+- **Failure cases (R1.5):**
+  - BIPED RGB_139: recall 0.861 → 0.610, precision 0.735 → 0.701, P90 distance +1.6 px.
+  - BIPED RGB_029: recall −0.128, precision −0.030.
+  - BSDS500 108004: recall −0.073, precision −0.067.
+  - UDED 28-img_043_SRF_2_HR (one of the figure images, a façade grid): recall −0.107, precision +0.081. ODPS removes many pixels along the paired edges of the bars.
+- **Figures.**
+  - The ten figure images are those of the submitted Figures 7, 9 and 11. Nine of them show a gain or a small change. None of the three worst cases above is among them except UDED 28-img.
+  - A figure set made only of these images would understate the failures. At least the worst case should be shown.
+  - In the difference panel, green marks GT pixels not detected after ODPS. That includes pixels GWi also missed, so green does not mean "lost by ODPS".
+  - **Border responses are visible.** In BSDS500 36046 the image border appears as a detected line in the GWi+ODPS map. This is the zero-padding effect of H5, visible in the qualitative figures.
+  - The figures must not be cropped to hide it. The caption should state it (R2.3 asks for the border handling to be described).
+- **No confidence intervals.** E25 is descriptive, and its differences are not part of the E22 family.
+- *Added after the failure-case figure (10 Nov 2026, 07:37 to 07:39, run E25b, CHANGELOG):* BIPED RGB_139 was added to the figure list. The re-run reproduced `localization.csv` byte for byte.
+- **Failure mechanism (BIPED RGB_139).** The image is dominated by louvred panels: many parallel horizontal slats.
+  - On the panels, the spacing between neighbouring GT edges has a median of 5 to 6 px (IQR 2 to 7 px), measured on three columns.
+  - At λ9, ODPS compares each pixel with neighbours about 4 px away along the gradient (d = 4.5, rounded, F13). Neighbouring true edges therefore fall inside the suppression distance, and ODPS removes the weaker one.
+  - The difference panel shows exactly this: red and green along the slats.
+  - The UDED façade grid (28-img) is the same case with the paired edges of the bars.
+  - **Limitation for the manuscript (R1.3, R2.5, R2.12):** ODPS assumes that one edge is isolated within about d pixels. For parallel edges spaced at or below d it removes true edges.
+  - This links the choice d = λ/2 to the smallest edge spacing the method can keep (R2.2 asks for the relation between λ and d).
+
 ## G. Open until the test run
 
-Status after E20, E21 and E22 (10 Nov 2026):
+Status after E20, E21, E22 and E25 (10 Nov 2026):
 
 - Sign and 95% CI of ΔODS for GWi vs GWC, GWi+ODPS vs GWC, and GWi+ODPS vs GWi on BSDS500, BIPED and UDED (E20, E22).
   - **Resolved by F25.** ODPS improves ODS on BSDS500 only. GWi and GWi+ODPS are above raw GWC on all three sets. GWi is above zero-DC GWC on all three sets at k9 λ9.
@@ -470,5 +533,14 @@ Status after E20, E21 and E22 (10 Nov 2026):
   - **Resolved by F21.** The selection carries over for GWi but not for GWi+ODPS.
 - Whether the non-test patterns above (H1, F7) also appear on the test sets: a descriptive check, not a new test.
   - **F22.** The direction is consistent with H1 on all three sets, with only two kernels.
-- Still open: runtime and C5 (E24). E23, E25 and E26 have not been run.
+- Still open: runtime and C5 (E24). E23 and E26 have not been run.
+- E25 (R1.3) was run on 10 Nov 2026: see F27 and C10.
+- **Figures (10 Nov 2026):** `scripts/27_figures.py` (stage `figures` of run_all.sh) draws every figure of the revised manuscript from the frozen results.
+  - `results/figures/FIGURES.md` lists, for each figure: the figure of the submission it replaces, the reviewer comments it answers, its data source, and what its caption must say.
+  - Figures 2-4 of the submission are hand-drawn; FIGURES.md lists the edits they need.
+  - Still pending: the runtime figure (E24) and the learning-based detectors (E23).
+  - Choices made by the script:
+    - images are chosen by rule (config.yaml list; median and worst recall change for the ODPS figure);
+    - display ranges are clipped only where the caption says so;
+    - no figure is cropped to hide the border response.
 - E21 (R2.7) was run on 10 Nov 2026: see F26 and C9.

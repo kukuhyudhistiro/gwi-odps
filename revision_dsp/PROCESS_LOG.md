@@ -17,7 +17,7 @@ Baris yang bukan jawaban atas komentar reviewer ditandai 'pendukung' atau 'bukan
 | 1. Persiapan data & eksperimen | 7-9 Nov | 26 | 11:15:09 | - |
 | 2. Penetapan konfigurasi & evaluasi uji | 10 Nov | 6 | 2:30:44 | - |
 | 3. Analisis & pengukuran | 11-14 Nov | 24 | 3:04:04 | - |
-| 5. Kirim draf | 19 Nov | 8 | 0:05:12 | AUD-1, REL-3, KIRIM-1 |
+| 5. Kirim draf | 19 Nov | 11 | 0:06:53 | AUD-1, REL-3, KIRIM-1 |
 
 ## Fase 1. Persiapan data & eksperimen (agenda 7-9 Nov)
 
@@ -105,3 +105,6 @@ Baris yang bukan jawaban atas komentar reviewer ditandai 'pendukung' atau 'bukan
 | S-02 | run | Smoke test pada clone baru dengan path Python berisi spasi, setelah perbaikan run_all.sh | pendukung (bukan eksperimen) | 2026-11-10 16:15:33 | 2026-11-10 16:17:08 | 0:01:35 | rc 0 |  | 12 skrip selesai; selftest T0-T6 PASS | run_all.sh dari working tree sebelum commit 67ed8ee | ya |
 | S-03 | run | Smoke test pada clone Windows tanpa modifikasi (run_all.sh dengan CRLF dari core.autocrlf) | pendukung (bukan eksperimen) | 2026-11-10 16:20:15 | 2026-11-10 16:22:06 | 0:01:51 | rc 0 |  | Dengan MSYS_NO_PATHCONV=1: 12 skrip selesai, selftest PASS; CRLF tidak mengganggu. Tanpa variabel itu (16:19:37) gagal di 01_selftest: Git Bash mengubah /tmp di argumen menjadi folder Temp Windows, sedangkan Python membaca /tmp dari config sebagai C:\tmp | hanya Windows (Git Bash); di Linux/macOS /tmp sama |  |
 | REL-2b | commit | Tag v3.0.0-dsp-r1 dipindah dari 44e1481 ke 67ed8ee (perbaikan run_all.sh); masih lokal | semua (Data availability) | 2026-11-10 16:19:03 |  |  | selesai (lokal) |  | Tag belum pernah dipublikasikan, jadi pemindahan tidak mengubah apa pun di GitHub | commit 67ed8ee; tag v3.0.0-dsp-r1 | ya |
+| FIX-2 | commit | Smoke test: data sintetis dan hasilnya di tests/_smoke/ (di-ignore git), bukan /tmp; hasil smoke lama dihapus sebelum tiap run; CHANGELOG 3.0.0 bagian Fixed | pendukung (bukan eksperimen) | 2026-11-10 16:25:48 |  |  | selesai | revision_dsp/run_all.sh; tests/config_synth.yaml; tools/make_synthetic_data.py; .gitignore | Tidak ada file hasil yang berubah | commit 9421741 |  |
+| S-04 | run | Smoke test pada clone Windows tanpa modifikasi setelah FIX-2, tanpa variabel tambahan, dengan path Python berisi spasi | pendukung (bukan eksperimen) | 2026-11-10 16:25:57 | 2026-11-10 16:27:38 | 0:01:41 | rc 0 |  | 12 skrip selesai; selftest T0-T6 PASS; output di tests/_smoke/ dan git status tetap bersih | folder kerja sementara | ya |
+| REL-2c | commit | Tag v3.0.0-dsp-r1 dipindah dari 67ed8ee ke 9421741 (FIX-2); masih lokal | semua (Data availability) | 2026-11-10 16:27:47 |  |  | selesai (lokal) |  | Tag belum pernah dipublikasikan, jadi pemindahan tidak mengubah apa pun di GitHub | commit 9421741; tag v3.0.0-dsp-r1 | ya |

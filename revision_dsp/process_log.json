@@ -1,7 +1,7 @@
 {
  "timezone": "WIB (UTC+7)",
  "source": "gwi-odps, revision_dsp/process_log.csv",
- "generated": "2026-11-10 15:39:28",
+ "generated": "2026-11-10 15:40:01",
  "agenda": {
   "1": {
    "dates": "7-9 Nov",
@@ -1123,6 +1123,25 @@
    "web_note": "",
    "duration_s": 1045,
    "duration": "0:17:25"
+  },
+  {
+   "phase": 5,
+   "phase_name": "Kirim draf",
+   "id": "REL-2",
+   "kind": "commit",
+   "activity": "Tag rilis v3.0.0-dsp-r1 pada commit dokumen rilis (lokal; belum di-push dan belum di-merge ke main)",
+   "start": "2026-11-10 15:39:54",
+   "end": "",
+   "status": "selesai (lokal)",
+   "outputs": "",
+   "result": "Tag dipindah bila penulisan naskah atau audit angka mengubah file sebelum dipublikasikan",
+   "ref": "commit 44e1481; tag v3.0.0-dsp-r1",
+   "reviewer": "semua (Data availability)",
+   "web": "ya",
+   "web_status": "selesai (lokal)",
+   "web_note": "Tag dibuat di repositori lokal; dipublikasikan bersama push repositori",
+   "duration_s": null,
+   "duration": ""
   }
  ]
 }

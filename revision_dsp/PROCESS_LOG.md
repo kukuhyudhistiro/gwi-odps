@@ -17,7 +17,7 @@ Baris yang bukan jawaban atas komentar reviewer ditandai 'pendukung' atau 'bukan
 | 1. Persiapan data & eksperimen | 7-9 Nov | 26 | 11:15:09 | - |
 | 2. Penetapan konfigurasi & evaluasi uji | 10 Nov | 6 | 2:30:44 | - |
 | 3. Analisis & pengukuran | 11-14 Nov | 24 | 3:04:04 | - |
-| 5. Kirim draf | 19 Nov | 1 | 0:00:00 | - |
+| 5. Kirim draf | 19 Nov | 2 | 0:00:00 | - |
 
 ## Fase 1. Persiapan data & eksperimen (agenda 7-9 Nov)
 
@@ -95,3 +95,4 @@ Baris yang bukan jawaban atas komentar reviewer ditandai 'pendukung' atau 'bukan
 | ID | Jenis | Kegiatan | Komentar reviewer | Mulai | Selesai | Durasi | Status | Output | Hasil | Ref | Web |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | REL-1 | tulis | Dokumen repositori untuk rilis v3.0.0 (runbook §9): README.md dengan angka revisi (angka versi submit di bagian terlipat), CHANGELOG.md 3.0.0, CITATION.cff, docs/ODPS_derivation.md ditulis ulang dengan mekanisme yang dikoreksi, docs/reproduction.md dengan perintah revisi | semua (Data availability) | 2026-11-10 15:20:42 | 2026-11-10 15:38:07 | 0:17:25 | selesai | README.md; CHANGELOG.md; CITATION.cff; docs/ODPS_derivation.md; docs/reproduction.md; docs/kernel_ablation.md; docs/benchmarks.md; revision_dsp/README.md | Isi diambil dari FINDINGS.md; klaim yang ditarik atau dikoreksi (C1-C11) ditulis setara dengan hasil lain. Penulis dan judul di README dan CITATION disamakan dengan naskah yang disubmit (empat penulis). Tidak ada file hasil yang berubah | jam mulai = pembacaan dokumen root; jam selesai = suntingan terakhir | ya |
+| REL-2 | commit | Tag rilis v3.0.0-dsp-r1 pada commit dokumen rilis (lokal; belum di-push dan belum di-merge ke main) | semua (Data availability) | 2026-11-10 15:39:54 |  |  | selesai (lokal) |  | Tag dipindah bila penulisan naskah atau audit angka mengubah file sebelum dipublikasikan | commit 44e1481; tag v3.0.0-dsp-r1 | ya |

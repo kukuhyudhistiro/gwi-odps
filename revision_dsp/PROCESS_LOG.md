@@ -17,7 +17,7 @@ Baris yang bukan jawaban atas komentar reviewer ditandai 'pendukung' atau 'bukan
 | 1. Persiapan data & eksperimen | 7-9 Nov | 26 | 11:15:09 | - |
 | 2. Penetapan konfigurasi & evaluasi uji | 10 Nov | 6 | 2:30:44 | - |
 | 3. Analisis & pengukuran | 11-14 Nov | 24 | 3:04:04 | - |
-| 5. Kirim draf | 19 Nov | 2 | 0:00:00 | AUD-1, REL-3, KIRIM-1 |
+| 5. Kirim draf | 19 Nov | 8 | 0:05:12 | AUD-1, REL-3, KIRIM-1 |
 
 ## Fase 1. Persiapan data & eksperimen (agenda 7-9 Nov)
 
@@ -99,3 +99,9 @@ Baris yang bukan jawaban atas komentar reviewer ditandai 'pendukung' atau 'bukan
 | AUD-1 | analisis | Audit angka naskah revisi dan response letter terhadap results/TABLES.md (runbook §8, 19 Nov) | semua |  |  |  | belum |  |  | setelah WP12-WP13 | ya |
 | REL-3 | commit | Merge branch revision-dsp-r1 ke main dan push repo gwi-odps beserta semua tag; tag v3.0.0-dsp-r1 dipindah dulu bila ada file yang berubah | semua (Data availability) |  |  |  | belum |  |  | setelah AUD-1 | ya |
 | KIRIM-1 | tulis | Kirim paket review internal ke promotor dan pengunggah: naskah revisi bertanda perubahan dan response letter | semua |  |  |  | belum |  |  | runbook §8, Kam 19 Nov | ya |
+| A-10 | analisis | Pemeriksaan kesiapan push repo gwi-odps: angka submit terhadap legacy check, TABLES.md dibuat ulang di clone baru, smoke test clone baru, pemindaian isi file | pendukung (bukan eksperimen) | 2026-11-10 16:02:01 | 2026-11-10 16:06:32 | 0:04:31 | selesai | FINDINGS.md bagian G | Legacy check identik dengan eval_results/k5 (27 nilai GWi, GWi+ODPS, GWC k5 λ4; 9 nilai Sobel); TABLES.md identik byte demi byte; tidak ada perubahan rev/ sejak freeze dan tidak ada perubahan hasil sejak numbers-frozen; tidak ada email pribadi, kredensial, dataset atau bobot. Ditemukan: run_all.sh gagal bila path PY berisi spasi |  |  |
+| S-01 | run | Smoke test pada clone baru (12 skrip, data sintetis) dengan pembungkus Python tanpa spasi | pendukung (bukan eksperimen) | 2026-11-10 16:04:41 | 2026-11-10 16:06:27 | 0:01:46 | rc 0 |  | 12 skrip selesai; selftest T0-T6 PASS. Percobaan pertama 16:03:59 berhenti dengan rc 127 karena path Python berisi spasi | folder kerja sementara |  |
+| FIX-1 | commit | run_all.sh: $PY diberi tanda kutip di empat pemanggilan (suntingan manual penulis pertama); CHANGELOG 3.0.0 bagian Fixed | pendukung (bukan eksperimen) | 2026-11-10 16:19:02 |  |  | selesai | revision_dsp/run_all.sh | Tidak ada file hasil yang berubah | commit 67ed8ee |  |
+| S-02 | run | Smoke test pada clone baru dengan path Python berisi spasi, setelah perbaikan run_all.sh | pendukung (bukan eksperimen) | 2026-11-10 16:15:33 | 2026-11-10 16:17:08 | 0:01:35 | rc 0 |  | 12 skrip selesai; selftest T0-T6 PASS | run_all.sh dari working tree sebelum commit 67ed8ee | ya |
+| S-03 | run | Smoke test pada clone Windows tanpa modifikasi (run_all.sh dengan CRLF dari core.autocrlf) | pendukung (bukan eksperimen) | 2026-11-10 16:20:15 | 2026-11-10 16:22:06 | 0:01:51 | rc 0 |  | Dengan MSYS_NO_PATHCONV=1: 12 skrip selesai, selftest PASS; CRLF tidak mengganggu. Tanpa variabel itu (16:19:37) gagal di 01_selftest: Git Bash mengubah /tmp di argumen menjadi folder Temp Windows, sedangkan Python membaca /tmp dari config sebagai C:\tmp | hanya Windows (Git Bash); di Linux/macOS /tmp sama |  |
+| REL-2b | commit | Tag v3.0.0-dsp-r1 dipindah dari 44e1481 ke 67ed8ee (perbaikan run_all.sh); masih lokal | semua (Data availability) | 2026-11-10 16:19:03 |  |  | selesai (lokal) |  | Tag belum pernah dipublikasikan, jadi pemindahan tidak mengubah apa pun di GitHub | commit 67ed8ee; tag v3.0.0-dsp-r1 | ya |

@@ -1,0 +1,4 @@
+method,dataset,input_hw,params,gmacs
+PiDiNet_converted,BSDS500,321x481,720709,12.471
+PiDiNet_converted,BIPED,720x1280,720709,74.644
+PiDiNet_converted,UDED,339x510,720709,13.937

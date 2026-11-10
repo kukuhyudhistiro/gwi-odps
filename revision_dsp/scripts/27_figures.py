@@ -1,8 +1,8 @@
 """All figures of the revised manuscript (DSP-D-26-02462), drawn from the revision results.
 
 Nothing is selected or tuned here: every figure reads the frozen configuration
-(results/config_final.yaml) and the result files of E02, E10, E11, E20, E21, E22
-and E25, or recomputes synthetic responses with the same code (rev/). The test
+(results/config_final.yaml) and the result files of E02, E10, E11, E20, E21, E22,
+E23, E24 and E25, or recomputes synthetic responses with the same code (rev/). The test
 sets are only read through the cached counts of E20 and the images named in
 config.yaml -> qualitative.
 
@@ -10,7 +10,8 @@ Each figure is listed in results/figures/FIGURES.md with the figure it replaces,
 the reviewer comments it answers, its data source and what the caption must say.
 Figures 2-4 of the submission are hand-drawn flowcharts: they are listed with the
 edits they need, not drawn. Figures that depend on E23 (learning-based detectors)
-or E24 (runtime) are listed as pending until those results exist.
+or E24 (runtime) are listed as pending until those results exist; E23 enters the
+PR curves (maps without NMS) and fig_dl_cost (results/external/cost.csv).
 
 Usage:  python scripts/27_figures.py --config config.yaml [--only pr,selection]
 Outputs (results/figures/): fig_*.png (300 dpi), fig_*.pdf for line plots, FIGURES.md
@@ -374,9 +375,29 @@ def final_by(final):
     return {m["name"]: m for m in final["methods"]}
 
 
+DL = {"TEED": dict(color="#1F3A93", ls=(0, (5, 1, 1, 1)), trained="BIPED"),
+      "LDC": dict(color="#4F81BD", ls=(0, (3, 1)), trained="BIPED"),
+      "PiDiNet": dict(color="#7B68AE", ls=(0, (1, 1)), trained="BSDS500")}
+
+
+def dl_label(name, ds):
+    t = DL[name]["trained"]
+    return f"{name} (learned, trained on {t}{'; in-domain' if t == ds else ''})"
+
+
+def dl_counts(cfg, name, ds):
+    """E23 counts without NMS (the same treatment as the other maps); None if E23 is absent."""
+    f = C.results_dir(cfg, "external", "counts") / f"{name}_{ds}.npz"
+    if not f.exists():
+        return None
+    z = np.load(f)
+    return aggregate(z["counts"], z["thresholds"])
+
+
 def fig_pr(cfg, final, M, proto, out, n_jobs):
     curves = [M.odps, M.gwi, M.gwc0, M.gwc, M.sub_odps, "GaussGradMag1.4", "Sobel", "LoG", "PC"]
     points = ["Canny", "ED"]
+    have_dl = False
     for ref in final["test_sets"]:
         ds, sp = split_ref(ref)
         fig, ax = plt.subplots(figsize=(8.2, 4.6))
@@ -409,6 +430,15 @@ def fig_pr(cfg, final, M, proto, out, n_jobs):
             _, ag = pr_and_counts(cfg, final, proto, n, ds, sp, n_jobs)
             ax.scatter([ag["ods_r"]], [ag["ods_p"]], color=M.color[n], marker="D" if n == "Canny" else "s",
                        s=28, zorder=6, label=f"[F={ag['ods']:.3f}] {M.label[n]} (binary)")
+        for n, st_ in DL.items():
+            ag = dl_counts(cfg, n, ds)
+            if ag is None:
+                continue
+            have_dl = True
+            Rr, Pp = np.array(ag["R"]), np.array(ag["P"])
+            ok = (Rr + Pp) > 0
+            ax.plot(Rr[ok], Pp[ok], color=st_["color"], lw=1.1, ls=st_["ls"], zorder=2,
+                    label=f"[F={ag['ods']:.3f}] {dl_label(n, ds)}")
         if ds == "BSDS500":
             ax.scatter([HUMAN_BSDS], [HUMAN_BSDS], s=70, color="#006400", edgecolor="black", zorder=7,
                        label=f"[F={HUMAN_BSDS:.3f}] Human")
@@ -423,14 +453,19 @@ def fig_pr(cfg, final, M, proto, out, n_jobs):
         files = save(fig, out, f"fig_pr_{ds}")
         old = {"BSDS500": "Figure 8", "BIPED": "Figure 10", "UDED": "Figure 12"}[ds]
         note(id=f"fig_pr_{ds}", old=old, title=f"Precision-recall curves on {ds} test",
-             reviewer="R2.8, R2.9, R1.2 (DL curves added after E23)", source=f"E20 counts ({ds}/{sp})", files=files,
-             status="drawn (DL detectors pending E23)",
+             reviewer="R2.8, R2.9, R1.2, R3.5", files=files,
+             source=f"E20 counts ({ds}/{sp})" + ("; E23 counts without NMS (results/external/counts)" if have_dl else ""),
+             status="drawn" if have_dl else "drawn (DL detectors pending E23)",
              caption="Dataset-level P/R over 99 thresholds (same protocol for all methods, §4.2). Binary detectors give "
                      "one operating point. 'Gaussian gradient σ 1.4' is the row labelled 'Canny' in the submission. "
                      "Gabor methods use zero padding, the others reflect-101 (H5). At the highest thresholds the Gabor "
                      "curves start at low precision; the H5 diagnostic points to the border response under zero padding "
                      "(not tested on the test sets). At the lowest thresholds curves fold back: the binary map covers "
-                     "large regions and thinning reduces the matched pixels (same for every method).")
+                     "large regions and thinning reduces the matched pixels (same for every method)."
+                     + (" Learned detectors (E23): official repositories and weights, maps evaluated without NMS, i.e. "
+                        "treated like every other map here; 'in-domain' marks weights trained on the training split of "
+                        "this dataset. Values are not comparable with the published ones (different evaluator, F29)."
+                        if have_dl else ""))
 
 
 def fig_qualitative(cfg, final, M, proto, out, n_jobs):
@@ -699,6 +734,61 @@ def fig_runtime(cfg, final, M, proto, out, n_jobs):
                  "Background load during the run was about 0.6 of one core (F28).")
 
 
+def fig_dl_cost(cfg, final, M, proto, out):
+    """ODS against CPU time per test set: frozen methods (E20, E24) and learned detectors (E23)."""
+    ext = C.results_dir(cfg, "external")
+    if not (ext / "cost.csv").exists():
+        return
+    cost = {(r["method"], r["dataset"]): r for r in read_csv(ext / "cost.csv")}
+    ext_ods = {(r["method"], r["dataset"]): float(r["ODS"]) for r in read_csv(ext / "summary.csv")}
+    rt = {(r["method"], r["dataset"]): r for r in read_csv(C.results_dir(cfg, "runtime") / "summary.csv")}
+    test = {(r["method"], r["dataset"]): float(r["ODS"]) for r in read_csv(C.results_dir(cfg, "test") / "summary.csv")}
+    classic = [M.odps, M.gwi, M.gwc0, "GaussGradMag1.4", "Sobel", "LoG", "Canny", "ED", "PC"]
+    short = {M.odps: "GWi+ODPS", M.gwi: "GWi", M.gwc0: "GWC zero-DC", "GaussGradMag1.4": "Gauss. grad.",
+             "Sobel": "Sobel", "LoG": "LoG", "Canny": "Canny", "ED": "ED", "PC": "PC"}
+    fig, axes = plt.subplots(1, 3, figsize=(13, 4.2))
+    for a, ref in zip(axes, final["test_sets"]):
+        ds, _ = split_ref(ref)
+        for n in classic:
+            if (n, ds) not in rt or (n, ds) not in test:
+                continue
+            t = float(rt[(n, ds)]["total_ms_mean"]) + float(rt[(n, ds)]["pre_ms_mean"])
+            a.scatter([t], [test[(n, ds)]], color=M.color.get(n, "#333333"), s=70 if n == M.odps else 26,
+                      marker="*" if n == M.odps else "o", zorder=3)
+            a.annotate(short[n], (t, test[(n, ds)]), xytext=(-4, -9) if n == M.gwi else (3, 2),
+                       textcoords="offset points", fontsize=6, ha="right" if n == M.gwi else "left")
+        for n, st_ in DL.items():
+            key = (n + "_converted", ds) if (n + "_converted", ds) in cost else (n, ds)
+            if key not in cost or (n, ds) not in ext_ods:
+                continue
+            t, f = float(cost[key]["total_ms"]), ext_ods[(n, ds)]
+            ind = st_["trained"] == ds
+            a.scatter([t], [f], marker="^", s=40, zorder=3, color=st_["color"] if not ind else "white",
+                      edgecolor=st_["color"], linewidth=1.2)
+            a.annotate(n + (" (in-domain)" if ind else ""), (t, f), xytext=(3, 2), textcoords="offset points",
+                       fontsize=6, color=st_["color"])
+        a.set_xscale("log")
+        a.set_ylim(0.3, 0.9)
+        a.set_xlabel("CPU time per image, 1 thread (ms, log scale)")
+        a.set_ylabel("ODS")
+        a.set_title(f"{ds} test")
+    fig.tight_layout()
+    files = save(fig, out, "fig_dl_cost")
+    note(id="fig_dl_cost", old="new (§5.6, with the table of learned detectors)",
+         title="ODS against CPU time: training-free methods and learned detectors",
+         reviewer="R1.2, R3.5", files=files,
+         source="results/test/summary.csv (E20), results/runtime/summary.csv (E24), results/external/summary.csv and cost.csv (E23)",
+         status="drawn",
+         caption="Same machine and timing rule for all points: one thread, 3 warm-up images, median of 5 runs per image, mean "
+                 "over images, including preprocessing (E24, E23); for the learned detectors it also includes reading "
+                 "the image file (5-31 ms), which E24 excludes. Training-free methods run in OpenCV/NumPy, learned "
+                 "detectors in PyTorch 2.15 CPU; the frameworks differ. Learned detectors: maps without NMS; hollow "
+                 "triangles are in-domain (weights trained on this dataset's training split). PiDiNet time is that of "
+                 "its converted model (same maps). Input sizes of the learned detectors follow their repositories "
+                 "(TEED upsamples BSDS500 and UDED x1.5; LDC resizes BSDS500 to 480x480), so their cost is not per "
+                 "original pixel (F29).")
+
+
 def manual_and_pending(cfg, M, out):
     d = M.by[M.odps]["nms"]["d"]
     note(id="(manual) flowchart GWC vs GWi", old="Figure 2", title="Flowchart, complex vs imaginary-only Gabor",
@@ -718,10 +808,10 @@ def manual_and_pending(cfg, M, out):
              reviewer="R1.4, R2.5, R2.10, R3.3, R3.6", source="results/runtime/ (E24)", files=[],
              status="pending E24", caption="Filtering stage vs full pipeline, single thread, median of 5 runs.")
     ext = C.results_dir(cfg, "external")
-    note(id="(DL in PR and qualitative figures)", old="Figures 8, 10, 12", title="Learning-based detectors (TEED, PiDiNet, LDC)",
-         reviewer="R1.2, R3.5", source="results/external/ (E23)", files=[],
-         status="pending E23" if not any(ext.glob("*.csv")) else "data present: add curves",
-         caption="Added to the PR curves and to a separate table once E23 is run.")
+    if not (ext / "cost.csv").exists():
+        note(id="(DL in PR figures and cost figure)", old="Figures 8, 10, 12", title="Learning-based detectors (TEED, PiDiNet, LDC)",
+             reviewer="R1.2, R3.5", source="results/external/ (E23)", files=[], status="pending E23",
+             caption="Added to the PR curves and to a cost figure once E23 and tools/external/summarize_e23.py are run.")
 
 
 def write_manifest(out: Path, M):
@@ -740,7 +830,8 @@ def write_manifest(out: Path, M):
 
 
 FIGS = ["pipeline", "odps_offsets", "step_profiles", "structures_dc", "selection", "lambda_d",
-        "qualitative", "pr", "forest", "perimage_f", "preproc", "odps_effect", "localization", "runtime"]
+        "qualitative", "pr", "forest", "perimage_f", "preproc", "odps_effect", "localization", "runtime",
+        "dl_cost"]
 
 
 def main():
@@ -769,6 +860,7 @@ def main():
         "odps_effect": lambda: fig_odps_effect(cfg, final, M, proto, out, n_jobs),
         "localization": lambda: fig_localization(cfg, final, M, proto, out),
         "runtime": lambda: fig_runtime(cfg, final, M, proto, out, n_jobs),
+        "dl_cost": lambda: fig_dl_cost(cfg, final, M, proto, out),
     }
     for name in only:
         print(f"[{name}]")

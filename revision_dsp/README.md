@@ -67,7 +67,7 @@ letter).
 | `bash run_all.sh test` | all tables | `results/test/summary.csv`, `legacy_check.csv` |
 | `bash run_all.sh preproc` | R2.7 | `results/preproc/preproc_ablation.csv` |
 | `bash run_all.sh stats` | R1.1, R2.11 (R1.5 analysis rows) | `results/stats/pairs.csv`, `variability.csv`, `claims_guard.json` |
-| `python3 scripts/23_eval_external.py --maps-root <dir> --methods TEED PiDiNet LDC --nms` | R1.2, R3.5 | `results/external/` (+ `models.yaml`, filled by hand) |
+| `bash tools/external/run_e23.sh` (separate PyTorch CPU environment and official repositories under `D:/Project 2026/e23_external`; maps, then `scripts/23_eval_external.py --nms`, MACs, CPU time), then `tools/external/summarize_e23.py` | R1.2, R3.5 | `results/external/` (`summary.csv`, `counts/`, `cost/`, `cost.csv`, `models.yaml`) |
 | `bash run_all.sh runtime` (idle machine) | R1.4, R2.5, R2.10, R3.3, R3.6 | `results/runtime/` |
 | `bash run_all.sh qualitative` | R1.3 | `results/qualitative/` |
 | `bash run_all.sh tables` | all | `results/TABLES.md` |

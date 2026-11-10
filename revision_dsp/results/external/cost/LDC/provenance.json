@@ -1,0 +1,12 @@
+{
+ "method": "LDC",
+ "repository": "https://github.com/xavysp/LDC",
+ "commit": "8b6e3280c03b6a7cd81beb4bc2ba4edde99b789c",
+ "checkpoint": "LDC/checkpoints/BIPED/16/16_model.pth",
+ "trained_on": "BIPED",
+ "torch": "2.15.0+cpu",
+ "threads": 8,
+ "images": 280,
+ "seconds": 29.5,
+ "test_time_processing": "copies each repository's own test code (checked 10 Nov 2026):\n    TEED     repo xavysp/TEED, checkpoints/BIPED/7/7_model.pth (trained on BIPED)\n             BGR float, minus the test-set mean of dataset.py (Windows branch);\n             if H < 512 or W < 512: resize x1.5; then, if a side is not a multiple of 8,\n             resize up to the next multiple of 8 (dataset.TestDataset.transform);\n             output = last (fused) map, sigmoid, per-image min-max to 0-255,\n             resized to the original size (utils/img_processing.save_image_batch_to_disk).\n    LDC      repo xavysp/LDC, checkpoints/BIPED/16/16_model.pth (trained on BIPED)\n             BGR float minus mean_pixel_values (main.py default, BIPED mean) for every test\n             set; if H < 512 or W < 512: resize to test_img_width x test_img_height of the\n             test set (BSDS 480x480, UDED 512x512); elif a side is not a multiple of 8:\n             next multiple of 8; output as TEED.\n    PiDiNet  repo hellozhuo/pidinet, trained_models/table5_pidinet.pth (trained on BSDS500 +\n             PASCAL VOC), model pidinet, config carv4, --sa --dil (README, Table 5);\n             RGB, ToTensor, ImageNet mean/std, original size (edge_dataloader.Custom_Loader);\n             output = last map (already sigmoid) x 255 (main.test)."
+}

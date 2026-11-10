@@ -20,7 +20,7 @@ test-set results (E20), run once after the freeze (tag `freeze-2026-11-10`, comm
 7ae7ba5), and the paired statistics of E22 (F25). Only the pairs pre-registered in
 scripts/22_stats.py have confidence intervals. Every other test-set difference is a
 point estimate.
-Last update: 10 Nov 2026, after E24. Timings of every stage: PROCESS_LOG.md.
+Last update: 10 Nov 2026, after E23. Timings of every stage: PROCESS_LOG.md.
 
 ## Original claims and their status
 
@@ -36,6 +36,7 @@ Last update: 10 Nov 2026, after E24. Timings of every stage: PROCESS_LOG.md.
 | C8 | (design choice, R2.6) N = 8 orientations is an appropriate balance | **Not supported at the selected kernel.** N = 4 reaches the same ODS at half the cost; N = 16 adds nothing. It was supported at k7 λ5 (E11 of the five-candidate run) | F19 |
 | C9 | (§3.1, R2.7) Histogram equalization is important, notably for low-contrast images; normalization to [0, 1] is necessary | **Claim withdrawn.** On all three test sets, removing HE raises ODS of GWi (+0.0055 to +0.0623) and of GWi+ODPS (+0.0111 to +0.0591). /255 changes nothing. The protocol stays as frozen (HE) | F26 |
 | C10 | (R1.3, as the reviewer frames it) ODPS reduces artifacts without introducing boundary distortions | **Claim corrected.** At the selected kernel, ODPS works by thinning, so that a lower threshold gives more recall at about the same precision. The mean matched distance grows by less than 0.1 px on average. Some images lose true boundary pixels (BIPED RGB_139: recall −0.25). "Without distortion" can only be stated with these numbers | F27 |
+| C11 | (§5.6, R1.2, R3.5) "competitive boundary localization"; learned detectors compared only through their published ODS | **Claim withdrawn.** Measured with the same evaluator, the best learned detector is +0.239 (BSDS500, in-domain), +0.197 (BIPED, in-domain) and +0.144 (UDED) ODS above GWi+ODPS. GWi+ODPS is 2.4 to 16× faster on one CPU thread, but the Gaussian gradient is faster still and more accurate. Framing: training-free and CPU-oriented, without a claim of competitive accuracy or of a cost advantage over classical baselines. Exception: PiDiNet (trained on BSDS500) is below GWi+ODPS on UDED | F29 |
 
 ## Reviewer map
 
@@ -72,6 +73,7 @@ They add no experiment that a reviewer did not ask for.
 | F26 | R2.7, R2.12 | Preprocessing ablation (E21) |
 | F27 | R1.3, R1.5, R2.3 | Localization and qualitative analysis of ODPS (E25); failure cases; border responses visible in the figures |
 | F28 | R1.4, R2.5, R2.10, R3.3, R3.6 | Runtime per stage, full pipeline vs filtering, cost of d, measurement conditions (E24) |
+| F29 | R1.2, R3.5 | Learned detectors with the same evaluator; parameters, MACs, CPU time; in-domain marks; NMS rows (E23) |
 | H1 | R3.1a (citation) | Published in A-GWi; Paper 1 must cite it |
 | H2 | R2.9 | Metric definitions; aligned with A-GWi |
 | H3 | R2.8 | Binary Canny and GaussGradMag naming |
@@ -561,6 +563,72 @@ n/c: binary map with one operating point; AP is not comparable (H3).
   - The submitted comparison "12.6× faster than Phase Congruency" uses the slowest baseline. At k9 λ9 it becomes 8.5×. The Gaussian gradient comparison is the informative one, and it is unfavourable.
 - **Relation to Paper 2 (H6):** A-GWi measured static GWi k7 at 15.54 ms and GWC at 33.70 ms (ratio 2.17; minimum of 3 runs, another machine). The ratios here (2.09× and 2.31× in filtering) are consistent. The absolute times are not comparable across machines and timing rules.
 
+**F29. Finding. The three learned detectors are far above GWi+ODPS on BSDS500 and BIPED and two of them on UDED; GWi+ODPS is 2.4 to 16× cheaper on one CPU thread, but the Gaussian gradient is cheaper still and more accurate, so "training-free/CPU" does not by itself give GWi+ODPS a place on the accuracy-cost trade-off (E23).**
+- **Run:** 10 Nov 2026, 10:03:05 to 11:35:45 WIB, at commit 0233bd2 (`tools/external/run_e23.sh`; times in `logs_local/runs.csv`, rows E23a to E23d). Setup of the separate environment and the official repositories: 09:58 to 10:03.
+  - Maps: E23a, 10:03:05 to 10:06:48. Evaluation: E23b, 10:06:48 to 10:51:37. Cost: E23c and E23d, 10:51:37 to 11:35:45.
+  - Correction run, 11:40:01 to 12:09:02 (E23c again for all three with the PyTorch counter; E23c and E23d_PiDiNet_converted). The thop counts of the first run are kept in `results/external/cost/*/flops_thop.csv`; its E23c logs were overwritten.
+- **Detectors** (official repositories and weights; `results/external/models.yaml`):
+  - TEED (xavysp/TEED, commit 40fa4b1, BIPED checkpoint 7);
+  - LDC (xavysp/LDC, commit 8b6e328, BIPED checkpoint 16);
+  - PiDiNet (hellozhuo/pidinet, commit d21aa88, `table5_pidinet`, BSDS500 train+val with PASCAL VOC).
+  - Test-time processing copies each repository's test code (`tools/external/infer_external.py`). The maps are written without the white-background inversion of the official scripts; no value is changed otherwise.
+  - No method published in 2024 or later was added (runbook E23: "usahakan"). The paper has to say this.
+- **Evaluation:** `scripts/23_eval_external.py`, written with the pre-registration (8 Nov 2026), with the same evaluator, thresholds and matching as every other method.
+  - Maps are evaluated without NMS, which is the treatment of the other maps (binarize, then thin). This is the comparable row.
+  - The script also reports "+NMS" rows; see the NMS paragraph below.
+- **Results, test sets, without NMS** (`results/external/summary.csv`):
+
+  | Method | Trained on | BSDS500 ODS / OIS / AP | BIPED ODS / OIS / AP | UDED ODS / OIS / AP |
+  |---|---|---|---|---|
+  | TEED | BIPED | 0.612 / 0.628 / 0.489 | 0.786 / 0.794 / 0.788 (in-domain) | 0.789 / 0.801 / 0.707 |
+  | LDC | BIPED | 0.667 / 0.683 / 0.602 | 0.825 / 0.829 / 0.824 (in-domain) | 0.762 / 0.776 / 0.665 |
+  | PiDiNet | BSDS500 | 0.751 / 0.763 / 0.669 (in-domain) | 0.690 / 0.697 / 0.563 | 0.558 / 0.575 / 0.395 |
+  | GWi+ODPS k9 λ9 | — (selected on BSDS500/BIPED non-test data) | 0.512 / 0.542 / 0.397 | 0.628 / 0.670 / 0.592 | 0.645 / 0.690 / 0.552 |
+  | Gaussian gradient σ 1.4 | — | 0.533 / 0.563 / 0.492 | 0.641 / 0.687 / 0.685 | 0.673 / 0.730 / 0.678 |
+
+  - The gap to the best learned detector is +0.239 ODS on BSDS500 (PiDiNet, in-domain), +0.197 on BIPED (LDC, in-domain) and +0.144 on UDED (TEED, not in-domain for any method).
+  - Out of domain, the learned detectors are still well above GWi+ODPS on BSDS500 (TEED +0.100, LDC +0.155) and BIPED (PiDiNet +0.062).
+  - **PiDiNet on UDED is below GWi+ODPS** (0.558 against 0.645) and below the Gaussian gradient, Sobel, LoG and PC; it is at the level of binary Canny (0.557) and ED (0.554). PiDiNet's thick, object-contour maps (BSDS500 training) miss the dense structural edges that UDED and BIPED annotate (visible in the maps, e.g. the louvres of BIPED RGB_139).
+  - These are point estimates. No CI was computed: the learned detectors are not in the pre-registered E22 family.
+  - **Not comparable with the published values.** For example, PiDiNet reports ODS 0.807 on BSDS500 with the official benchmark (NMS, bipartite matching). The evaluator here uses greedy matching, skimage thinning and no NMS. The submitted §5.6 quoted published values (PiDiNet 0.789, LGLNet 0.805, EDTER 0.848, EdgeNAT 0.860); those numbers are replaced by the measured ones.
+- **NMS rows.** The pre-registered script applies its own NMS: orientation from the Sobel gradient of the map smoothed with σ 1, 16 directions, d = 1, bilinear.
+  - It lowers ODS in 7 of 9 cases (−0.045 for PiDiNet on BSDS500; +0.001 for TEED on BSDS500 and +0.002 for LDC on UDED).
+  - This NMS is not the Structured-Edge NMS (Dollár and Zitnick) that the learned detectors' papers use. That one takes the orientation from second derivatives, which are defined at the crest of a ridge; a first-derivative orientation is not. This is a likely reason for the loss, **not tested**.
+  - The "+NMS" rows therefore do not represent the detectors' standard post-processing, and must not be presented as such. The runbook asked for "± standard NMS".
+  - **Decision (10 Nov 2026, 13:06, first author): the "+NMS" rows are reported as they are, with this description.** The Structured-Edge NMS is not added and no deviation is made.
+  - In the manuscript, the rows are labelled with what was applied (for example "+ first-derivative NMS, script of the pre-registration"), not "standard NMS". The text states that this NMS lowered ODS in 7 of 9 cases, and that the rows without NMS are the comparison under the common protocol.
+  - The comparison is not affected: the learned detectors are already above GWi+ODPS without NMS. A better NMS could only widen the gap, except for PiDiNet on UDED, where its effect is unknown.
+  - The docstring of `scripts/23_eval_external.py` calls this NMS "a standard edge NMS". The pre-registered script is left unchanged, and this entry corrects the wording.
+- **Cost** (`results/external/cost.csv`; one thread, 3 warm-up images, median of 5 runs per image, mean over images, including pre- and post-processing, same machine as E24; PyTorch 2.15 CPU):
+
+  | Method | Learned parameters | GMAC at network input (BSDS500 / BIPED / UDED, first image) | CPU ms per image (BSDS500 / BIPED / UDED) |
+  |---|---|---|---|
+  | TEED | 58,910 | 2.56 (488×728) / 6.64 (720×1280) / 2.84 (512×768) | 209 / 579 / 256 |
+  | LDC | 674,500 | 5.58 (480×480) / 22.15 (720×1280) / 6.34 (512×512) | 170 / 765 / 232 |
+  | PiDiNet (converted) | 710,149 | 12.47 (321×481) / 74.64 (720×1280) / 13.94 (339×510) | 589 / 3880 / 979 |
+  | GWi+ODPS k9 λ9 (E24) | 0 | 0.10 / 0.60 / — (filtering only: 648 MAC per pixel) | 42 / 245 / 69 |
+  | Gaussian gradient σ 1.4 (E24) | 0 | — | 10.5 / 63 / 16.5 |
+
+  - The unconverted PiDiNet takes 627 / 4159 / 1037 ms; the converted model is about 6% faster.
+  - UDED images differ in size, so the per-image spread there is large (sd 73 to 502 ms); BSDS500 and BIPED spreads are below 8 and 45 ms.
+  - The learned detectors' preprocessing includes reading and decoding the image file (5 to 31 ms); E24 excluded it. This favours the training-free methods by at most that amount, small against the forward pass.
+
+  - Parameters: TEED 58,910; LDC 674,500; PiDiNet 710,149 (as published). GWi+ODPS has no learned parameter (k = 9, λ = 9, d = 4.5, N = 8, and the HE preprocessing are fixed by selection).
+  - The input sizes follow the repositories: TEED upsamples BSDS500 and UDED images ×1.5, LDC resizes BSDS500 to 480×480 and UDED to 512×512. Their cost is therefore not per original pixel.
+  - thop, used first, counts PiDiNet at 11.46 GMAC for the unconverted model on the first BSDS500 image. The PyTorch counter gives 12.50, because thop does not count the functional convolutions inside the pixel-difference modules. The MACs in cost.csv come from the PyTorch counter (convolutions and matrix products only).
+  - The frameworks differ (PyTorch against OpenCV/NumPy). The times are a practical comparison on one CPU thread, not a comparison of operation counts.
+- **Position on the accuracy-cost trade-off (R1.2, R3.5):**
+  - GWi+ODPS (42.2 ms on BSDS500 with preprocessing) is 4.0× (LDC), 5.0× (TEED) and 14× (PiDiNet) faster on one thread than the learned detectors; over the three sets the range is 2.4× (TEED, BIPED) to 16× (PiDiNet, BIPED). It is also much less accurate.
+  - In convolution MACs the learned detectors need 25 to 125× more than GWi filtering on BSDS500, but only 4 to 14× more time: PyTorch convolutions are faster per MAC than the OpenCV filtering of E24. MAC ratios alone would overstate the speed advantage.
+  - The Gaussian gradient σ 1.4 (10.5 ms) is 4× faster than GWi+ODPS and has higher ODS on all three sets (F24).
+  - On these measurements, GWi+ODPS is dominated within the training-free group. "Training-free/CPU-oriented" (R3.5) describes the setting correctly, but it is not an advantage over the classical baseline. The manuscript must not suggest competitive accuracy with learned detectors, nor a cost advantage over the Gaussian gradient.
+- **In-domain marks:** TEED and LDC on BIPED; PiDiNet on BSDS500. The selection of GWi+ODPS also used BSDS500 and BIPED non-test data (E10), so no method is entirely out of domain there; UDED is out of domain for all.
+- **Other notes:**
+  - TEED's `utils/img_processing.py` was replaced by a stand-in with the same `count_parameters`, to avoid installing kornia and scikit-learn. The network and the weights are unchanged.
+  - TEED subtracts a per-test-set mean, including one for UDED, as in its repository.
+  - The learned maps also show a weak response along the image border (mean of the 2-px frame above the interior on BSDS500 and UDED for all three). This is descriptive and was not analysed further (cf. H5).
+  - Licences: TEED MIT; PiDiNet research use only; LDC has no licence file. The maps can be used for evaluation. The weights must not be redistributed with the release.
+
 ## G. Open until the test run
 
 Status after E20, E21, E22, E24 and E25 (10 Nov 2026):
@@ -571,12 +639,12 @@ Status after E20, E21, E22, E24 and E25 (10 Nov 2026):
   - **Resolved by F21.** The selection carries over for GWi but not for GWi+ODPS.
 - Whether the non-test patterns above (H1, F7) also appear on the test sets: a descriptive check, not a new test.
   - **F22.** The direction is consistent with H1 on all three sets, with only two kernels.
-- Runtime and C5: E24 was run on 10 Nov 2026 (F28). E23 and E26 have not been run.
+- Runtime and C5: E24 was run on 10 Nov 2026 (F28). E23 was run on 10 Nov 2026 (F29). E26 has not been run.
 - E25 (R1.3) was run on 10 Nov 2026: see F27 and C10.
 - **Figures (10 Nov 2026):** `scripts/27_figures.py` (stage `figures` of run_all.sh) draws every figure of the revised manuscript from the frozen results.
   - `results/figures/FIGURES.md` lists, for each figure: the figure of the submission it replaces, the reviewer comments it answers, its data source, and what its caption must say.
   - Figures 2-4 of the submission are hand-drawn; FIGURES.md lists the edits they need.
-  - Still pending: the runtime figure (E24) and the learning-based detectors (E23).
+  - The runtime figure (E24) and the learned detectors (E23: PR curves, `fig_dl_cost`) are now drawn.
   - Choices made by the script:
     - images are chosen by rule (config.yaml list; median and worst recall change for the ODPS figure);
     - display ranges are clipped only where the caption says so;

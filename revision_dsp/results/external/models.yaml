@@ -1,0 +1,80 @@
+# E23 (R1.2, R3.5). Written by tools/external/summarize_e23.py from the measurements in
+# results/external/cost/; do not edit by hand. CPU: one thread, 3 warm-up images, median of 5 runs
+# per image, mean ± sd over the test images, including pre- and post-processing (as E24);
+# unlike E24, pre-processing here includes reading and decoding the image file.
+# MACs: convolutions and matrix products executed (torch.utils.flop_counter), first test image.
+TEED:
+  reference: Soria et al., ICCVW 2023 (TEED)
+  repo: https://github.com/xavysp/TEED
+  commit: 40fa4b1391dc6424f88989d0ca75d5b592c8681d
+  weights: TEED/checkpoints/BIPED/7/7_model.pth
+  weights_sha256: d0109e7f40e7d9f1f495d34947eb08167e8fbb0a13b4e6ab3121261fb8d5a416
+  trained_on: BIPED
+  in_domain_test_sets:
+  - BIPED
+  license: MIT (repository LICENSE)
+  params: 58910
+  gmacs_at_network_input:
+    BSDS500: 2.561 at 488x728 (first test image)
+    BIPED: 6.636 at 720x1280 (first test image)
+    UDED: 2.835 at 512x768 (first test image)
+  cpu_ms_1thread:
+    BSDS500: 209.4 ± 3.3 (forward 200.9)
+    BIPED: 578.5 ± 6.7 (forward 557.0)
+    UDED: 255.5 ± 73.1 (forward 242.9)
+  cost_model: as used for the maps
+  torch: 2.15.0+cpu
+  notes:
+  - 'Test-time size: images below 512 px are upsampled x1.5 (BSDS500, UDED), as in the repository.'
+  - Mean subtracted per test set (dataset.py), including a UDED mean.
+  - utils/img_processing.py replaced by a stand-in with the same count_parameters (avoids kornia and scikit-learn);
+    network and weights unchanged.
+LDC:
+  reference: Soria et al., IEEE Access 2022 (LDC)
+  repo: https://github.com/xavysp/LDC
+  commit: 8b6e3280c03b6a7cd81beb4bc2ba4edde99b789c
+  weights: LDC/checkpoints/BIPED/16/16_model.pth
+  weights_sha256: d236d6bf243159c6e1ae9d18d28e06bb7d2575ccb14a30180b84a3ff8452244b
+  trained_on: BIPED
+  in_domain_test_sets:
+  - BIPED
+  license: no LICENSE file in the repository
+  params: 674500
+  gmacs_at_network_input:
+    BSDS500: 5.577 at 480x480 (first test image)
+    BIPED: 22.151 at 720x1280 (first test image)
+    UDED: 6.339 at 512x512 (first test image)
+  cpu_ms_1thread:
+    BSDS500: 169.8 ± 2.5 (forward 164.1)
+    BIPED: 765.4 ± 6.1 (forward 744.0)
+    UDED: 231.7 ± 76.5 (forward 222.1)
+  cost_model: as used for the maps
+  torch: 2.15.0+cpu
+  notes:
+  - 'Test-time size: images below 512 px are resized to 480x480 (BSDS500) or 512x512 (UDED), as in the repository;
+    this changes the aspect ratio.'
+PiDiNet:
+  reference: Su et al., ICCV 2021 (PiDiNet), Table 5 model
+  repo: https://github.com/hellozhuo/pidinet
+  commit: d21aa881ed9c628571636fad39acfe1fad517ebd
+  weights: pidinet/trained_models/table5_pidinet.pth
+  weights_sha256: 80860ac267258b5f27486e0ef152a211d0b08120f62aeb185a050acc30da486c
+  trained_on: BSDS500 (+ PASCAL VOC augmentation)
+  in_domain_test_sets:
+  - BSDS500
+  license: research use only; commercial use needs the authors' permission (repository LICENSE)
+  params: 710149
+  gmacs_at_network_input:
+    BSDS500: 12.471 at 321x481 (first test image)
+    BIPED: 74.644 at 720x1280 (first test image)
+    UDED: 13.937 at 339x510 (first test image)
+  cpu_ms_1thread:
+    BSDS500: 588.8 ± 7.9 (forward 583.2)
+    BIPED: 3879.7 ± 29.9 (forward 3847.2)
+    UDED: 979.2 ± 501.9 (forward 968.3)
+  cost_model: converted (same maps; its 5x5 rd kernels store 720709 values for the same learned weights)
+  torch: 2.15.0+cpu
+  notes:
+  - Weights trained on BSDS500 train+val with PASCAL VOC augmentation.
+  - Maps from the unconverted model (README evaluation command); the converted model gives the same maps (max difference
+    1 grey level on 15 checked images) and is used for cost.

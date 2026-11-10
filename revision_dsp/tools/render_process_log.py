@@ -96,7 +96,9 @@ def main():
            "Sumber waktu: log di `logs_local/`, `logs_local/runs.csv` (tools/run_logged.sh),",
            "commit dan tag git, dan riwayat sesi kerja. Baris tanpa jam ditandai di kolom Ref.",
            "Temuan lengkap ada di FINDINGS.md; perubahan protokol di CHANGELOG.md.",
-           "Kolom Web: baris yang ditampilkan di halaman agenda KDC (tahapan runbook dan tag pra-registrasi).", ""]
+           "Kolom Web: baris yang ditampilkan di halaman agenda KDC (tahapan runbook dan tag pra-registrasi).",
+           "Kolom Komentar reviewer: komentar yang dijawab tahap itu (register komentar, runbook §6-§7).",
+           "Baris yang bukan jawaban atas komentar reviewer ditandai 'pendukung' atau 'bukan permintaan reviewer'.", ""]
     out += ["## Ringkasan per fase", "",
             "| Fase | Agenda | Kegiatan tercatat | Waktu komputasi (run) | Belum dijalankan |",
             "|---|---|---|---|---|"]
@@ -114,11 +116,11 @@ def main():
         if not pr:
             continue
         out += [f"## Fase {p}. {name} (agenda {dates})", "",
-                "| ID | Jenis | Kegiatan | Mulai | Selesai | Durasi | Status | Output | Hasil | Ref | Web |",
-                "|---|---|---|---|---|---|---|---|---|---|---|"]
+                "| ID | Jenis | Kegiatan | Komentar reviewer | Mulai | Selesai | Durasi | Status | Output | Hasil | Ref | Web |",
+                "|---|---|---|---|---|---|---|---|---|---|---|---|"]
         for r in pr:
-            cells = [r["id"], r["kind"], r["activity"], r["start"], r["end"], r["duration"],
-                     r["status"], r["outputs"], r["result"], r["ref"],
+            cells = [r["id"], r["kind"], r["activity"], r.get("reviewer", ""), r["start"], r["end"],
+                     r["duration"], r["status"], r["outputs"], r["result"], r["ref"],
                      "ya" if r.get("web") == "ya" else ""]
             out.append("| " + " | ".join(c.replace("|", "/") for c in cells) + " |")
         out.append("")

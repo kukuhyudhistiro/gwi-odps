@@ -20,7 +20,7 @@ test-set results (E20), run once after the freeze (tag `freeze-2026-11-10`, comm
 7ae7ba5), and the paired statistics of E22 (F25). Only the pairs pre-registered in
 scripts/22_stats.py have confidence intervals. Every other test-set difference is a
 point estimate.
-Last update: 10 Nov 2026, after E22. Timings of every stage: PROCESS_LOG.md.
+Last update: 10 Nov 2026, after E21. Timings of every stage: PROCESS_LOG.md.
 
 ## Original claims and their status
 
@@ -34,6 +34,47 @@ Last update: 10 Nov 2026, after E22. Timings of every stage: PROCESS_LOG.md.
 | C6 | (implicit) the Gabor carrier is what makes GWi work | **Not supported for GWi alone.** GWi scores best as the kernel loses its carrier lobe and approaches a smoothed oriented derivative. This was already published in Paper 2 (A-GWi) | F7, H1 |
 | C7 | (not claimed, but implied by roadmap §6, which lists only Gabor methods) where GWi+ODPS stands among the evaluated detectors | **Below a classical baseline, in the submission and in the revision.** The Gaussian gradient magnitude σ 1.4 is above every Gabor variant on all three test sets, in ODS, OIS and AP. Measured under the manuscript border protocol, which handicaps the Gabor methods (H5) | F16, F24, H3, H5 |
 | C8 | (design choice, R2.6) N = 8 orientations is an appropriate balance | **Not supported at the selected kernel.** N = 4 reaches the same ODS at half the cost; N = 16 adds nothing. It was supported at k7 λ5 (E11 of the five-candidate run) | F19 |
+| C9 | (§3.1, R2.7) Histogram equalization is important, notably for low-contrast images; normalization to [0, 1] is necessary | **Claim withdrawn.** On all three test sets, removing HE raises ODS of GWi (+0.0055 to +0.0623) and of GWi+ODPS (+0.0111 to +0.0591). /255 changes nothing. The protocol stays as frozen (HE) | F26 |
+
+## Reviewer map
+
+Each entry answers one or more reviewer comments. IDs follow the comment register (runbook §7, `PANDUAN_Komentar_Reviewer_DSP.md`). The register also says where in the manuscript each answer goes.
+
+Entries marked *not requested* answer no reviewer comment. They are kept for one of two reasons:
+- consistency with Paper 2 (A-GWi, already published);
+- transparency about how the revision was run.
+
+They add no experiment that a reviewer did not ask for.
+
+| Entry | Reviewer comments | Note |
+|---|---|---|
+| F1, F2 | R2.1 | Selection without test data |
+| F3, F4, F5 | R2.1, R3.4 | Selection procedure and its amendments (CHANGELOG.md) |
+| F6 | *not requested* | Run incidents, disclosed for transparency; no result affected |
+| F7 | R3.1a, R3.1b, R3.7 | Framing of GWi as an odd Gabor or derivative filter |
+| F8 | R2.2, R3.1b, R3.2, R3.4 | Pre-registered hypotheses H2 (HYPOTHESES.md) |
+| F9, F10, F11 | R1.3, R3.2, R1.1 | ODPS gain vs λ; "improves" governed by E22 |
+| F12 | R2.2, R1.3 | Double-peak (side-lobe) mechanism |
+| F13 | R2.3 | Discretization of d |
+| F14 | R1.5 | DC response of the real kernel |
+| F15 | R1.4, R2.10, R3.3 | Cost per pixel |
+| F16 | R2.8, R2.12 | Position against the classical baselines |
+| F17 | R2.1, R3.4 | Final selection |
+| F18 | R2.5, R3.2 | Effect of d |
+| F19 | R2.6, R3.4 | N, σ/λ, γ |
+| F20 | R2.8, R2.9 | Reproduction of the submitted numbers; baselines as described in §4.3 |
+| F21 | R2.1, R2.12 | Selected vs submitted kernel on test |
+| F22 | R1.3, R3.2, R1.1 | ODPS gain on test |
+| F23 | R1.5, R2.4, R3.7 | GWi vs GWC zero-DC |
+| F24 | R2.8, R2.12 | Ranking against the classical baselines |
+| F25 | R1.1, R2.11, R1.5 | Paired statistics (E22) |
+| F26 | R2.7, R2.12 | Preprocessing ablation (E21) |
+| H1 | R3.1a (citation) | Published in A-GWi; Paper 1 must cite it |
+| H2 | R2.9 | Metric definitions; aligned with A-GWi |
+| H3 | R2.8 | Binary Canny and GaussGradMag naming |
+| H4 | *not requested* | Consistency with A-GWi (roadmap premise) |
+| H5 | R2.3 (description only), R2.12 | Border handling is described, not changed. The border diagnostic itself was *not requested* |
+| H6 | R2.10 | Runtime procedure; compared with A-GWi |
 
 ## A. Selection procedure
 
@@ -225,6 +266,9 @@ Paper 2 was revised after review and accepted. Several of its corrected statemen
   - The comparison against the classical baselines (F16) is confounded by this handicap. The manuscript must not draw a ranking against them on BSDS500 without stating it.
   - GWi vs GWC uses the same border and stays internally fair. The size of the effect on that gap is unknown.
 - **No border sensitivity rows are added to E20** (decision of the first author, 10 Nov 2026). Border handling was not raised by the reviewers, so the revision keeps to what they asked. The limitation is stated in the text without test-set numbers.
+- *Correction (10 Nov 2026, while E21 was running):* R2.3 does mention border handling. It asks only that the handling be **described** for reproducibility: how ODPS samples x ± d·n, what happens at the image edge, and how the kernel is discretized.
+  - It does not ask for a different border mode or a sensitivity test.
+  - The decision above therefore stands. The zero-padding specification (WP4), and this limitation, are part of the answer to R2.3 and R2.12.
 
 **H6. Consistency item. Runtime.**
 A-GWi measured static GWi k7 at 15.54 ms and GWC at 33.70 ms per BSDS500 image (ratio 2.17, single thread, minimum of 3 runs). Paper 1 E24 uses the median of 5 runs. If the machines or timing rules differ, both must be stated, and E24 values for k7 should be compared with these.
@@ -356,9 +400,40 @@ n/c: binary map with one operating point; AP is not comparable (H3).
   - The comparisons against the classical baselines (F24) also have no CI. The pre-registered family covers only the reviewers' Gabor pairs, so those rankings stay descriptive.
   - The per-method CIs in `variability.csv` are marginal. Overlap or non-overlap between them is not a test, and must not be used to claim that the Gaussian gradient magnitude and GWi+ODPS are "not separable" or "separable".
 
+**F26. Finding. Histogram equalization lowers ODS of the proposed method on all three test sets; /255 has no effect (E21, R2.7).**
+- Run on 10 Nov 2026, 06:05:26 to 06:27:53 WIB (22 min), at commit 87b21a5, with the frozen configuration k9 λ9. Nothing was selected. File: `results/preproc/preproc_ablation.csv`.
+
+  | Method (k9 λ9) | Dataset | ODS with HE (manuscript protocol) | ODS without HE | Effect of HE |
+  |---|---|---|---|---|
+  | GWi | BSDS500 | 0.4998 | 0.5053 | −0.0055 |
+  | GWi+ODPS | BSDS500 | 0.5120 | 0.5231 | −0.0111 |
+  | GWi | BIPED | 0.6202 | 0.6825 | −0.0623 |
+  | GWi+ODPS | BIPED | 0.6281 | 0.6872 | −0.0591 |
+  | GWi | UDED | 0.6476 | 0.6737 | −0.0261 |
+  | GWi+ODPS | UDED | 0.6451 | 0.6812 | −0.0361 |
+
+- **OIS and AP:**
+  - On BIPED and UDED, HE also lowers OIS (−0.018 to −0.035) and AP (−0.005 to −0.049).
+  - On BSDS500 its effect on OIS and AP is close to zero. For GWi, OIS is +0.0007 and AP +0.0083 with HE. For GWi+ODPS, OIS is −0.0039 and AP +0.0005.
+- **/255:** ODS, OIS and AP are identical with and without /255, for both methods on all three sets. This is as expected: the filtering is linear and the maps are min-max normalized per image.
+- **Answer to R2.7.** The GWi+ODPS results are not produced by preprocessing. HE lowers them.
+  - The statement that HE is important is not supported on these test sets.
+  - A low-contrast subset was not tested (the reviewer did not ask for one). The manuscript therefore must not claim that HE helps low-contrast images either.
+  - The §3.1 sentence calling the [0, 1] normalization "necessary" must be corrected: it does not change the evaluated maps.
+- **What must not be done with this result.**
+  - The protocol stays as frozen, with HE. Switching to "no HE" now would choose the preprocessing on the test sets, the problem raised in R2.1.
+  - The kernel (k9 λ9) was selected with HE on non-test data. Whether the selection would differ without HE is unknown.
+- **Baselines.**
+  - In the main tables every method uses HE (same protocol, R2.8).
+  - E21 measures only GWi and GWi+ODPS, which is what R2.7 asks ("the proposed method with and without these preprocessing steps").
+  - The no-HE values must not be compared with baselines run with HE. For example, GWi+ODPS without HE on BIPED (0.6872) is not comparable with GaussGradMag with HE (0.6407). Whether the baselines also gain without HE is not known.
+- **ODPS gain without HE (descriptive):** +0.0178, +0.0047 and +0.0075. With HE it is +0.0122, +0.0079 and −0.0025. On UDED, the sign of the ODPS gain depends on the preprocessing. This is consistent with F25: no difference on UDED.
+- **No confidence intervals.** The E21 differences are not part of the pre-registered E22 family, so they are point estimates.
+- **Possible reason, not tested.** HE stretches the contrast of flat and textured regions. That can create gradients that the Gabor filter reports as edges.
+
 ## G. Open until the test run
 
-Status after E20 and E22 (10 Nov 2026):
+Status after E20, E21 and E22 (10 Nov 2026):
 
 - Sign and 95% CI of ΔODS for GWi vs GWC, GWi+ODPS vs GWC, and GWi+ODPS vs GWi on BSDS500, BIPED and UDED (E20, E22).
   - **Resolved by F25.** ODPS improves ODS on BSDS500 only. GWi and GWi+ODPS are above raw GWC on all three sets. GWi is above zero-DC GWC on all three sets at k9 λ9.
@@ -366,4 +441,5 @@ Status after E20 and E22 (10 Nov 2026):
   - **Resolved by F21.** The selection carries over for GWi but not for GWi+ODPS.
 - Whether the non-test patterns above (H1, F7) also appear on the test sets: a descriptive check, not a new test.
   - **F22.** The direction is consistent with H1 on all three sets, with only two kernels.
-- Still open: runtime and C5 (E24). E21, E23, E25 and E26 have not been run.
+- Still open: runtime and C5 (E24). E23, E25 and E26 have not been run.
+- E21 (R2.7) was run on 10 Nov 2026: see F26 and C9.

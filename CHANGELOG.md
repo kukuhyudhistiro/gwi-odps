@@ -55,6 +55,11 @@ First revision of manuscript DSP-D-26-02462. Tag `v3.0.0-dsp-r1`. The work is in
 - "12.6× faster than PC": 8.5× at k9 λ9.
 - "33 thresholds" and "SciPy 1.5.3, scikit-image 0.21": the main tables used 99 thresholds, and the actual versions are listed in `revision_dsp/results/env/`.
 
+### Fixed
+- `revision_dsp/run_all.sh` now quotes `$PY`, so an interpreter path that contains spaces works, e.g. `PY="D:/Project 2026/.../python.exe"`.
+  - Found by the smoke test on a fresh clone on 10 Nov 2026, after the numbers were frozen.
+  - No result is affected.
+
 ### Unchanged
 - `src/`, `scripts/`, `eval_results/k5/` and `runtime_logs/`, as at submission (commit `91b4f83`, tag `dsp-submitted-v1`).
 

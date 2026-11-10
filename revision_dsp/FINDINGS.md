@@ -684,6 +684,21 @@ Status after E20 to E26 (10 Nov 2026):
   - `docs/kernel_ablation.md` and `docs/benchmarks.md`: marked as describing v2.0.0.
   - The documents state the negative results with the same weight as the others: C1 to C11, the Gaussian gradient above every Gabor variant, and the learned detectors far above.
   - **What the tag does and does not cover.** `v3.0.0-dsp-r1` is a local tag. It precedes the manuscript writing (WP12-WP13). If writing or the number audit changes any file, the tag is moved before it is published.
+- **Check of the release state (10 Nov 2026, 16:02 to 16:17, before any push of this repository):**
+  - **Legacy check.** `results/test/legacy_check.csv` gives GWi, GWi+ODPS and GWC at k5 λ4 to four decimals on all three sets, identical to `eval_results/k5/ods_summary.csv` in ODS, OIS and AP (27 values). Sobel in `test/summary.csv` gives 9 more, also identical.
+  - **Fresh clone.**
+    - `TABLES.md` regenerated from the committed CSVs is byte-identical.
+    - The smoke test runs all 12 scripts, and the selftest passes (T0-T6).
+  - **No change affecting results since the freeze.**
+    - There is no change in `rev/` since the freeze. The only change to `config.yaml` is the qualitative image list (CHANGELOG.md).
+    - No result file has changed since `numbers-frozen-2026-11-10`.
+    - `src/`, `scripts/` and `eval_results/` are unchanged since submission.
+  - **Content scan.** The tracked files hold no private e-mail address, no credential, no dataset and no detector weights.
+  - **Defect found.** `run_all.sh` failed when `PY` held a path with spaces, because `$PY` was not quoted. The first author quoted it; the smoke test then passed with the spaced path. The tag `v3.0.0-dsp-r1` was moved to the commit with this fix.
+  - **Not in the repository, by choice:**
+    - `logs_local/` (run logs, cited above as timing sources);
+    - `results/counts/` (per-image counts, 34 MB).
+    - Both are excluded only by `.git/info/exclude`. The repository has no root `.gitignore`.
 - **Before the repository is pushed (decision of the first author, not taken yet):**
   - Every commit of the revision branch since 8 Nov 2026 carries a `Co-Authored-By` trailer.
   - FINDINGS sections F and H, and the decision rows (D-) and short analysis rows (A-) of the process log, are internal notes.

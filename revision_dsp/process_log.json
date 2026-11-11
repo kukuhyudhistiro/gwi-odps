@@ -1,7 +1,7 @@
 {
  "timezone": "WIB (UTC+7)",
  "source": "gwi-odps, revision_dsp/process_log.csv",
- "generated": "2026-11-10 17:02:36",
+ "generated": "2026-11-11 20:29:12",
  "agenda": {
   "1": {
    "dates": "7-9 Nov",
@@ -1132,6 +1132,27 @@
    "web_note": "",
    "duration_s": 38,
    "duration": "0:00:38"
+  },
+  {
+   "phase": 3,
+   "phase_name": "Analisis & pengukuran",
+   "id": "FIG3",
+   "kind": "run",
+   "activity": "Gambar naskah digambar ulang selebar teks cetak (6,5 in) dan disesuaikan dengan naskah ringkas: pipeline sebagai alur (menggantikan flowchart tahap), flowchart GWC vs GWi dan ODPS digambar dari hasil beku, gambar gabungan kurva PR dan peta tepi, gambar supplementary",
+   "title": "Gambar naskah: ukuran cetak dan naskah ringkas",
+   "start": "2026-11-11 20:27:15",
+   "end": "2026-11-11 20:28:43",
+   "status": "rc 0",
+   "outputs": "scripts/27_figures.py; results/figures/fig_*.png; results/figures/fig_*.pdf; results/figures/FIGURES.md; logs_local/FIG3_figures.log",
+   "result": "Teks gambar kini sekitar 7-8 pt saat dicetak. Baru: fig_flow_gwc_gwi, fig_odps, fig_pr_all, fig_qualitative_all; fig_odps_offsets diganti panel (b, c) fig_odps. Label 'submitted' menjadi 'reference', (k//2)/λ menjadi r_c, BIPED menjadi BIPED v2; label [R1.5] di fig_forest dihapus",
+   "finding": "Data dan angka tidak berubah; hanya tata letak dan label. Gambar supplementary yang kodenya tidak diubah dihasilkan ulang identik",
+   "ref": "tools/run_logged.sh",
+   "reviewer": "pendukung (tata letak gambar naskah)",
+   "web": "",
+   "web_status": "",
+   "web_note": "",
+   "duration_s": 88,
+   "duration": "0:01:28"
   },
   {
    "phase": 3,

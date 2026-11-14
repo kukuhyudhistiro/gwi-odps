@@ -47,8 +47,11 @@ bash run_all.sh select       # kernel selection: results/selection/ (Table 4, Ta
 bash run_all.sh hypotheses   # results/hypotheses/
 bash run_all.sh stats        # CIs and paired tests: results/stats/ (Tables 5-6, S2)
 bash run_all.sh tables       # results/TABLES.md
-git status --short results/  # no output: the recomputed files equal the released ones
+git status --short results/  # only results/hypotheses/hypotheses.json changes
 ```
+
+The one changed file differs only in its `source` field, the absolute path of
+the input file; every number is identical.
 
 Recomputing the maps themselves (stages `check`, `test`, `ablation`, `preproc`,
 `runtime`, `qualitative`, `figures`) needs the datasets in `gwi-odps/data/`

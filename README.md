@@ -187,7 +187,7 @@ git clone https://github.com/kukuhyudhistiro/gwi-odps.git
 cd gwi-odps
 git checkout v3.0.0-dsp-r1
 cd revision_dsp
-python -m venv .venv && source .venv/bin/activate     # Windows: .venv\Scripts\activate
+python -m venv .venv && source .venv/bin/activate     # Windows (Git Bash): source .venv/Scripts/activate
 pip uninstall -y opencv-python; pip install -r requirements.txt
 bash run_all.sh smoke                                  # synthetic data, every script must finish
 ```
@@ -198,8 +198,10 @@ On Windows, run the commands in Git Bash and set the interpreter for `run_all.sh
 
 ```bash
 bash run_all.sh select && bash run_all.sh hypotheses && bash run_all.sh stats && bash run_all.sh tables
-git status --short results/                            # no output: same files as released
+git status --short results/                            # only results/hypotheses/hypotheses.json changes
 ```
+
+The one changed file differs only in its `source` field, the absolute path of the input file on your machine; every number is identical.
 
 **With the datasets.** Datasets go in `data/`, as described in [`docs/datasets.md`](docs/datasets.md). The revision also needs BSDS500 train and val, and BIPED train. Then `bash run_all.sh check` tests the environment and the equivalence with `src/`, and the other stages recompute the maps.
 

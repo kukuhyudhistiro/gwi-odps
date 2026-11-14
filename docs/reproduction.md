@@ -14,7 +14,7 @@ Commands run from `revision_dsp/`. The order of stages, the reviewer comment eac
 
 ```bash
 cd revision_dsp
-python -m venv .venv && source .venv/bin/activate      # Windows: .venv\Scripts\activate
+python -m venv .venv && source .venv/bin/activate      # Windows (Git Bash): source .venv/Scripts/activate
 pip uninstall -y opencv-python; pip install -r requirements.txt
 ```
 
@@ -33,8 +33,10 @@ PY=.venv/Scripts/python.exe bash run_all.sh select       # Windows; on Linux/mac
 PY=.venv/Scripts/python.exe bash run_all.sh hypotheses
 PY=.venv/Scripts/python.exe bash run_all.sh stats
 PY=.venv/Scripts/python.exe bash run_all.sh tables
-git status --short results/                              # no output: same files as released
+git status --short results/                              # only results/hypotheses/hypotheses.json changes
 ```
+
+The one changed file differs only in its `source` field, which records the absolute path of the input file; every number is identical (checked on a fresh clone without the datasets, 14 Nov 2026).
 
 This recomputes the kernel selection (Table 4, Table S1), the confidence intervals and paired tests (Tables 5-6, Table S2) and `results/TABLES.md` from the released counts. Recomputing the maps and counts themselves needs the datasets (A.1).
 

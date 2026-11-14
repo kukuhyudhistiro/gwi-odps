@@ -7,9 +7,10 @@
 Reference implementation and evaluation pipeline for the paper:
 
 > **"Imaginary-Only Wavelet with Orientation-Aware Double-Peak Suppression for Lightweight Edge Detection"**
-> Kukuh Yudhistiro¹, Puput Dani Prasetyo Adi², Ruri Suko Basuki¹, Nova Rijati¹
-> ¹ Faculty of Computer Science, Universitas Dian Nuswantoro, Semarang, Indonesia
-> ² National Research and Innovation Agency (BRIN), Bandung, Indonesia
+> Kukuh Yudhistiro¹ ², Puput Dani Prasetyo Adi³, Ruri Suko Basuki², Nova Rijati²
+> ¹ Faculty of Information Technology, Universitas Merdeka Malang, Malang, Indonesia
+> ² Faculty of Computer Science, Universitas Dian Nuswantoro, Semarang, Indonesia
+> ³ National Research and Innovation Agency (BRIN), Bandung, Indonesia
 
 **Version 3.0.0 (first revision, manuscript DSP-D-26-02462).**
 - All numbers on this page come from [`revision_dsp/`](revision_dsp/README.md). They were computed under a protocol that was pre-registered with git tags before the test sets were opened.
@@ -128,7 +129,7 @@ The full ledger, with every finding and limitation, is [`revision_dsp/FINDINGS.m
 
 - **Kernel selection.**
   - The kernel tables of the submission (Tables 1-4) were computed on the test sets.
-  - The revision selects on non-test data only. On that data, k5 λ4 ranks 12th of 18 candidates by mean ODS of GWi.
+  - The revision selects on non-test data only. On that data, k5 λ4 ranks 18th of the 24 candidates by mean ODS of GWi and by mean ODS of GWi+ODPS (12th of the 18 candidates of amendment 1).
   - The selection criterion (mean ODS of GWi+ODPS) was adopted after the first results were seen. This amendment is recorded in [`revision_dsp/CHANGELOG.md`](revision_dsp/CHANGELOG.md).
   - On UDED, which has no non-test split, the new kernel does not raise the ODS of GWi+ODPS (+0.0002).
 - **ODPS mechanism.**
@@ -189,14 +190,20 @@ cd revision_dsp
 python -m venv .venv && source .venv/bin/activate     # Windows: .venv\Scripts\activate
 pip uninstall -y opencv-python; pip install -r requirements.txt
 bash run_all.sh smoke                                  # synthetic data, every script must finish
-bash run_all.sh check                                  # environment, equivalence with src/, mechanism
 ```
 
-The full order of stages and their outputs are in [`revision_dsp/README.md`](revision_dsp/README.md) and [`docs/reproduction.md`](docs/reproduction.md).
+On Windows, run the commands in Git Bash and set the interpreter for `run_all.sh`, e.g. `PY=.venv/Scripts/python.exe bash run_all.sh smoke`.
 
-Results are cached. A stage recomputes only the files that are missing.
+**Without the datasets.** The per-image matching counts of every evaluated map are included (`revision_dsp/results/counts/`). The kernel selection, the statistics and the tables can be recomputed from them in a few minutes:
 
-Datasets go in `data/`, as described in [`docs/datasets.md`](docs/datasets.md). The revision also needs BSDS500 train and val, and BIPED train.
+```bash
+bash run_all.sh select && bash run_all.sh hypotheses && bash run_all.sh stats && bash run_all.sh tables
+git status --short results/                            # no output: same files as released
+```
+
+**With the datasets.** Datasets go in `data/`, as described in [`docs/datasets.md`](docs/datasets.md). The revision also needs BSDS500 train and val, and BIPED train. Then `bash run_all.sh check` tests the environment and the equivalence with `src/`, and the other stages recompute the maps.
+
+The full order of stages, their outputs and durations are in [`revision_dsp/README.md`](revision_dsp/README.md) and [`docs/reproduction.md`](docs/reproduction.md). Results are cached; a stage recomputes only the files that are missing.
 
 ---
 
@@ -331,7 +338,7 @@ Third-party material:
 ## Contact
 
 - **Corresponding author**: Kukuh Yudhistiro, kukuh.yudhistiro@unmer.ac.id
-- **Affiliation**: Faculty of Computer Science, Universitas Dian Nuswantoro, Semarang, Indonesia
+- **Affiliations**: Faculty of Information Technology, Universitas Merdeka Malang, Malang, Indonesia; Faculty of Computer Science, Universitas Dian Nuswantoro, Semarang, Indonesia
 
 ---
 

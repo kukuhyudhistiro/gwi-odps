@@ -4,8 +4,9 @@ and official weights, and write 8-bit edge maps for scripts/23_eval_external.py.
 Run with the separate E23 environment (PyTorch CPU), one method per process, because
 the three repositories use clashing module names (utils, models):
 
-    D:/Project 2026/e23_external/.venv-dl/Scripts/python.exe tools/external/infer_external.py \
-        --method TEED --repos "D:/Project 2026/e23_external/repos" --out "D:/Project 2026/e23_external/maps"
+    $EXT/.venv-dl/Scripts/python.exe tools/external/infer_external.py \
+        --method TEED --repos "$EXT/repos" --out "$EXT/maps"
+(EXT: the E23 folder, see tools/external/run_e23.sh and docs/reproduction.md A.2)
 
 Test-time processing copies each repository's own test code (checked 10 Nov 2026):
     TEED     repo xavysp/TEED, checkpoints/BIPED/7/7_model.pth (trained on BIPED)

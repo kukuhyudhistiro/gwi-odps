@@ -6,7 +6,7 @@ step; times in WIB, UTC+7). This script writes:
     process_log.json  the same rows with durations, for the KDC agenda page
 
 Usage (from revision_dsp):  .venv/Scripts/python.exe tools/render_process_log.py
-                            [--kdc "D:/Project 2026/kdc"]   (also writes kdc/revisi_dsp_log.json)
+                            [--kdc <path to the kdc site folder>]   (also writes kdc/revisi_dsp_log.json)
 Timing of a new stage: run it with  bash tools/run_logged.sh <id> <stage>,  which
 appends start, end, duration and exit code to logs_local/runs.csv; then add the
 row to process_log.csv and run this script.

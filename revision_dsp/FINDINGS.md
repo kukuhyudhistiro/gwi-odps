@@ -26,7 +26,7 @@ Last update: 10 Nov 2026, after E26, the numbers freeze (tag `numbers-frozen-202
 
 | # | Claim in the submission or the roadmap | Status now | Entries |
 |---|---|---|---|
-| C1 | k5 λ4 is the best configuration across three datasets (Table 4) | **Claim withdrawn.** It was selected on test data. On non-test data it ranks 12 of 18 by ODS of GWi. On test, k9 λ9 is above it for GWi on all three sets; for GWi+ODPS on BSDS500 and BIPED but not UDED (+0.0002) | F1, F2, F21 |
+| C1 | k5 λ4 is the best configuration across three datasets (Table 4) | **Claim withdrawn.** It was selected on test data. On non-test data it ranks 18 of the final 24 candidates by mean ODS of GWi and of GWi+ODPS (12 of the 18 candidates of amendment 1). On test, k9 λ9 is above it for GWi on all three sets; for GWi+ODPS on BSDS500 and BIPED but not UDED (+0.0002) | F1, F2, F21 |
 | C2 | ODPS suppresses carrier side lobes located at ±λ/2, with d = 2 for λ = 4 | **Claim withdrawn (mechanism), replaced by directional thinning.** Carrier side lobes exist only when (k//2)/λ > 0.5. At k5 λ4 and at the new selection there are none; ODPS thins a broad response across orientations. Where side lobes exist (k5 λ3), ODPS keeps the two side peaks of an axis-aligned step and removes the edge pixels | F12 (correction), F27 |
 | C3 | ODPS improves ODS over GWi | **Claim corrected: supported on BSDS500 only.** E22 at k9 λ9: BSDS500 +0.0122, 95% CI [0.0090, 0.0158]; BIPED +0.0079, CI [−0.0076, 0.0203]; UDED −0.0025, CI [−0.0161, 0.0121]. "Improves" may be written for BSDS500 only. At the submitted k5 λ4 the point gains were larger (+0.0253, +0.0142, +0.0377), with no CI | F9, F10, F11, F22, F25 |
 | C4 | The real component of the Gabor kernel is redundant (GWi > GWC) | **Claim corrected.** GWi is above raw GWC on all test sets (CIs exclude 0), but most of that gap is the DC response of the raw real kernel. Against zero-DC GWC at k9 λ9, GWi stays above, with CIs excluding 0: +0.0161, +0.0391 and +0.0842. At k5 λ4, zero-DC GWC is above GWi on BSDS500 (−0.0093, no CI) | F14, F23, F25 |
@@ -87,7 +87,7 @@ They add no experiment that a reviewer did not ask for.
 The response letter acknowledges this. The revision selects on non-test splits only.
 
 **F2. Claim withdrawn. On non-test data, k5 λ4 is not the best configuration.**
-Its mean ODS of GWi is 0.4738, rank 12 of the 18 candidates of amendment 1.
+Its mean ODS of GWi is 0.4738, rank 12 of the 18 candidates of amendment 1 and rank 18 of the final 24 candidates (also rank 18 by mean ODS of GWi+ODPS, 0.4946).
 UDED has no non-test split, so selection uses two datasets instead of three.
 
 **F3. Process. The five configurations of Tables 1-4 did not bracket the optimum.**
@@ -627,7 +627,7 @@ n/c: binary map with one operating point; AP is not comparable (H3).
   |---|---|---|---|
   | TEED | 58,910 | 2.56 (488×728) / 6.64 (720×1280) / 2.84 (512×768) | 209 / 579 / 256 |
   | LDC | 674,500 | 5.58 (480×480) / 22.15 (720×1280) / 6.34 (512×512) | 170 / 765 / 232 |
-  | PiDiNet (converted) | 710,149 | 12.47 (321×481) / 74.64 (720×1280) / 13.94 (339×510) | 589 / 3880 / 979 |
+  | PiDiNet (converted) | 720,709 | 12.47 (321×481) / 74.64 (720×1280) / 13.94 (339×510) | 589 / 3880 / 979 |
   | GWi+ODPS k9 λ9 (E24) | 0 | 0.10 / 0.60 / — (filtering only: 648 MAC per pixel) | 42 / 245 / 69 |
   | Gaussian gradient σ 1.4 (E24) | 0 | — | 10.5 / 63 / 16.5 |
 
@@ -635,7 +635,7 @@ n/c: binary map with one operating point; AP is not comparable (H3).
   - UDED images differ in size, so the per-image spread there is large (sd 73 to 502 ms); BSDS500 and BIPED spreads are below 8 and 45 ms.
   - The learned detectors' preprocessing includes reading and decoding the image file (5 to 31 ms); E24 excluded it. This favours the training-free methods by at most that amount, small against the forward pass.
 
-  - Parameters: TEED 58,910; LDC 674,500; PiDiNet 710,149 (as published). GWi+ODPS has no learned parameter (k = 9, λ = 9, d = 4.5, N = 8, and the HE preprocessing are fixed by selection).
+  - Parameters: TEED 58,910; LDC 674,500; PiDiNet 710,149 as published and 720,709 after conversion (the converted model is the one timed). Table 8 of the revised manuscript gives the parameters and GMAC of the published PiDiNet (710,149; 12.50) and the CPU time of the converted model. GWi+ODPS has no learned parameter (k = 9, λ = 9, d = 4.5, N = 8, and the HE preprocessing are fixed by selection).
   - The input sizes follow the repositories: TEED upsamples BSDS500 and UDED images ×1.5, LDC resizes BSDS500 to 480×480 and UDED to 512×512. Their cost is therefore not per original pixel.
   - thop, used first, counts PiDiNet at 11.46 GMAC for the unconverted model on the first BSDS500 image. The PyTorch counter gives 12.50, because thop does not count the functional convolutions inside the pixel-difference modules. The MACs in cost.csv come from the PyTorch counter (convolutions and matrix products only).
   - The frameworks differ (PyTorch against OpenCV/NumPy). The times are a practical comparison on one CPU thread, not a comparison of operation counts.

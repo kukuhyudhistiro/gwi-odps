@@ -11,9 +11,12 @@
 # max difference 1 grey level; the form the repository times): E23c/E23d_PiDiNet_converted.
 set -uo pipefail
 cd "$(dirname "$0")/../.."
-EXT="D:/Project 2026/e23_external"
-PYD="$EXT/.venv-dl/Scripts/python.exe"
-PYR=".venv/Scripts/python.exe"
+# EXT: folder with the E23 environment (.venv-dl), the official repositories (repos/) and the
+#      maps (maps/); see docs/reproduction.md A.2. The revision used a folder next to the repository.
+# PYD: Python of the E23 environment; PYR: Python of the revision environment (Linux: .../bin/python).
+EXT="${EXT:?set EXT to the E23 folder, e.g. EXT=../../e23_external}"
+PYD="${PYD:-$EXT/.venv-dl/Scripts/python.exe}"
+PYR="${PYR:-.venv/Scripts/python.exe}"
 export PYTHONIOENCODING=utf-8 MSYS_NO_PATHCONV=1
 runs=logs_local/runs.csv
 head=$(git rev-parse --short HEAD)

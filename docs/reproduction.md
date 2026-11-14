@@ -24,6 +24,20 @@ pip uninstall -y opencv-python; pip install -r requirements.txt
 
 Datasets go in `../data/`, see [`datasets.md`](datasets.md). Besides the test splits, the revision needs BSDS500 train and val, and BIPED train.
 
+### A.0b Check the numbers without the datasets
+
+`results/counts/` holds the per-image matching counts of every evaluated map. The stages that aggregate counts read them from this cache, so they run without the images and finish in a few minutes:
+
+```bash
+PY=.venv/Scripts/python.exe bash run_all.sh select       # Windows; on Linux/macOS omit PY=...
+PY=.venv/Scripts/python.exe bash run_all.sh hypotheses
+PY=.venv/Scripts/python.exe bash run_all.sh stats
+PY=.venv/Scripts/python.exe bash run_all.sh tables
+git status --short results/                              # no output: same files as released
+```
+
+This recomputes the kernel selection (Table 4, Table S1), the confidence intervals and paired tests (Tables 5-6, Table S2) and `results/TABLES.md` from the released counts. Recomputing the maps and counts themselves needs the datasets (A.1).
+
 ### A.1 Stages
 
 How to run a stage:
@@ -61,17 +75,24 @@ E23 runs in a separate PyTorch CPU environment, outside the repository. It uses 
 
 The weights are not redistributed (licences: TEED MIT; LDC no licence file; PiDiNet research use only).
 
+Setup of the E23 folder (`EXT`, outside the repository):
+- `EXT/.venv-dl/`: a separate environment with the packages of `results/external/requirements-e23.txt` (Python 3.13.13, PyTorch 2.15.0 CPU build, thop).
+- `EXT/repos/TEED`, `EXT/repos/LDC`, `EXT/repos/pidinet`: clones of the official repositories at the commits listed in `results/external/models.yaml`. The weights are part of these repositories (paths and SHA-256 in `models.yaml`).
+- `EXT/maps/`: written by the run.
+
 ```bash
-bash tools/external/run_e23.sh            # maps, evaluation (scripts/23_eval_external.py --nms), MACs, CPU time
-.venv/Scripts/python.exe tools/external/summarize_e23.py --maps <maps root> --repos <repos root>
+EXT=<E23 folder> bash tools/external/run_e23.sh   # maps, evaluation (scripts/23_eval_external.py --nms), MACs, CPU time
+.venv/Scripts/python.exe tools/external/summarize_e23.py --maps <E23 folder>/maps --repos <E23 folder>/repos
 ```
+
+On Linux or macOS, set `PYD=<E23 folder>/.venv-dl/bin/python` and `PYR=.venv/bin/python` as well.
 
 Outputs:
 - `results/external/summary.csv`: ODS, OIS and AP, without and with the NMS of the script.
 - `results/external/counts/`.
 - `results/external/cost.csv`, `cost/` and `models.yaml`.
 
-The paths of the environment and the repositories are set at the top of `run_e23.sh`. The run took 1 h 33 min, plus 29 min for the corrected cost measurement.
+The run took 1 h 33 min, plus 29 min for the corrected cost measurement.
 
 ### A.3 Checks
 
@@ -85,7 +106,7 @@ The paths of the environment and the repositories are set at the top of `run_e23
 
 Check out `dsp-submitted-v1` (commit `91b4f83`) to run exactly the submitted code. The code in `src/` and `scripts/` is the same at `v3.0.0-dsp-r1`.
 
-Notes on the submitted version, from the revision audit (`revision_dsp/FINDINGS.md`, runbook §3):
+Notes on the submitted version, from the revision audit (`revision_dsp/FINDINGS.md`):
 - **Baseline names and settings.**
   - The "Canny" row is a Gaussian gradient magnitude, σ 1.4, without NMS or hysteresis.
   - LoG uses a Gaussian blur with σ 1.5 followed by `cv2.Laplacian`.

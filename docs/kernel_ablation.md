@@ -7,7 +7,7 @@
 > **What the revision does instead (v3.0.0).**
 > - Selection is on non-test data only: BSDS500 train+val and BIPED train.
 > - It uses the protocol of the main tables.
-> - It selects k9 λ9 with d = λ/2. On that data, k5 λ4 ranks 12th of 18 candidates by mean ODS of GWi.
+> - It selects k9 λ9 with d = λ/2. On that data, k5 λ4 ranks 18th of the 24 candidates by mean ODS of GWi and by mean ODS of GWi+ODPS (12th of the 18 candidates of amendment 1).
 >
 > See `revision_dsp/results/selection/` and `revision_dsp/FINDINGS.md` (F1-F5, F17).
 

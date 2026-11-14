@@ -1,7 +1,14 @@
 # Datasets
 
 This work uses three publicly available human-annotated edge detection
-benchmarks. All datasets must be obtained from their original sources.
+benchmarks. They are not included in this repository; obtain them from their
+original sources and place them under `data/`.
+
+- The submitted version (v2.0.0) uses the test splits only.
+- The revision (v3.0.0, `revision_dsp/`) also uses BSDS500 train and val and BIPED train, for kernel selection and ablations. The test splits are evaluated once, after the configuration was fixed.
+
+The paths are set under `datasets:` in `revision_dsp/config.yaml` (relative to
+`data/`). If your copy uses other folder names, change them there.
 
 ---
 
@@ -19,8 +26,14 @@ benchmarks. All datasets must be obtained from their original sources.
 
 ```
 data/BSDS500/
-├── images/test/        # 200 .jpg files (321 × 481)
-└── groundTruth/test/   # 200 .mat files (5-6 annotators per image)
+├── images/
+│   ├── train/          # 200 .jpg (revision only)
+│   ├── val/            # 100 .jpg (revision only)
+│   └── test/           # 200 .jpg (321 × 481)
+└── groundTruth/
+    ├── train/          # 200 .mat (revision only)
+    ├── val/            # 100 .mat (revision only)
+    └── test/           # 200 .mat (5-6 annotators per image)
 ```
 
 Each `.mat` file contains `groundTruth[0,i]['Boundaries']` for annotator i.
@@ -41,9 +54,15 @@ Each `.mat` file contains `groundTruth[0,i]['Boundaries']` for annotator i.
 ```
 data/BIPED/
 └── edges/
-    ├── imgs/test/        # 50 .jpg files (1280 × 720)
-    └── edge_maps/test/   # 50 .png files (binary edge maps)
+    ├── imgs/
+    │   ├── train/rgbr/real/      # 200 .jpg (revision only)
+    │   └── test/                 # 50 .jpg (1280 × 720)
+    └── edge_maps/
+        ├── train/rgbr/real/      # 200 .png (revision only)
+        └── test/                 # 50 .png (binary edge maps)
 ```
+
+Only the 200 original training images (`rgbr/real`) are used, not the augmented copies.
 
 ---
 
@@ -60,12 +79,12 @@ data/BIPED/
 
 ```
 data/UDED/
-├── imgs/    # 30 .jpg images (variable resolution)
+├── imgs/    # 30 .png images (variable resolution)
 └── gt/      # 30 .png ground truth files
 ```
 
 Images drawn from: BIPED, BSDS500, DIV2K, WIREFRAME, CITYSCAPES, ADE20K,
-BSDS300, CID.
+BSDS300, CID. UDED has no training split.
 
 ---
 
@@ -85,11 +104,15 @@ BIPED test:    50 images, mean edge density 3.26% ± 1.04%
 UDED test:     30 images, mean edge density 6.37% ± 4.32%
 ```
 
+In the revision, a stage that reads a missing folder stops with
+`Image folder not found: <path>`; images without ground truth are reported and
+skipped.
+
 ---
 
 ## Notes
 
-- Total dataset size: ~610 MB on disk
-- Only test splits are used; GWi+ODPS has no trainable parameters
-- BSDS500 evaluation uses all 5-6 annotators with per-annotator matching
-- BIPED/UDED use single annotator
+- The splits listed above take about 110 MB on disk.
+- GWi+ODPS has no trainable parameters. The non-test splits are used only to select the kernel size and wavelength (revision).
+- BSDS500 evaluation uses all 5-6 annotators with per-annotator matching.
+- BIPED v2 and UDED have a single annotator.

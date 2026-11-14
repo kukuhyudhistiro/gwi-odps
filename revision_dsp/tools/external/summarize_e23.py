@@ -2,8 +2,7 @@
 write results/external/models.yaml and results/external/cost.csv.
 
 Run with the revision environment after tools/external/run_e23.sh:
-    .venv/Scripts/python.exe tools/external/summarize_e23.py --maps "D:/Project 2026/e23_external/maps" \
-        --repos "D:/Project 2026/e23_external/repos"
+    .venv/Scripts/python.exe tools/external/summarize_e23.py --maps "$EXT/maps" --repos "$EXT/repos"
 
 Reads, per method, <maps>/<METHOD>/provenance.json, flops*.csv and timing*.csv (written by
 infer_external.py), copies them to results/external/cost/<METHOD>/ so that the repository

@@ -12,8 +12,8 @@ abstract: >
 authors:
   - family-names: Yudhistiro
     given-names: Kukuh
-    affiliation: Universitas Dian Nuswantoro
-    city: Semarang
+    affiliation: "Universitas Merdeka Malang; Universitas Dian Nuswantoro"
+    city: Malang
     country: ID
   - family-names: Adi
     given-names: Puput Dani Prasetyo

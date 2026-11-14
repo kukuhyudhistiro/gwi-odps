@@ -1,0 +1,10 @@
+# Datasets are not redistributed (see docs/datasets.md); data/README.md is tracked.
+data/*/
+
+# Environments, caches and local run logs
+.venv/
+revision_dsp/.venv/
+revision_dsp/logs_local/
+__pycache__/
+*.pyc
+.DS_Store

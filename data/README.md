@@ -9,16 +9,20 @@ See [`../docs/datasets.md`](../docs/datasets.md) for download instructions.
 ```
 data/
 ├── BSDS500/
-│   ├── images/test/         # 200 .jpg files
-│   └── groundTruth/test/    # 200 .mat files
+│   ├── images/{train,val,test}/        # 200 / 100 / 200 .jpg (train and val: revision only)
+│   └── groundTruth/{train,val,test}/   # 200 / 100 / 200 .mat
 ├── BIPED/
 │   └── edges/
-│       ├── imgs/test/       # 50 .jpg files (1280×720)
-│       └── edge_maps/test/  # 50 .png files
+│       ├── imgs/train/rgbr/real/       # 200 .jpg (revision only)
+│       ├── imgs/test/                  # 50 .jpg (1280×720)
+│       ├── edge_maps/train/rgbr/real/  # 200 .png (revision only)
+│       └── edge_maps/test/             # 50 .png
 └── UDED/
-    ├── imgs/                # 30 .jpg files
-    └── gt/                  # 30 .png files
+    ├── imgs/                           # 30 .png files
+    └── gt/                             # 30 .png files
 ```
+
+The revision (`revision_dsp/`) reads these paths from `revision_dsp/config.yaml` (`datasets:`).
 
 ## Verify Placement
 

@@ -56,13 +56,27 @@ First revision of manuscript DSP-D-26-02462. Tag `v3.0.0-dsp-r1`. The work is in
 - "33 thresholds" and "SciPy 1.5.3, scikit-image 0.21": the main tables used 99 thresholds, and the actual versions are listed in `revision_dsp/results/env/`.
 
 ### Fixed
-- `revision_dsp/run_all.sh` now quotes `$PY`, so an interpreter path that contains spaces works, e.g. `PY="D:/Project 2026/.../python.exe"`.
+- `revision_dsp/run_all.sh` now quotes `$PY`, so an interpreter path that contains spaces works, e.g. `PY="C:/My Projects/gwi-odps/revision_dsp/.venv/Scripts/python.exe"`.
   - Found by the smoke test on a fresh clone on 10 Nov 2026, after the numbers were frozen.
   - No result is affected.
 - **Smoke test on Windows.** The smoke test now keeps its synthetic data and results in `revision_dsp/tests/_smoke/` (git-ignored) instead of `/tmp`.
   - **The problem.** Under Git Bash on Windows, `/tmp` passed as an argument became the Windows Temp folder. `/tmp` read from the config became `C:\tmp`. The synthetic data were therefore written to one folder and looked for in another, and `01_selftest` failed.
   - **Also changed.** Earlier smoke results are now removed before each run, so the test does not read old cached results.
   - No result of the revision is affected.
+
+### Before publication (14 Nov 2026)
+No result changed. The tag `v3.0.0-dsp-r1` was moved to the release commit.
+- **Per-image counts included** (`revision_dsp/results/counts/`, 34 MB). The kernel selection, the statistics and the tables can be recomputed without the datasets (`docs/reproduction.md` A.0b).
+- **Documentation for users outside the project:**
+  - `revision_dsp/README.md`: setup from a clone, the pre-registration tags, the Windows interpreter setting.
+  - `docs/datasets.md` and `data/README.md`: layouts of the train and val splits used by the revision; UDED images are PNG.
+  - `docs/reproduction.md`: check without the datasets; setup of the E23 environment.
+- **E23 tools:** the local folder of the E23 environment is no longer written into `tools/external/run_e23.sh`; it is passed as `EXT`. The package list of that environment is in `revision_dsp/results/external/requirements-e23.txt`.
+- **Corrections of text, not of results:**
+  - k5 λ4 ranks 18th of the final 24 candidates under both selection criteria (12th of the 18 candidates of amendment 1); `README.md`, `docs/kernel_ablation.md` and `revision_dsp/FINDINGS.md` gave only the latter.
+  - `revision_dsp/FINDINGS.md` (E23 cost table): the converted PiDiNet has 720,709 parameters; 710,149 is the published model.
+- **Authors and affiliations** in `README.md` and `CITATION.cff` follow the revised manuscript: Universitas Merdeka Malang (first author), Universitas Dian Nuswantoro, BRIN.
+- Root `.gitignore`: datasets, environments and local logs.
 
 ### Unchanged
 - `src/`, `scripts/`, `eval_results/k5/` and `runtime_logs/`, as at submission (commit `91b4f83`, tag `dsp-submitted-v1`).

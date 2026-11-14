@@ -1,7 +1,7 @@
 {
  "timezone": "WIB (UTC+7)",
  "source": "gwi-odps, revision_dsp/process_log.csv",
- "generated": "2026-11-14 11:49:04",
+ "generated": "2026-11-14 12:02:33",
  "agenda": {
   "1": {
    "dates": "7-9 Nov",
@@ -1546,6 +1546,27 @@
    "result": "Tag pindah dari 9421741 ke commit rilis (lokal)",
    "finding": "Tag belum pernah dipublikasikan, jadi pemindahan tidak mengubah apa pun di GitHub",
    "ref": "commit 67a3686, 4c40254 dan commit rilis; tag v3.0.0-dsp-r1",
+   "reviewer": "semua (Data availability)",
+   "web": "",
+   "web_status": "",
+   "web_note": "",
+   "duration_s": null,
+   "duration": ""
+  },
+  {
+   "phase": 5,
+   "phase_name": "Kirim draf",
+   "id": "REL-2e",
+   "kind": "commit",
+   "activity": "Pesan commit branch revision-dsp-r1 (29 commit sejak 91b4f83) dirapikan sebelum publikasi atas keputusan penulis: baris trailer co-author dihapus. Isi berkas tidak berubah, kecuali hash commit yang dikutip di README, CHANGELOG, FINDINGS, HYPOTHESES dan process log, yang diganti dengan hash baru. Nama, e-mail dan waktu author, committer dan tagger dipertahankan. Tag v3.0.0-dsp-r1 dipindah ke commit yang memuat baris ini; masih lokal",
+   "title": "Riwayat commit dirapikan sebelum publikasi",
+   "start": "2026-11-14 12:02:33",
+   "end": "",
+   "status": "selesai (lokal)",
+   "outputs": "",
+   "result": "29 commit dan 7 tag (termasuk tag pra-registrasi) dipetakan ke commit baru; tidak ada hasil yang berubah",
+   "finding": "Hash commit sebelum tanggal ini tidak berlaku lagi; hash yang dikutip di dokumen repo sudah diganti",
+   "ref": "refs/backup/pre-rewrite (lokal, tidak dipublikasikan)",
    "reviewer": "semua (Data availability)",
    "web": "",
    "web_status": "",

@@ -77,6 +77,7 @@ No result changed. The tag `v3.0.0-dsp-r1` was moved to the release commit.
   - `revision_dsp/FINDINGS.md` (E23 cost table): the converted PiDiNet has 720,709 parameters; 710,149 is the published model.
 - **Authors and affiliations** in `README.md` and `CITATION.cff` follow the revised manuscript: Universitas Merdeka Malang (first author), Universitas Dian Nuswantoro, BRIN.
 - Root `.gitignore`: datasets, environments and local logs.
+- **Commit history.** Before publication, a co-author line was removed from the messages of the revision commits. The commit hashes therefore changed; the hashes cited in the documentation refer to the published commits. File contents, author and commit dates, and the dates of the pre-registration tags are unchanged (process log REL-2e).
 
 ### Unchanged
 - `src/`, `scripts/`, `eval_results/k5/` and `runtime_logs/`, as at submission (commit `91b4f83`, tag `dsp-submitted-v1`).

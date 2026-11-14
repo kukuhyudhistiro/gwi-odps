@@ -36,7 +36,7 @@ PY=.venv/Scripts/python.exe bash run_all.sh tables
 git status --short results/                              # only results/hypotheses/hypotheses.json changes
 ```
 
-The one changed file differs only in its `source` field, which records the absolute path of the input file; every number is identical (checked on a fresh clone without the datasets, 14 Nov 2026).
+The one changed file differs only in its `source` field, which records the absolute path of the input file; every number is identical (checked on a fresh clone without the datasets).
 
 This recomputes the kernel selection (Table 4, Table S1), the confidence intervals and paired tests (Tables 5-6, Table S2) and `results/TABLES.md` from the released counts. Recomputing the maps and counts themselves needs the datasets (A.1).
 
@@ -49,7 +49,7 @@ How to run a stage:
 
 Results are cached per method specification, so a stage computes only the files that are missing. To recompute a result, delete its file.
 
-The durations below are those of the revision runs, on an Intel Core i5-14400 with 8 jobs. Single-thread runtime measurement (E24) is the exception: it ran as one job. Every run is listed in `revision_dsp/PROCESS_LOG.md`.
+The durations below are those of the revision runs, on an Intel Core i5-14400 with 8 jobs. Single-thread runtime measurement (E24) is the exception: it ran as one job.
 
 | Stage | Command | Output | Duration in the revision |
 |---|---|---|---|

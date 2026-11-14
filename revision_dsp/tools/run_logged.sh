@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Run one stage of run_all.sh and record when it ran, how long it took, its exit
-# code and its log, for PROCESS_LOG.md (process history of the revision).
+# code and its log (local run record, logs_local/).
 # Usage (from revision_dsp):  bash tools/run_logged.sh <id> <stage>
 #   e.g.  bash tools/run_logged.sh E22 stats
 # Appends one line to logs_local/runs.csv:

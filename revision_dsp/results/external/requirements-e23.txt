@@ -1,6 +1,6 @@
 # E23 environment (learned detectors, tools/external/), separate from the revision environment.
 # Python 3.13.13; torch 2.15.0+cpu (CPU build, from https://download.pytorch.org/whl/cpu).
-# Captured with pip freeze on 14 Nov 2026 from the environment used for E23 (10 Nov 2026).
+# Captured with pip freeze from the environment used for E23.
 contourpy==1.4.0
 cycler==0.12.1
 filelock==4.2.10

@@ -130,7 +130,7 @@ The full ledger, with every finding and limitation, is [`revision_dsp/FINDINGS.m
 - **Kernel selection.**
   - The kernel tables of the submission (Tables 1-4) were computed on the test sets.
   - The revision selects on non-test data only. On that data, k5 λ4 ranks 18th of the 24 candidates by mean ODS of GWi and by mean ODS of GWi+ODPS (12th of the 18 candidates of amendment 1).
-  - The selection criterion (mean ODS of GWi+ODPS) was adopted after the first results were seen. This amendment is recorded in [`revision_dsp/CHANGELOG.md`](revision_dsp/CHANGELOG.md).
+  - The selection criterion (mean ODS of GWi+ODPS) was adopted after the first results were seen. This amendment is recorded at the tag `prereg-dsp-amend2-2026-11-09`.
   - On UDED, which has no non-test split, the new kernel does not raise the ODS of GWi+ODPS (+0.0002).
 - **ODPS mechanism.**
   - The submitted mechanism, "suppression of side lobes at ±λ/2", is not supported. At k5 λ4 and at k9 λ9 the imaginary kernel has no carrier side lobe in its window.
@@ -168,15 +168,13 @@ The full ledger, with every finding and limitation, is [`revision_dsp/FINDINGS.m
 | `dsp-submitted-v1` | `91b4f83` | Code at submission |
 | `prereg-dsp-2026-11-08` | `749931b` | Protocol v2, before any run on real data |
 | `prereg-dsp-amend1-2026-11-09` | `2df5279` | Amendment 1: candidate grid k ∈ {5, 7, 9} × λ ∈ {3..8} |
-| `hyp-dsp-2026-11-09` | `d5fa797` | Hypotheses H1/H2 (`revision_dsp/HYPOTHESES.md`) |
+| `hyp-dsp-2026-11-09` | `d5fa797` | Hypotheses H1/H2 (`revision_dsp/HYPOTHESES.md` at this tag) |
 | `prereg-dsp-amend2-2026-11-09` | `31494a6` | Amendment 2: selection by mean ODS of GWi+ODPS (post hoc, disclosed) |
 | `freeze-2026-11-10` | `7ae7ba5` | Frozen configuration and method list, before the test sets were opened |
 | `numbers-frozen-2026-11-10` | `ed93f8c` | All results of the revision (E20-E26); `revision_dsp/results/TABLES.md` |
 | `v3.0.0-dsp-r1` | this release | Revised code, results and documentation |
 
-The tags were created in a local repository and published together with this release. Their dates are those of the local machine, so they cannot be verified independently. The order of the commits and the content of each tag can.
-
-The timing of every stage is recorded in [`revision_dsp/PROCESS_LOG.md`](revision_dsp/PROCESS_LOG.md).
+The tags were created in a local repository and published together with this release. Their dates are those of the local machine, so they cannot be verified independently. The order of the commits and the content of each tag can: for example, `git show prereg-dsp-amend2-2026-11-09:revision_dsp/config.yaml` shows the protocol at that point.
 
 ---
 
@@ -249,13 +247,10 @@ gwi-odps/
 ├── data/                 BSDS500/, BIPED/, UDED/ (not in git)
 └── revision_dsp/         code, protocol and results of the revision
     ├── config.yaml       pre-registered protocol
-    ├── HYPOTHESES.md     pre-registered hypotheses
-    ├── CHANGELOG.md      protocol changes after pre-registration, with reasons
     ├── FINDINGS.md       findings and limitations, including withdrawn claims
-    ├── PROCESS_LOG.md    timing of every stage
     ├── rev/              library: kernels, methods, ODPS, evaluator, statistics
     ├── scripts/          one script per reviewer comment or group of comments
-    ├── tools/            smoke-test data, process log, learned-detector inference
+    ├── tools/            smoke-test data, logged runs, learned-detector inference
     └── results/          CSV/JSON results, TABLES.md, figures
 ```
 

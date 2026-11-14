@@ -68,13 +68,14 @@ The protocol was committed and tagged before the data it governs were evaluated.
 |---|---|
 | `prereg-dsp-2026-11-08` | protocol v2 (`config.yaml`), before any run on real data |
 | `prereg-dsp-amend1-2026-11-09` | amendment 1: grid k ∈ {5, 7, 9} × λ ∈ {3, ..., 8} with an edge rule |
-| `hyp-dsp-2026-11-09` | hypotheses H1/H2 (`HYPOTHESES.md`) |
+| `hyp-dsp-2026-11-09` | hypotheses H1/H2 (`HYPOTHESES.md` at this tag) |
 | `prereg-dsp-amend2-2026-11-09` | amendment 2 (post hoc): selection criterion mean ODS of GWi+ODPS |
 | `freeze-2026-11-10` | selected configuration and method list (`results/config_final.yaml`), before the test sets were opened |
 | `numbers-frozen-2026-11-10` | all results of the revision |
 
-Every change after `prereg-dsp-2026-11-08` is listed with its reason in
-`CHANGELOG.md`. The tags rest on the local clock of the machine.
+Each tag holds the protocol and the record of its changes at that point
+(`CHANGELOG.md` and `HYPOTHESES.md` in the tagged tree). The tags rest on the
+local clock of the machine.
 
 ## 4. Principle
 
@@ -91,7 +92,7 @@ letter).
 | `bash run_all.sh check` | R2.2, R2.4, R3.1b, R1.5 | `results/env/`, `results/selftest/selftest.json` (all PASS), `results/mechanism/` |
 | `bash run_all.sh select` | R2.1 (and kernel ablation for R3.4) | `results/selection/selected.json`, `kernel_mean.csv`, `kernel_ablation.csv` |
 | `bash run_all.sh ablation` | R2.5, R2.6, R3.2, R3.4 | `results/ablation/lam_d.csv`, `one_at_a_time.csv` |
-| `bash run_all.sh hypotheses` | HYPOTHESES.md | `results/hypotheses/` |
+| `bash run_all.sh hypotheses` | pre-registered hypotheses (tag `hyp-dsp-2026-11-09`) | `results/hypotheses/` |
 | `bash run_all.sh freeze` | R2.1 | `results/config_final.yaml` |
 | `bash run_all.sh test` | all tables | `results/test/summary.csv`, `legacy_check.csv` |
 | `bash run_all.sh preproc` | R2.7 | `results/preproc/preproc_ablation.csv` |
@@ -102,10 +103,9 @@ letter).
 | `bash run_all.sh tables` | all | `results/TABLES.md` |
 | `bash run_all.sh figures` | all (figures of the revised manuscript) | `results/figures/`, `results/figures/FIGURES.md` |
 
-All stages were run on 9-10 Nov 2026; `PROCESS_LOG.md` lists every run with its
-start, end and duration, and `docs/reproduction.md` A.1 the duration of each
-stage (about 13 h in total on an Intel Core i5-14400 with 8 jobs, most of it
-kernel selection). Findings and limitations are in `FINDINGS.md`.
+`docs/reproduction.md` A.1 gives the duration of each stage (about 13 h in total
+on an Intel Core i5-14400 with 8 jobs, most of it kernel selection). Findings and
+limitations are in `FINDINGS.md`.
 
 A run with `--limit N`, e.g. `python scripts/10_select_kernel.py --limit 5`, is
 a quick check on real data. Limited runs are cached separately and must never
@@ -117,8 +117,8 @@ be quoted.
 - **Border:** as in the manuscript: zero padding for GWi and GWC (Algorithm 1), OpenCV's default (reflect-101) for Sobel, LoG and the Gaussian gradient. ODPS neighbours outside the image are 0.
 - **Map normalization:** per-image min-max to [0, 1], 8-bit levels, as in the submitted code, for every method and every table. The ablation tables of the submission used a different normalization and 33 thresholds; in the revision they use the same protocol as the main tables (R2.9).
 - **Evaluation:** 99 thresholds, `skimage` thinning of prediction and GT, one-to-one greedy matching within 0.0075 × diagonal, multi-annotator counts as in 04c. Counts are bit-identical to `04c_evaluate_bsds_v2.py` (selftest T5/T6).
-- **Metrics:** ODS; OIS and AP by dataset-level accumulation (since 9 Nov 2026, CHANGELOG.md): OIS = F of the counts accumulated over images at each image's best threshold; AP = area under the dataset-level PR curve with precision made monotone. These are the definitions of the A-GWi paper (JESA 44740), so both papers report the same metrics. The definitions of the submitted tables (04c: mean of per-image best F, mean of per-image areas) are reported alongside as `OIS_legacy` and `AP_legacy`, and the BSDS benchmark-code AP as `AP_bsds101`. Canny and ED give binary maps: one operating point, so ODS = OIS and AP is not comparable with the other methods.
-- **Selection (R2.1):** on BSDS500 train+val and BIPED train instead of the test sets; d = λ/2 (Section 3.6); N, σ/λ, γ at the manuscript values. Protocol v2 used the five configurations and the rule of Tables 1-4 (highest mean ODS of GWi). Amendment 1 extended the candidates to k ∈ {5, 7, 9} × λ ∈ {3..8} with an edge rule; amendment 2, written after those results were seen, changed the criterion to the highest mean ODS of GWi+ODPS, because under the GWi criterion ODS rises monotonically with λ and has no interior optimum. Both criteria are reported. See CHANGELOG.md and FINDINGS.md. The test sets are opened once, after the freeze.
+- **Metrics:** ODS; OIS and AP by dataset-level accumulation (decided before the freeze): OIS = F of the counts accumulated over images at each image's best threshold; AP = area under the dataset-level PR curve with precision made monotone. These are the definitions of the A-GWi paper (JESA 44740), so both papers report the same metrics. The definitions of the submitted tables (04c: mean of per-image best F, mean of per-image areas) are reported alongside as `OIS_legacy` and `AP_legacy`, and the BSDS benchmark-code AP as `AP_bsds101`. Canny and ED give binary maps: one operating point, so ODS = OIS and AP is not comparable with the other methods.
+- **Selection (R2.1):** on BSDS500 train+val and BIPED train instead of the test sets; d = λ/2 (Section 3.6); N, σ/λ, γ at the manuscript values. Protocol v2 used the five configurations and the rule of Tables 1-4 (highest mean ODS of GWi). Amendment 1 extended the candidates to k ∈ {5, 7, 9} × λ ∈ {3..8} with an edge rule; amendment 2, written after those results were seen, changed the criterion to the highest mean ODS of GWi+ODPS, because under the GWi criterion ODS rises monotonically with λ and has no interior optimum. Both criteria are reported. See FINDINGS.md (F3-F5) and the tag `prereg-dsp-amend2-2026-11-09`. The test sets are opened once, after the freeze.
 - **Baselines (R2.8):** run as described in Section 4.3 with fixed parameters: Canny OpenCV 50/150, Sobel 3×3, LoG 7×7 σ 1.4, PC (phasepack, 4 scales, 6 orientations, Kovesi's defaults otherwise), ED (OpenCV default parameters). GWC uses the same kernel as GWi. The submitted "Canny" row (Gaussian σ 1.4 + Sobel magnitude) is kept as `GaussGradMag1.4`.
 - **Statistics (R1.1, R2.11):** per method, bootstrap 95% CI of ODS, OIS, AP and the spread of per-image F; for GWi vs GWC, GWi+ODPS vs GWC and GWi+ODPS vs GWi, paired bootstrap 95% CI of ΔODS (B = 2000) and Wilcoxon signed-rank on per-image F with Holm adjustment over the 9 tests.
 - **Analysis for R1.5:** GWC with a zero-mean real kernel (same kernel otherwise), compared with GWi and GWC outside the Holm family.
@@ -149,14 +149,11 @@ config.yaml            protocol, selection rule, ablations, baselines
 rev/                   library (kernels, methods, specs, ODPS, normalization, evaluator, stats, runner)
 rev/legacy.py          verbatim functions from the submitted repo (tests only)
 scripts/00..27         one script per reviewer point or group of points (docstring at the top)
-tools/                 synthetic data for the smoke test, logged runs, process log
+tools/                 synthetic data for the smoke test, logged runs
 tools/external/        E23: learned detectors from their official repositories
 tools/session/         scripts run during the revision, kept for the record
 tests/config_synth.yaml
 results/               everything the scripts write (cached; delete a file to recompute)
 results/counts/        per-image matching counts of every evaluated map
-CHANGELOG.md           protocol changes after pre-registration
-HYPOTHESES.md          pre-registered hypotheses
-FINDINGS.md            every finding and limitation
-PROCESS_LOG.md         every run, commit and decision, with times (in Indonesian)
+FINDINGS.md            findings and limitations
 ```

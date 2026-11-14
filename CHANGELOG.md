@@ -78,6 +78,7 @@ No result changed. The tag `v3.0.0-dsp-r1` was moved to the release commit.
 - **Authors and affiliations** in `README.md` and `CITATION.cff` follow the revised manuscript: Universitas Merdeka Malang (first author), Universitas Dian Nuswantoro, BRIN.
 - Root `.gitignore`: datasets, environments and local logs.
 - **Commit history.** Before publication, a co-author line was removed from the messages of the revision commits. The commit hashes therefore changed; the hashes cited in the documentation refer to the published commits. File contents, author and commit dates, and the dates of the pre-registration tags are unchanged (process log REL-2e).
+- **After the first push (14 Nov 2026):** planning notes on other work of the authors were moved out of `revision_dsp/FINDINGS.md` (section F and a few references). No result of the revision changed. The tag `v3.0.0-dsp-r1` was moved to this version; the pre-registration tags were not moved (process log REL-3a).
 
 ### Unchanged
 - `src/`, `scripts/`, `eval_results/k5/` and `runtime_logs/`, as at submission (commit `91b4f83`, tag `dsp-submitted-v1`).

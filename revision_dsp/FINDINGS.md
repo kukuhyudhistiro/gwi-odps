@@ -3,8 +3,7 @@
 Every finding of the revision is recorded here, whether or not it supports the
 submitted manuscript. Entries are not removed. If an entry is later corrected,
 the correction is added below it. All entries are carried into the response
-letter and the revised manuscript (§5.5, §5.7 limitations, conclusion), and into
-the update of the dissertation roadmap (`Roadmap_KGWavelet_Paper1_Paper2_Paper3.docx`).
+letter and the revised manuscript (§5.5, §5.7 limitations, conclusion).
 
 Status labels:
 - **Finding**: observed result, reported as is.
@@ -24,7 +23,7 @@ Last update: 10 Nov 2026, after E26, the numbers freeze (tag `numbers-frozen-202
 
 ## Original claims and their status
 
-| # | Claim in the submission or the roadmap | Status now | Entries |
+| # | Claim in the submission | Status now | Entries |
 |---|---|---|---|
 | C1 | k5 λ4 is the best configuration across three datasets (Table 4) | **Claim withdrawn.** It was selected on test data. On non-test data it ranks 18 of the final 24 candidates by mean ODS of GWi and of GWi+ODPS (12 of the 18 candidates of amendment 1). On test, k9 λ9 is above it for GWi on all three sets; for GWi+ODPS on BSDS500 and BIPED but not UDED (+0.0002) | F1, F2, F21 |
 | C2 | ODPS suppresses carrier side lobes located at ±λ/2, with d = 2 for λ = 4 | **Claim withdrawn (mechanism), replaced by directional thinning.** Carrier side lobes exist only when (k//2)/λ > 0.5. At k5 λ4 and at the new selection there are none; ODPS thins a broad response across orientations. Where side lobes exist (k5 λ3), ODPS keeps the two side peaks of an axis-aligned step and removes the edge pixels | F12 (correction), F27 |
@@ -32,7 +31,7 @@ Last update: 10 Nov 2026, after E26, the numbers freeze (tag `numbers-frozen-202
 | C4 | The real component of the Gabor kernel is redundant (GWi > GWC) | **Claim corrected.** GWi is above raw GWC on all test sets (CIs exclude 0), but most of that gap is the DC response of the raw real kernel. Against zero-DC GWC at k9 λ9, GWi stays above, with CIs excluding 0: +0.0161, +0.0391 and +0.0842. At k5 λ4, zero-DC GWC is above GWi on BSDS500 (−0.0093, no CI) | F14, F23, F25 |
 | C5 | GWi is about 2.2× faster than GWC | **Claim corrected (scope).** It holds for the filtering stage: 2.1× at k9 λ9 and 2.3× at k5 λ4. For the full pipeline, GWi+ODPS is 1.56× faster than GWC at k9 λ9, but only 1.15× at the submitted k5 λ4. The Gaussian gradient baseline is about 5.5× faster than GWi+ODPS and has higher ODS. "12.6× faster than PC" becomes 8.5× at k9 λ9 | F15, F28 |
 | C6 | (implicit) the Gabor carrier is what makes GWi work | **Not supported for GWi alone.** GWi scores best as the kernel loses its carrier lobe and approaches a smoothed oriented derivative. This was already published in Paper 2 (A-GWi) | F7, H1 |
-| C7 | (not claimed, but implied by roadmap §6, which lists only Gabor methods) where GWi+ODPS stands among the evaluated detectors | **Below a classical baseline, in the submission and in the revision.** The Gaussian gradient magnitude σ 1.4 is above every Gabor variant on all three test sets, in ODS, OIS and AP. Measured under the manuscript border protocol, which handicaps the Gabor methods (H5) | F16, F24, H3, H5 |
+| C7 | (not claimed in the submission) where GWi+ODPS stands among the evaluated detectors | **Below a classical baseline, in the submission and in the revision.** The Gaussian gradient magnitude σ 1.4 is above every Gabor variant on all three test sets, in ODS, OIS and AP. Measured under the manuscript border protocol, which handicaps the Gabor methods (H5) | F16, F24, H3, H5 |
 | C8 | (design choice, R2.6) N = 8 orientations is an appropriate balance | **Not supported at the selected kernel.** N = 4 reaches the same ODS at half the cost; N = 16 adds nothing. It was supported at k7 λ5 (E11 of the five-candidate run) | F19 |
 | C9 | (§3.1, R2.7) Histogram equalization is important, notably for low-contrast images; normalization to [0, 1] is necessary | **Claim withdrawn.** On all three test sets, removing HE raises ODS of GWi (+0.0055 to +0.0623) and of GWi+ODPS (+0.0111 to +0.0591). /255 changes nothing. The protocol stays as frozen (HE) | F26 |
 | C10 | (R1.3, as the reviewer frames it) ODPS reduces artifacts without introducing boundary distortions | **Claim corrected.** At the selected kernel, ODPS works by thinning, so that a lower threshold gives more recall at about the same precision. The mean matched distance grows by less than 0.1 px on average. Some images lose true boundary pixels (BIPED RGB_139: recall −0.25). "Without distortion" can only be stated with these numbers | F27 |
@@ -77,7 +76,7 @@ They add no experiment that a reviewer did not ask for.
 | H1 | R3.1a (citation) | Published in A-GWi; Paper 1 must cite it |
 | H2 | R2.9 | Metric definitions; aligned with A-GWi |
 | H3 | R2.8 | Binary Canny and GaussGradMag naming |
-| H4 | *not requested* | Consistency with A-GWi (roadmap premise) |
+| H4 | *not requested* | Consistency with A-GWi (adaptation premise) |
 | H5 | R2.3 (description only), R2.12 | Border handling is described, not changed. The border diagnostic itself was *not requested* |
 | H6 | R2.10 | Runtime procedure; compared with A-GWi |
 
@@ -158,7 +157,7 @@ For all six candidates with half-width over λ below 0.5, the gain is positive: 
 - The offsets use `np.round`, which rounds halves to even. For d = 4.5 (λ9) the axis offsets are 4, the same as for λ8. For λ10 they are 5.
 - The drop in gain between λ9 and λ10 coincides with this step from 4 to 5. Reported, not corrected.
 
-## D. GWi vs GWC (operator I of the roadmap)
+## D. GWi vs GWC
 
 **F14. Limitation, Open. The raw real kernel's DC response grows with λ, which biases GWi vs GWC at large λ.**
 - DC-to-gain ratio of the raw real kernel: 0.15 at k5 λ4, 0.76 at k7 λ9, 1.24 at k7 λ12. At k7 λ12 the real kernel is entirely non-negative, a low-pass filter.
@@ -180,7 +179,6 @@ For all six candidates with half-width over λ below 0.5, the gain is positive: 
 **F16. Finding (submitted test results), Open (E20). GWi+ODPS ranked below the Gaussian gradient magnitude baseline on all three test sets.**
 - In the submission (`eval_results/k5/ods_summary.csv`), the row labelled "Canny" is a Gaussian gradient magnitude with σ 1.4, without NMS (runbook A2). Its ODS is 0.534 (BSDS500), 0.641 (BIPED) and 0.674 (UDED). GWi+ODPS has 0.470, 0.574 and 0.645.
 - Sobel is also above GWi+ODPS on BIPED (0.584). Phase congruency is above it on BSDS500 (0.524).
-- The roadmap summary (§6) reports only GWC, GWi and GWi+ODPS, so this ranking does not appear there.
 - The new selection raises GWi+ODPS on non-test data (0.489 BSDS500 train+val, 0.610 BIPED train), so whether it reaches this baseline on test is open. It cannot be assumed.
 - Paper 2 (A-GWi, H3 below) found the same baseline not separable from its method (p = 0.82 on both datasets).
 - *Added after E20:* the ranking holds in the revision. The new selection narrows the gap on BSDS500 and BIPED but not on UDED. See F24.
@@ -215,69 +213,9 @@ For all six candidates with half-width over λ below 0.5, the gain is positive: 
 - This is a property of the large-λ regime. In the five-candidate E11 around k7 λ5, N = 4 was 0.008 below N = 8.
 - It adds to F7: at the selected configuration, the Gabor envelope plays little role.
 
-## F. Consequences for the dissertation roadmap
+## F. (moved)
 
-Correction (9 Nov 2026, after reading the JESA 44740 files): R1, R4 and R5 were first written from the roadmap document in `arsip/`. That document describes Paper 2 as LDA-GaborNet, a learned model. The Paper 2 actually accepted is A-GWi (JESA 44740, final proof 18 Sep 2026): a handcrafted per-pixel imaginary Gabor method, k = 7 fixed, without ODPS. The entries below refer to that paper. The roadmap document itself is outdated on Paper 2 and needs updating.
-
-**R1.** The roadmap transfer "k5 λ4 N8 as the Paper 2 default" is invalid (F2). It also does not describe what Paper 2 did: A-GWi used k = 7, and its static GWi baseline was k7 λ4.
-
-**R2.** The numbers in roadmap §6 (GWi vs GWC +0.050 to +0.150 ODS, 2.2× faster) come from the submitted, test-selected protocol. They are replaced after E20 and E24. The §6 table should also show the classical baselines (F16).
-
-**R3.** Notation clash: Paper 2 (published) uses ρL for local gradient activity and ρc for the sigmoid centre. This revision used ρ = (k//2)/λ, so the Paper 1 manuscript needs another symbol for it.
-
-**R4.** A-GWi does not use ODPS, so C2 and C3 concern Paper 1 only.
-
-**R5.** The roadmap premise for adaptation ("dense regions need high-frequency, small-λ kernels") was tested in Paper 2 and **not supported** (H4). Paper 1 must not restate it as motivation.
-
-**R6. Histogram equalization across the papers (after E21, 10 Nov 2026).**
-- **Paper 1:** HE lowers ODS of GWi and GWi+ODPS on all three test sets (F26). The protocol keeps HE as frozen.
-- **Paper 2 (A-GWi):**
-  - HE is applied to all six methods (Eq. 2, Algorithm 1 line 1, note to Table 3 of the final proof).
-  - An "A-GWi without HE" ablation was planned in the revision plan (A4) but is not in the published Table 8. The effect of HE on A-GWi itself is therefore not measured.
-  - The only measured effect is in the JESA response letter: binary Canny fell from 0.4441 to 0.4078 on BSDS500 when given the equalized image.
-- **Paper 3 (PTBM, Research_Topic_KG-Wavelet_6Nopember2026.docx):**
-  - Stage 1 is BT.601 grayscale and an Otsu mask, without HE.
-  - In `ptbm_v2.py`, HE is optional (`--he`) and off by default. All pilot outputs in `ptbm_v2_out/` have `he=False`.
-  - Brightness is handled by the zero-DC even kernel, not by global HE.
-- **What can be carried forward:** two measurements on natural-scene edge benchmarks point the same way: HE is not neutral and lowered ODS.
-  - This supports keeping PTBM without global HE, and writing that choice as a design rule of the framework.
-- **What cannot be carried forward:**
-  - None of this was measured on maize trays, on counting accuracy, or on UV fluorescence.
-  - It was not measured on A-GWi either.
-  - For Paper 3 it is a motivated default, not a result. If Paper 3 reports an HE on/off check, it should be fixed before its test images are opened, as in Paper 1.
-- **Decision of the first author (10 Nov 2026):** PTBM (Paper 3) and the later stages of the dissertation will not use HE. The reason is the HE findings of Papers 1 and 2 above.
-  - When this is written in Paper 3 or the dissertation, the evidence must be stated as it stands. In Paper 1, HE lowers GWi and GWi+ODPS. In Paper 2, HE lowered the binary Canny baseline; A-GWi itself was not measured without HE.
-- **Pending (decided 10 Nov 2026, to be done later):** update the Paper 1 statements in Research_Topic_KG-Wavelet_6Nopember2026.docx listed in R7. Add the no-HE design rule to the same document.
-- *Done (10 Nov 2026, 15:36):* see R7. The no-HE rule is a new paragraph in §2.3.2 ("Aturan desain kedua"). It carries the evidence and its limits as stated above.
-  - Table 20 (stage 1) and line 1 of Algorithm 1 now say "tanpa HE". Line 1 of Algorithm 1 had said "HE opsional".
-
-**R7. Paper 1 statements in Research_Topic_KG-Wavelet_6Nopember2026.docx that the revision has changed.**
-- "GWi melebihi GWC sebesar +0,050 (BSDS500), +0,150 (BIPED v2), dan +0,140 (UDED) ODS dengan waktu 2,2× lebih cepat":
-  - These are the submitted, test-selected numbers against raw GWC.
-  - Against zero-DC GWC at the selected kernel the gaps are +0.016, +0.039 and +0.084 (F23, F25). At k5 λ4, zero-DC GWC is above GWi on BSDS500.
-  - The 2.2× figure awaits E24.
-- RQ1 "apakah ODPS menekan side-lobe": the side-lobe mechanism does not apply at the reported kernels (F12). ODPS improves ODS significantly on BSDS500 only (F25).
-- Design rule 1 "Komponen real redundan untuk tepi langkah (Paper 1)" must be narrowed (C4).
-- The topic document's own argument for a zero-DC even kernel in Paper 3 is supported by F23: most of GWC's deficit in Paper 1 came from the DC response of the raw real kernel.
-- *Done (10 Nov 2026, 15:36):* the edits are tracked changes in a new file, `D:\Proposal Disertasi\Research_Topic_KG-Wavelet_10Nopember2026.docx`. The 6 Nov file is unchanged.
-  - **Edited:**
-    - the three statements above;
-    - four more statements that carried the same claims:
-      - contribution 1 in §1.6.1;
-      - note 1 of the roadmap figure;
-      - point 1 of "Kesinambungan antar-paper" in §3.5.1;
-      - the Paper 1 grid search in §2.3.4, now marked as selected on test data in the submission.
-  - **RQ1 is kept as written.** Its answer after the revision is added:
-    - yes to the first part, also against zero-DC GWC at k9 λ9;
-    - the side-lobe part is not supported.
-    The question is not rewritten to fit the result.
-  - **The 2.2× figure** is replaced by the E24 values: filtering 2.1× at k9 λ9; full pipeline 1.56×. The text also states that the Gaussian gradient has higher ODS than every Gabor variant and is about 5.5× faster than GWi+ODPS (F24, F28).
-  - **Not changed:** status words ("under review") and the reference entry of Paper 1.
-  - **Author list.** That entry has four authors, while README.md and CITATION.cff of v2.0.0 had three. The submitted PDF (DSP-D-26-02462.pdf) has four: Yudhistiro, Adi (BRIN), Basuki, Rijati. README.md and CITATION.cff were corrected to match it in v3.0.0.
-  - **Checks done:**
-    - the XML is well-formed;
-    - with all changes rejected, the text equals the original paragraph by paragraph.
-  - **Not done:** the file was not opened in Word. No Word or LibreOffice is installed on this machine.
+Planning notes on other work of the authors were moved out of this ledger on 14 Nov 2026, before publication. They contained no result of this revision.
 
 ## H. Consistency with Paper 2 (A-GWi, JESA 44740, accepted)
 
@@ -420,7 +358,7 @@ n/c: binary map with one operating point; AP is not comparable (H3).
 - GWi+ODPS minus zero-DC GWC at k9 λ9 is +0.0284, +0.0470 and +0.0817.
 - In AP, GWi stays further above zero-DC GWC: +0.0665, +0.1050 and +0.1644 at k9 λ9; +0.0301, +0.0368 and +0.0952 at k5 λ4.
 - Raw GWC at k9 λ9 is the lowest of all 14 methods on BSDS500 and UDED. This is the DC leakage predicted in F14.
-- The roadmap §6 numbers (+0.050 to +0.150) must be replaced (R2). The manuscript must report the zero-DC comparison as the fair one.
+- The manuscript must report the zero-DC comparison as the fair one.
 
 **F24. Finding. The Gaussian gradient magnitude is above every Gabor variant on all three test sets.**
 - GaussGradMag σ 1.4 ranks first in ODS, OIS and AP on BSDS500, BIPED and UDED.

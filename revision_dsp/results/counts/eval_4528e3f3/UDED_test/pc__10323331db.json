@@ -1,0 +1,20 @@
+{
+ "spec": {
+  "name": "PC",
+  "family": "pc",
+  "nscale": 4,
+  "norient": 6
+ },
+ "proto": {
+  "preproc": "he",
+  "border": "paper",
+  "nms_outside": "zero",
+  "normalization": "minmax_image",
+  "quantize_8bit": true,
+  "n_thresholds": 99,
+  "max_dist_frac": 0.0075,
+  "matching": "greedy",
+  "thinning": "skimage"
+ },
+ "scale": null
+}

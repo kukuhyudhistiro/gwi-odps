@@ -1,0 +1,18 @@
+{
+ "spec": {
+  "name": "ED",
+  "family": "ed"
+ },
+ "proto": {
+  "preproc": "he",
+  "border": "paper",
+  "nms_outside": "zero",
+  "normalization": "minmax_image",
+  "quantize_8bit": true,
+  "n_thresholds": 99,
+  "max_dist_frac": 0.0075,
+  "matching": "greedy",
+  "thinning": "skimage"
+ },
+ "scale": null
+}

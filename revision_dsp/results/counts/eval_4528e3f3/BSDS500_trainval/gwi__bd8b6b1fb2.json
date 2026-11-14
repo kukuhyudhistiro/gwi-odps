@@ -1,0 +1,27 @@
+{
+ "spec": {
+  "name": "GWiODPS_k9l9_N16",
+  "family": "gwi",
+  "nms": {
+   "d": 4.5,
+   "mode": "nearest"
+  },
+  "k": 9,
+  "lam": 9.0,
+  "N": 16,
+  "sigma_ratio": 0.56,
+  "gamma": 0.5
+ },
+ "proto": {
+  "preproc": "he",
+  "border": "paper",
+  "nms_outside": "zero",
+  "normalization": "minmax_image",
+  "quantize_8bit": true,
+  "n_thresholds": 99,
+  "max_dist_frac": 0.0075,
+  "matching": "greedy",
+  "thinning": "skimage"
+ },
+ "scale": null
+}

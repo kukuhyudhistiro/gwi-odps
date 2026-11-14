@@ -1,0 +1,23 @@
+{
+ "spec": {
+  "name": "GWi_k5l5",
+  "family": "gwi",
+  "k": 5,
+  "lam": 5.0,
+  "N": 8,
+  "sigma_ratio": 0.56,
+  "gamma": 0.5
+ },
+ "proto": {
+  "preproc": "he",
+  "border": "paper",
+  "nms_outside": "zero",
+  "normalization": "minmax_image",
+  "quantize_8bit": true,
+  "n_thresholds": 99,
+  "max_dist_frac": 0.0075,
+  "matching": "greedy",
+  "thinning": "skimage"
+ },
+ "scale": null
+}

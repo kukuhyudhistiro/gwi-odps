@@ -1,0 +1,27 @@
+{
+ "spec": {
+  "name": "GWiODPS_k7l6",
+  "family": "gwi",
+  "nms": {
+   "d": 3.0,
+   "mode": "nearest"
+  },
+  "k": 7,
+  "lam": 6.0,
+  "N": 8,
+  "sigma_ratio": 0.56,
+  "gamma": 0.5
+ },
+ "proto": {
+  "preproc": "he",
+  "border": "paper",
+  "nms_outside": "zero",
+  "normalization": "minmax_image",
+  "quantize_8bit": true,
+  "n_thresholds": 99,
+  "max_dist_frac": 0.0075,
+  "matching": "greedy",
+  "thinning": "skimage"
+ },
+ "scale": null
+}
